@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SearchBar from './SearchBar';
+import { connect } from 'react-redux';
 import Logo from "../images/logo.jpg";
 import {
     Collapse,
@@ -10,20 +11,9 @@ import {
     NavItem,
     NavLink, } from 'reactstrap';
 
-class Header extends Component {
-    constructor(props) {
-        super(props);
+import { toggleNavbar } from '../actions';
 
-        this.toggle = this.toggle.bind(this);
-        this.state = {
-            isOpen: false
-        };
-    }
-    toggle() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    }
+class Header extends Component {
     render () {
         return (
             <div>
@@ -32,8 +22,8 @@ class Header extends Component {
                         <img className="mr-2" src={Logo} alt="Logo"/>
                         ZeroBugs
                     </NavbarBrand>
-                    <NavbarToggler onClick={this.toggle} />
-                    <Collapse isOpen={this.state.isOpen} navbar>
+                    <NavbarToggler onClick={this.props.onToggleNavbar} />
+                    <Collapse isOpen={this.props.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
                                 <NavLink>Category</NavLink>
@@ -52,4 +42,12 @@ class Header extends Component {
     }
 }
 
+Header = connect(
+    state => {
+        return { isOpen: state.navbarIsOpen }
+    },
+    dispatch => {
+        return { onToggleNavbar: () => dispatch(toggleNavbar()) }
+    }
+)(Header);
 export default Header;
