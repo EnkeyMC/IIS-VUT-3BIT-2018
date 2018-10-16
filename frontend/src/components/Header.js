@@ -16,11 +16,11 @@ import { toggleNavbar } from '../actions';
 class Header extends Component {
     render () {
         return (
-            <div>
-                <Navbar color="light" light expand="md">
+            <div className="border-bottom">
+                <Navbar color="white" light expand="md">
                     <NavbarBrand href="/">
-                        <img className="mr-2" src={Logo} alt="Logo"/>
-                        ZeroBugs
+                        <img className="mr-2 logo align-middle" src={Logo} alt="Logo"/>
+                        <span className="h2 align-middle">ZeroBugs</span>
                     </NavbarBrand>
                     <NavbarToggler onClick={this.props.onToggleNavbar} />
                     <Collapse isOpen={this.props.isOpen} navbar>
