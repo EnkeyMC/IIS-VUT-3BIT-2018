@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Logo from "../images/logo.jpg";
 import {
     Collapse,
     Navbar,
@@ -30,7 +31,10 @@ class Header extends Component {
         return (
             <div>
                 <Navbar color="light" light expand="md">
-                    <NavbarBrand href="/">reactstrap</NavbarBrand>
+                    <NavbarBrand href="/">
+                        <img className="mr-2" src={Logo} alt="Logo"/>
+                        ZeroBugs
+                    </NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
