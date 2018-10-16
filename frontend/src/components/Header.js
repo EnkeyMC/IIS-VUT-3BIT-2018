@@ -13,7 +13,7 @@ import {
 
 import { toggleNavbar } from '../actions';
 
-class Header extends Component {
+export default class Header extends Component {
     render () {
         return (
             <div className="border-bottom">
@@ -50,4 +50,3 @@ Header = connect(
         return { onToggleNavbar: () => dispatch(toggleNavbar()) }
     }
 )(Header);
-export default Header;
