@@ -13,11 +13,11 @@ class Profile(models.Model):
     user = models.OneToOneField(
             User, on_delete=models.CASCADE, primary_key=True)
     languages = models.ManyToManyField(Language)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null=True)
     position = models.CharField(max_length=50, default='')
 
     def __str__(self):
-        return self.first_name + self.last_name
+        return self.user.username
 
 
 class Module(models.Model):
