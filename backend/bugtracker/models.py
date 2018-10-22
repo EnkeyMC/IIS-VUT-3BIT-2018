@@ -10,8 +10,7 @@ class Language(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(
-            User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     languages = models.ManyToManyField(Language)
     birth_date = models.DateField(null=True)
     position = models.CharField(max_length=50, default='')
@@ -21,7 +20,7 @@ class Profile(models.Model):
 
 
 class Module(models.Model):
-    expert = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    expert = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     languages = models.ManyToManyField(Language)
     name = models.CharField(max_length=50)
     description = models.TextField()
@@ -40,10 +39,10 @@ class Severity(models.Model):
 
 
 class Patch(models.Model):
-    author = models.ForeignKey(Profile, on_delete=models.PROTECT)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=50)
-    date_released = models.DateField()
-    date_applied = models.DateField()
+    date_released = models.DateField(null=True)
+    date_applied = models.DateField(null=True)
 
     def __str__(self):
         return '#' + self.id
@@ -52,7 +51,7 @@ class Patch(models.Model):
 class Bug(models.Model):
     severity = models.ForeignKey(
             Severity, on_delete=models.SET_NULL, null=True)
-    module = models.ForeignKey(Module, on_delete=models.PROTECT)
+    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
     patch = models.ForeignKey(Patch, on_delete=models.SET_NULL, null=True)
     vulnerability = models.CharField(max_length=50)
     title = models.CharField(max_length=100)
@@ -63,10 +62,9 @@ class Bug(models.Model):
 
 
 class Ticket(models.Model):
-    expert = models.ForeignKey(
-            Profile, on_delete=models.SET_NULL, null=True,
-            related_name='tickets_under_supervision')
-    author = models.ForeignKey(Profile, on_delete=models.PROTECT)
+    expert = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+                               related_name='tickets_under_supervision')
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     bugs = models.ManyToManyField(Bug)
     duplicate = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=100)
