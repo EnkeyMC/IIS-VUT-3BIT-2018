@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SearchBar from './SearchBar';
 import { connect } from 'react-redux';
-import Logo from "../images/logo.jpg";
+import Logo from "../images/logo.png";
 import {
     Collapse,
     Navbar,
@@ -17,7 +17,7 @@ export default class Header extends Component {
     render () {
         return (
             <div className="border-bottom">
-                <Navbar color="white" light expand="md">
+                <Navbar color="light" light expand="md">
                     <NavbarBrand href="/">
                         <img className="mr-2 logo align-middle" src={Logo} alt="Logo"/>
                         <span className="h2 align-middle">ZeroBugs</span>
