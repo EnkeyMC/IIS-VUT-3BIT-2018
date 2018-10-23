@@ -1,0 +1,467 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$7AOTxLmVWBbH$P7muMAt19DuMZZWRBfNitbDDyrdacZAvO9EWPygk19U=",
+        "last_login": "2018-10-22T16:26:38.260Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "admin@email.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2018-10-22T16:14:47.226Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$117GqYjvldj7$85/X2CyzenOU56BBvypGHTeBqAy+c7FfyxqFCJjtlR8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "xomach00",
+        "first_name": "Martin",
+        "last_name": "Omacht",
+        "email": "xomach00@stud.fit.vutbr.cz",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2018-10-22T16:09:22.016Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$y8LRWT6MCNFF$JYtKxm01J853jHgvI1tMKQLMouHVG+F/j9zuS/gwuv0=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "xhendr03",
+        "first_name": "Petr",
+        "last_name": "Hendrych",
+        "email": "xhendr03@stud.fit.vutbr.cz",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2018-10-22T16:22:20.582Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$DHT2VKndINgT$a7ANVMX8hTukKwD8Ln6dg+3zcbeEouh5vZUHFOvIh8Y=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "xchova19",
+        "first_name": "Zden\u011bk",
+        "last_name": "Chovanec",
+        "email": "xchova19@stud.fit.vutbr.cz",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2018-10-22T16:23:24.355Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$jl6q5sr2Iq8S$F2DVeeVvJi6G18BU21Ymj+ZO/6CZIkQn7eajvm7dXYU=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "john",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john@email.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2018-10-22T16:25:05.706Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$xu5JNbMDsPuX$rHZ1QXR36TCk5PIM/ehgFPwNBKrQF5I0PxcylsJdfUQ=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "jane",
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "email": "jane@email.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2018-10-22T16:25:30.864Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "bugtracker.language",
+    "pk": 1,
+    "fields": {
+        "name": "PHP"
+    }
+},
+{
+    "model": "bugtracker.language",
+    "pk": 2,
+    "fields": {
+        "name": "HTML"
+    }
+},
+{
+    "model": "bugtracker.language",
+    "pk": 3,
+    "fields": {
+        "name": "JS"
+    }
+},
+{
+    "model": "bugtracker.language",
+    "pk": 4,
+    "fields": {
+        "name": "CSS"
+    }
+},
+{
+    "model": "bugtracker.profile",
+    "pk": 2,
+    "fields": {
+        "birth_date": "1996-06-16",
+        "position": "administrator",
+        "languages": [
+            1,
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "bugtracker.profile",
+    "pk": 3,
+    "fields": {
+        "birth_date": "1997-07-12",
+        "position": "programmer",
+        "languages": [
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "bugtracker.profile",
+    "pk": 4,
+    "fields": {
+        "birth_date": "1997-01-07",
+        "position": "programmer",
+        "languages": [
+            1
+        ]
+    }
+},
+{
+    "model": "bugtracker.profile",
+    "pk": 5,
+    "fields": {
+        "birth_date": "1992-01-22",
+        "position": "regular user",
+        "languages": [
+            1
+        ]
+    }
+},
+{
+    "model": "bugtracker.profile",
+    "pk": 6,
+    "fields": {
+        "birth_date": "1984-09-29",
+        "position": "regular user",
+        "languages": [
+            3
+        ]
+    }
+},
+{
+    "model": "bugtracker.module",
+    "pk": 1,
+    "fields": {
+        "expert": 3,
+        "name": "Frontend",
+        "description": "Client side of web application",
+        "languages": [
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "bugtracker.module",
+    "pk": 2,
+    "fields": {
+        "expert": 4,
+        "name": "Backend",
+        "description": "Server side of web application",
+        "languages": [
+            1
+        ]
+    }
+},
+{
+    "model": "bugtracker.severity",
+    "pk": 1,
+    "fields": {
+        "name": "Cosmetic",
+        "description": "Bug is only cosmetic, does not affect program functions."
+    }
+},
+{
+    "model": "bugtracker.severity",
+    "pk": 2,
+    "fields": {
+        "name": "Minor",
+        "description": "Insignificant problem of the program functioning."
+    }
+},
+{
+    "model": "bugtracker.severity",
+    "pk": 3,
+    "fields": {
+        "name": "Major",
+        "description": "Error in the main functionality of the program."
+    }
+},
+{
+    "model": "bugtracker.severity",
+    "pk": 4,
+    "fields": {
+        "name": "Critical",
+        "description": "Error that can affect security, cause crashes or data loss"
+    }
+},
+{
+    "model": "bugtracker.patch",
+    "pk": 1,
+    "fields": {
+        "author": 4,
+        "status": "applied",
+        "date_released": "2017-11-16",
+        "date_applied": "2017-12-13"
+    }
+},
+{
+    "model": "bugtracker.patch",
+    "pk": 2,
+    "fields": {
+        "author": 4,
+        "status": "applied",
+        "date_released": "2016-04-30",
+        "date_applied": "2017-07-18"
+    }
+},
+{
+    "model": "bugtracker.patch",
+    "pk": 3,
+    "fields": {
+        "author": 3,
+        "status": "applied",
+        "date_released": "2017-12-14",
+        "date_applied": "2017-12-22"
+    }
+},
+{
+    "model": "bugtracker.patch",
+    "pk": 4,
+    "fields": {
+        "author": 4,
+        "status": "approved",
+        "date_released": "2017-05-08",
+        "date_applied": null
+    }
+},
+{
+    "model": "bugtracker.patch",
+    "pk": 5,
+    "fields": {
+        "author": 3,
+        "status": "in development",
+        "date_released": null,
+        "date_applied": null
+    }
+},
+{
+    "model": "bugtracker.patch",
+    "pk": 6,
+    "fields": {
+        "author": 3,
+        "status": "in development",
+        "date_released": null,
+        "date_applied": null
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 1,
+    "fields": {
+        "severity": 2,
+        "module": 2,
+        "patch": 1,
+        "vulnerability": "None",
+        "title": "Bug #1",
+        "description": "This is a minor bug"
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 2,
+    "fields": {
+        "severity": 3,
+        "module": 1,
+        "patch": null,
+        "vulnerability": "None",
+        "title": "Bug #2",
+        "description": "This is a major bug"
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 3,
+    "fields": {
+        "severity": 4,
+        "module": 2,
+        "patch": 2,
+        "vulnerability": "Possible threat",
+        "title": "Bug #3",
+        "description": "This is a critical bug and a security problem! Do something about it!"
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 4,
+    "fields": {
+        "severity": 2,
+        "module": 1,
+        "patch": null,
+        "vulnerability": "None",
+        "title": "Bug #4",
+        "description": "This is a bug"
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 5,
+    "fields": {
+        "severity": 2,
+        "module": 2,
+        "patch": 6,
+        "vulnerability": "None",
+        "title": "Bug #5",
+        "description": "This is a bug"
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 6,
+    "fields": {
+        "severity": 3,
+        "module": 2,
+        "patch": 5,
+        "vulnerability": "None",
+        "title": "Bug #6",
+        "description": "This is a bug"
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 1,
+    "fields": {
+        "expert": 3,
+        "author": 5,
+        "duplicate": null,
+        "title": "Reporting these multiple issues",
+        "description": "They annoy me",
+        "status": "open",
+        "attachment": "",
+        "bugs": [
+            2,
+            3,
+            4
+        ]
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 2,
+    "fields": {
+        "expert": 4,
+        "author": 5,
+        "duplicate": null,
+        "title": "Page not found problem",
+        "description": "It is not working",
+        "status": "closed",
+        "attachment": "",
+        "bugs": [
+            1,
+            6
+        ]
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 3,
+    "fields": {
+        "expert": 3,
+        "author": 6,
+        "duplicate": null,
+        "title": "Reporting problem with ...",
+        "description": "It is not working",
+        "status": "closed",
+        "attachment": "",
+        "bugs": [
+            5
+        ]
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 4,
+    "fields": {
+        "expert": null,
+        "author": 6,
+        "duplicate": null,
+        "title": "Reporting this issue",
+        "description": "It is not working",
+        "status": "open",
+        "attachment": "",
+        "bugs": []
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 5,
+    "fields": {
+        "expert": 4,
+        "author": 6,
+        "duplicate": 2,
+        "title": "Reporting another problem",
+        "description": "It is not working",
+        "status": "duplicate",
+        "attachment": "",
+        "bugs": []
+    }
+}
+]
