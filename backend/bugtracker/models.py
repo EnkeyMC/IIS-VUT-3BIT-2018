@@ -45,7 +45,7 @@ class Patch(models.Model):
     date_applied = models.DateField(null=True)
 
     def __str__(self):
-        return '#' + self.id
+        return '#' + str(self.id)
 
 
 class Bug(models.Model):
