@@ -395,6 +395,7 @@
         "title": "Reporting these multiple issues",
         "description": "They annoy me",
         "status": "open",
+        "created": "2016-04-15",
         "attachment": "",
         "bugs": [
             2,
@@ -413,6 +414,7 @@
         "title": "Page not found problem",
         "description": "It is not working",
         "status": "closed",
+        "created": "2017-05-11",
         "attachment": "",
         "bugs": [
             1,
@@ -429,7 +431,8 @@
         "duplicate": null,
         "title": "Reporting problem with ...",
         "description": "It is not working",
-        "status": "closed",
+        "status": "open",
+        "created": "2018-05-12",
         "attachment": "",
         "bugs": [
             5
@@ -446,6 +449,7 @@
         "title": "Reporting this issue",
         "description": "It is not working",
         "status": "open",
+        "created": "2018-09-17",
         "attachment": "",
         "bugs": []
     }
@@ -460,6 +464,7 @@
         "title": "Reporting another problem",
         "description": "It is not working",
         "status": "duplicate",
+        "created": "2017-10-15",
         "attachment": "",
         "bugs": []
     }
