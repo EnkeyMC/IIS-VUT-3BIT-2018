@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bugtracker.apps.BugtrackerConfig'
+    'bugtracker.apps.BugtrackerConfig',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +121,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+
+    # TODO User permissions
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+
+    'ORDERING_PARAM': 'order',
+}
