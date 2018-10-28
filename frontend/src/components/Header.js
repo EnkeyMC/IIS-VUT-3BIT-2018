@@ -12,6 +12,7 @@ import {
     NavLink, } from 'reactstrap';
 
 import { toggleNavbar } from '../actions';
+import {Link} from "react-router-dom";
 
 export default class Header extends Component {
     render () {
@@ -32,7 +33,7 @@ export default class Header extends Component {
                                 <SearchBar />
                             </NavItem>
                             <NavItem>
-                                <NavLink className="text-dark">Log In</NavLink>
+                                <NavLink tag={Link} to="/login" className="text-dark">Log In</NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>
