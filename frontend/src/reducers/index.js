@@ -1,4 +1,4 @@
-import { TOGGLE_NAVBAR, GET_DATA } from '../actions'
+import {TOGGLE_NAVBAR, GET_DATA, SUBMIT_FORM, HANDLE_CHANGE} from '../actions'
 import { copyMerge } from '../utils';
 
 const REQ = '_REQ';
@@ -9,7 +9,8 @@ const initialState = {
     navbarIsOpen: false,
     ajaxInProgress: 0,
     data: [],
-    error: null
+    error: null,
+    forms: {}
 };
 
 export function zeroBugsApp(state = initialState, action) {
@@ -32,6 +33,31 @@ function reduce(state, action) {
         case GET_DATA+FAIL:
             state.error = action.error.statusText;
             return state;
+        case SUBMIT_FORM:
+        case HANDLE_CHANGE:
+            return reduceForms(state, action);
+        default:
+            return state;
+    }
+}
+
+function reduceForms(state, action) {
+    switch (action.type) {
+        case SUBMIT_FORM: {
+            return state;
+        }
+
+        case HANDLE_CHANGE: {
+            const fields = state.forms["fields"] ? state.forms.fields : {};
+            return {
+                forms: copyMerge(state.forms, {
+                    fields: copyMerge(fields, {
+                        [action.field]: action.value
+                    })
+                })
+            }
+        }
+
         default:
             return state;
     }
