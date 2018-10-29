@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-// import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 
 export default class TicketList extends Component {
     render() {
         return (
-            <div className="bug-list border-right">
+            <div className="ticket-list border-right content-height position-fixed">
                 <div className="list-group">
                     <Ticket title="Title 1" user="Jan Novák" time="1.1.1992" ticketState="state-open" />
                     <Ticket title="Title 2" user="Roman Left" time="12.8.2002" ticketState="state-close" />

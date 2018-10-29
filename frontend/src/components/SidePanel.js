@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default class SidePanel extends Component {
     render() {
         return (
-            <nav className="float-left side-panel">
+            <nav className="position-fixed side-panel content-height">
                 <div className="w100 mt-5">
                     <div className="icon-box text-center">
                         <FontAwesomeIcon icon ="check-circle"/>
