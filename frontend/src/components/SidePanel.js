@@ -7,27 +7,21 @@ export default class SidePanel extends Component {
         return (
             <nav className="float-left side-panel">
                 <div className="w100 mt-5">
-                    <div className="icon-box text-center pt-2">
-                        <FontAwesomeIcon icon ="check-circle" />
+                    <div className="icon-box text-center">
+                        <FontAwesomeIcon icon ="check-circle"/>
                     </div>
-                    <div className="icon-text">
-                        Done
-                    </div>
+                    {/*<div className="icon-text">*/}
+                        {/*Done*/}
+                    {/*</div>*/}
                 </div>
                 <div className="w100">
-                    <div className="icon-box text-center pt-2">
+                    <div className="icon-box text-center">
                         <FontAwesomeIcon icon ="box-open" />
                     </div>
-                    <div className="icon-text">
-                        Solving
-                    </div>
                 </div>
                 <div className="w100">
-                    <div className="icon-box text-center pt-2">
+                    <div className="icon-box text-center">
                         <FontAwesomeIcon icon ="user" />
-                        <div className="icon-text">
-                            My
-                        </div>
                     </div>
                 </div>
             </nav>
