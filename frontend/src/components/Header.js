@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SearchBar from './SearchBar';
 import { connect } from 'react-redux';
 import Logo from "../images/logo.png";
 import {
@@ -17,8 +16,7 @@ import {Link} from "react-router-dom";
 export default class Header extends Component {
     render () {
         return (
-            <div className="border-bottom">
-                <Navbar color="light" light expand="md">
+                <Navbar color="light" light expand="md" className="border-bottom position-absolute w-100 header-height">
                     <NavbarBrand href="/">
                         <img className="mr-2 logo align-middle" src={Logo} alt="Logo"/>
                         <span className="h2 align-middle">ZeroBugs</span>
@@ -38,7 +36,6 @@ export default class Header extends Component {
                         </Nav>
                     </Collapse>
                 </Navbar>
-            </div>
         )
     }
 }
@@ -51,3 +48,18 @@ Header = connect(
         return { onToggleNavbar: () => dispatch(toggleNavbar()) }
     }
 )(Header);
+
+class SearchBar extends Component {
+    // constructor(props) {
+    //     super(props);
+    //
+    //     this.state = { term: '' };
+    // }
+    render() {
+        return (
+            <div className="search-bar">
+                <input className="mr-5 mt-2" />
+            </div>
+        );
+    }
+}
