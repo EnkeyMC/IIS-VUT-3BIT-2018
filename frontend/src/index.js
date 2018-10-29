@@ -13,7 +13,7 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 
-const client = axios.create({baseURL: "https://www.mocky.io/v2"});
+const client = axios.create();
 
 const store = createStore(zeroBugsApp, applyMiddleware(axiosMiddleware(client)));
 
