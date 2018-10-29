@@ -8,7 +8,7 @@ function Tmp(props) {
             <button onClick={props.onLoadData}>Load data</button>
             {props.ajaxInProgress > 0 ? <p>Loading...</p> : null}
             <ul>
-                {props.data.map((item) => <li key={item.id}>{item.name}</li>)}
+                {props.data.map((item) => <li key={item.id}>{item.title}</li>)}
             </ul>
         </div>
     );

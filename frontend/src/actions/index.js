@@ -11,7 +11,7 @@ export function loadData() {
         type: GET_DATA,
         payload: {
             request: {
-                url: '/5bd3781b3400007100cfe16f?mocky-delay=1000ms'
+                url: '/api/tickets'
             }
         }
     };
