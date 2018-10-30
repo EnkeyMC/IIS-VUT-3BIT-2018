@@ -27,7 +27,7 @@ export class Form extends React.Component {
     render () {
         return (
             <BsForm onSubmit={this.onSubmit}>
-                <FormContext.Provider value={{onChange: this.onChange, id: this.props.id}}>
+                <FormContext.Provider value={{onChange: this.onChange, id: this.props.id, form: this.props.form}}>
                     {this.props.children}
                 </FormContext.Provider>
             </BsForm>
@@ -37,7 +37,7 @@ export class Form extends React.Component {
 
 Form = connect(
     (state, ownProps) => {
-        return { forms: state.forms[ownProps.id] }
+        return { form: state.forms[ownProps.id] }
     },
     dispatch => {
         return {
@@ -51,7 +51,11 @@ export class Input extends React.Component {
     render() {
         return (
             <FormContext.Consumer>
-                {context => <BsInput {...this.props} onChange={context.onChange} /> }
+                {context => <BsInput
+                    {...this.props}
+                    onChange={context.onChange}
+                    value={context.form ? context.form.fields[this.props.name] : ""}
+                /> }
             </FormContext.Consumer>
         );
     }

@@ -1,30 +1,44 @@
 import React, { Component } from 'react';
+import {connect} from "react-redux";
+import {getTickets} from "../actions";
 
 export default class TicketList extends Component {
+    componentDidMount() {
+        this.props.getTickets();
+    }
+
     render() {
         return (
             <div className="ticket-list border-right content-height position-fixed">
                 <div className="list-group">
-                    <Ticket title="Title 1" user="Jan Novák" time="1.1.1992" ticketState="state-open" />
-                    <Ticket title="Title 2" user="Roman Left" time="12.8.2002" ticketState="state-close" />
-                    <Ticket title="Title 3" user="Marek Haz" time="8.6.1989" ticketState="state-open" />
-                    <Ticket title="Title 4" user="Alena Black" time="7.12.1989" ticketState="state-open" />
-                    <Ticket title="Title 5" user="Katerine Smith" time="9.6.1989" ticketState="state-close" />
-                    <Ticket title="Title 6" user="Marek Haz" time="10.10.2009" ticketState="state-close" />
+                    {this.props.tickets.data.map(ticket => {
+                        return <Ticket key={ticket.id} ticket={ticket} />;
+                    })}
                 </div>
             </div>
         );
     }
 }
 
+TicketList = connect(
+    state => {
+        return { tickets: state.ticketView.tickets }
+    },
+    dispatch => {
+        return {
+            getTickets: () => dispatch(getTickets())
+        }
+    }
+)(TicketList);
+
 function Ticket(props) {
     return (
-        <a href="#" className={"list-group-item list-group-item-action flex-column align-items-start " + props.ticketState}>
+        <a href="#" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.ticket.status}>
             <div className="d-flex w-100 justify-content-between">
-                <h6 className="mb-1">{props.title}</h6>
+                <h6 className="mb-1">{props.ticket.title}</h6>
             </div>
-            <small className="float-left">{props.user}</small>
-            <small className="float-right">{props.time}</small>
+            <small className="float-left">No user yet</small>
+            <small className="float-right">{props.ticket.created}</small>
         </a>
     );
 }

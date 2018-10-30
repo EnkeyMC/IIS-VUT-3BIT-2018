@@ -1,61 +1,87 @@
-import {TOGGLE_NAVBAR, GET_DATA, SUBMIT_FORM, HANDLE_CHANGE} from '../actions'
+import {TOGGLE_NAVBAR, GET_TICKETS, SUBMIT_FORM, HANDLE_CHANGE} from '../actions'
 import { copyMerge } from '../utils';
+import {combineReducers} from "redux";
 
-const REQ = '_REQ';
+// const REQ = '_REQ';
 const SUCC = '_SUCCESS';
 const FAIL = '_FAIL';
 
-const initialState = {
+const initialGlobalState = {
     navbarIsOpen: false,
-    ajaxInProgress: 0,
-    data: [],
-    error: null,
-    forms: {}
 };
 
-export function zeroBugsApp(state = initialState, action) {
-    console.log(action.type);
-    if (action.type.endsWith(REQ))
-        return reduce(copyMerge(state, {ajaxInProgress: state.ajaxInProgress + 1}), action);
-    else if (action.type.endsWith(SUCC) || action.type.endsWith(FAIL))
-        return reduce(copyMerge(state, {ajaxInProgress: state.ajaxInProgress - 1}), action);
-    return reduce(copyMerge(state), action);
-}
+const initialTicketsViewState = {
+    tickets: {
+        loading: false,
+        error: null,
+        data: []
+    }
+};
 
-function reduce(state, action) {
+export const zeroBugsApp = combineReducers({
+    global: reduceGlobal,
+    ticketView: reduceTicketView,
+    forms: reduceForms,
+});
+
+function reduceGlobal(state = initialGlobalState, action) {
+    console.log(action);
     switch (action.type) {
         case TOGGLE_NAVBAR:
-            state.navbarIsOpen = !state.navbarIsOpen;
-            return state;
-        case GET_DATA+SUCC:console.log(action.payload);
-            state.data = action.payload.data.results;
-            return state;
-        case GET_DATA+FAIL:
-            state.error = action.error.statusText;
-            return state;
-        case SUBMIT_FORM:
-        case HANDLE_CHANGE:
-            return reduceForms(state, action);
+            return {navbarIsOpen: !state.navbarIsOpen};
         default:
             return state;
     }
 }
 
-function reduceForms(state, action) {
+function reduceTicketView(state = initialTicketsViewState, action) {
+    switch (action.type) {
+        case GET_TICKETS: {
+            const tickets = copyMerge(state.tickets);
+            tickets.loading = true;
+            return {
+                tickets: tickets
+            }
+        }
+
+        case GET_TICKETS+SUCC: {
+            const tickets = copyMerge(state.tickets);
+            tickets.data = action.payload.data.results;
+            tickets.loading = false;
+            return {
+                tickets: tickets
+            }
+        }
+
+        case GET_TICKETS+FAIL: {
+            const tickets = copyMerge(state.tickets);
+            tickets.loading = false;
+            tickets.error = "Error loading tickets";
+            return {
+                tickets: tickets
+            };
+        }
+        default:
+            return state;
+    }
+}
+
+function reduceForms(state = {}, action) {
     switch (action.type) {
         case SUBMIT_FORM: {
             return state;
         }
 
         case HANDLE_CHANGE: {
-            const fields = state.forms["fields"] ? state.forms.fields : {};
-            return {
-                forms: copyMerge(state.forms, {
+            const form = state[action.formId] ? state[action.formId] : {fields: {}};
+            const fields = form.fields;
+            return copyMerge(state, {
+                [action.formId]: {
                     fields: copyMerge(fields, {
                         [action.field]: action.value
                     })
-                })
-            }
+                }
+            })
         }
 
         default:
