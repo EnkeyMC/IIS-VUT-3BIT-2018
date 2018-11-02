@@ -19,6 +19,11 @@ code {
   monospace;
 }
 
+.no-margin {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .pt-header {
   padding-top: 70px;
 }
@@ -38,6 +43,7 @@ code {
 
 .navbar {
   z-index: 500;
+  padding-left: 10px !important;
 }
 
 /* Side panel css */
