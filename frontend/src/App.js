@@ -8,9 +8,11 @@ import LoginView from "./views/LoginView";
 import {
     faCheckCircle,
     faBoxOpen,
-    faUser
+    faUser,
+    faAngleLeft,
+    faAngleRight
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faCheckCircle, faBoxOpen, faUser);
+library.add(faCheckCircle, faBoxOpen, faUser, faAngleRight, faAngleLeft);
 
 class App extends Component {
   render() {

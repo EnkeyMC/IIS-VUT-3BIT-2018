@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
-import {Col, Container, Row, Media} from "reactstrap";
+import {
+    Col, Container, Row,
+    Media,
+    Card, Button, CardTitle, CardText
+} from "reactstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 export default class TicketList extends Component {
@@ -26,8 +31,12 @@ export default class TicketList extends Component {
                         </Col>
                         <Col md="4" xs="12">
                             <Container>
-                                <Row>adf</Row>
-                                <Row>fdf</Row>
+                                <Row className="pt-3 justify-content-end mb-4">
+                                    <Numbering/>
+                                </Row>
+                                <Row>
+                                    <Bugs/>
+                                </Row>
                             </Container>
                         </Col>
                     </Row>
@@ -39,7 +48,7 @@ export default class TicketList extends Component {
 
 function Detail(props) {
     return (
-        <Container className="no-margin mt-md-4">
+        <Container className="no-margin mt-md-4 border-bottom pb-3">
             <Media heading>Details</Media>
             <Row>
                 <Col md="6" xs="12">
@@ -57,7 +66,7 @@ function Detail(props) {
 
 function Description(props) {
     return (
-        <Media>
+        <Media className="border-bottom pb-3">
             <Media body>
                 <Media heading>Description</Media>
                 Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
@@ -78,3 +87,35 @@ function UploadFiles(props) {
       </div>
     );
 }
+
+function Numbering(props) {
+    return (
+        <div className="font-size">
+            <span>1 of ....</span>
+            <a href="#" className="pl-3 pr-3"><FontAwesomeIcon icon ="angle-left" size={70}/></a>
+            <a href="#"><FontAwesomeIcon icon="angle-right"/></a>
+        </div>
+    );
+}
+
+const Bugs = (props) => {
+    return (
+        <div>
+            <Card body outline color="danger" className="mb-2">
+                <CardTitle>Insert bugs of ticket</CardTitle>
+                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                <Button color="secondary">Probably not needed</Button>
+            </Card>
+            <Card body outline color="danger" className="mb-2">
+                <CardTitle>Insert bugs of ticket</CardTitle>
+                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                <Button color="secondary">Probably not needed</Button>
+            </Card>
+            <Card body outline color="danger" className="mb-2">
+                <CardTitle>Insert bugs of ticket</CardTitle>
+                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                <Button color="secondary">Probably not needed</Button>
+            </Card>
+        </div>
+    );
+};

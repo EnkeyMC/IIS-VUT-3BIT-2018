@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import {getTickets} from "../actions";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default class TicketList extends Component {
     componentDidMount() {
