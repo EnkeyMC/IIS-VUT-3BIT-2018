@@ -1,4 +1,4 @@
-import {TOGGLE_NAVBAR, GET_TICKETS, SUBMIT_FORM, HANDLE_CHANGE} from '../actions'
+import {TOGGLE_NAVBAR, GET_TICKETS, SUBMIT_FORM} from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
 
@@ -70,18 +70,6 @@ function reduceForms(state = {}, action) {
     switch (action.type) {
         case SUBMIT_FORM: {
             return state;
-        }
-
-        case HANDLE_CHANGE: {
-            const form = state[action.formId] ? state[action.formId] : {fields: {}};
-            const fields = form.fields;
-            return copyMerge(state, {
-                [action.formId]: {
-                    fields: copyMerge(fields, {
-                        [action.field]: action.value
-                    })
-                }
-            })
         }
 
         default:

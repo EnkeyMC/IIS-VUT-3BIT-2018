@@ -27,11 +27,11 @@ export default class RegisterView extends React.Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="password">Password</Label>
-                                    <Input name="password" id="password" />
+                                    <Input name="password" id="password" type="password" />
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="password-verify">Verify password</Label>
-                                    <Input name="password-verify" id="password-verify" />
+                                    <Input name="password-verify" id="password-verify" type="password" />
                                 </FormGroup>
                                 <Button className="mt-3" color="primary">Register</Button>
                                 <p className="mt-4">Already have an account? <Link to="/login">Login here!</Link></p>

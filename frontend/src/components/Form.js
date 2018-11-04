@@ -1,7 +1,8 @@
 import React from "react";
 import { Form as BsForm, Input as BsInput } from 'reactstrap';
 import {connect} from "react-redux";
-import {handleChange, submitForm} from "../actions";
+import {submitForm} from "../actions";
+import {copyMerge} from "../utils";
 
 const FormContext = React.createContext();
 
@@ -11,6 +12,32 @@ export class Form extends React.Component {
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.registerInput = this.registerInput.bind(this);
+
+        this.state = {
+            fields: {}
+        };
+
+        this._isMounted = false;
+        this._fieldsToRegister = [];
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+
+        let newFields = {};
+        for (const field in this._fieldsToRegister) {
+            newFields[this._fieldsToRegister[field].name] = {
+                value: this._fieldsToRegister[field].defaultValue
+            }
+        }
+
+        this.setState({
+            fields: copyMerge(
+                this.state.fields,
+                newFields
+            )
+        });
     }
 
     onSubmit(event) {
@@ -20,14 +47,31 @@ export class Form extends React.Component {
     }
 
     onChange(event) {
-        if (event)
-            this.props.onChange(this.props.id, event);
+        const name = event.target.name;
+        this.setState({
+            fields: copyMerge(this.state.fields, {
+                [name]: copyMerge(
+                    this.state.fields[name],
+                    {value: event.target.value}
+                )
+            })
+        });
+    }
+
+    registerInput(name, defaultValue) {
+        if (this._isMounted) {
+            this.setState({
+                fields: copyMerge(this.state.fields, {[name]: {value: defaultValue}})
+            });
+        } else {
+            this._fieldsToRegister = this._fieldsToRegister.concat([{name: name, defaultValue: defaultValue}]);
+        }
     }
 
     render () {
         return (
             <BsForm onSubmit={this.onSubmit}>
-                <FormContext.Provider value={{onChange: this.onChange, id: this.props.id, form: this.props.form}}>
+                <FormContext.Provider value={{onChange: this.onChange, registerInput: this.registerInput, state: this.state}}>
                     {this.props.children}
                 </FormContext.Provider>
             </BsForm>
@@ -35,28 +79,51 @@ export class Form extends React.Component {
     }
 }
 
+const withForm = WrappedComponent => {
+    class withForm extends React.Component {
+        render() {
+            return (
+                <FormContext.Consumer>
+                    {context => <WrappedComponent {...this.props} form={context} />}
+                </FormContext.Consumer>
+            );
+        }
+    }
+    return withForm;
+};
+
 Form = connect(
     (state, ownProps) => {
-        return { form: state.forms[ownProps.id] }
+        return {}
     },
     dispatch => {
         return {
-            onSubmit: () => dispatch(submitForm()),
-            onChange: (id, event) => dispatch(handleChange(id, event))
+            onSubmit: () => dispatch(submitForm())
         }
     }
 )(Form);
 
 export class Input extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+
+    componentDidMount() {
+        this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : "");
+        if (this.props.onMount)
+            this.props.onMount(this.props);
+    }
+
     render() {
         return (
-            <FormContext.Consumer>
-                {context => <BsInput
+                <BsInput
                     {...this.props}
-                    onChange={context.onChange}
-                    value={context.form ? context.form.fields[this.props.name] : ""}
-                /> }
-            </FormContext.Consumer>
+                    onChange={this.props.form.onChange}
+                    value={this.props.form.state[this.props.name]}
+                />
         );
     }
 }
+
+Input = withForm(Input);

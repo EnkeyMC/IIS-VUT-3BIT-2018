@@ -37,7 +37,7 @@ class LoginForm extends React.Component {
                 </FormGroup>
                 <FormGroup>
                     <Label for="password">Password</Label>
-                    <Input name="password" id="password" />
+                    {<Input name="password" id="password" type="password" />}
                 </FormGroup>
                 <FormGroup>
                     <Button type="submit" color="primary" className="w-100 mt-4">Login</Button>
