@@ -12,11 +12,16 @@ export default class TicketList extends Component {
         return (
             <div className="ticket-info content-height">
                 <Container>
+                    <Row className="mb-3">
+                        <Col className="pt-1 text-right">
+                            <Numbering/>
+                        </Col>
+                    </Row>
                     <Row>
-                        <Col md="8" xs="12">
+                        <Col lg="8" xs="12" md="12">
                             <Container>
-                                <Row className="pt-3">
-                                    <h1 className="display-4">Name of ticket</h1>
+                                <Row>
+                                    <h1>Name of ticket</h1>
                                 </Row>
                                 <Row className="pt-3">
                                     <Detail/>
@@ -29,12 +34,10 @@ export default class TicketList extends Component {
                                 </Row>
                             </Container>
                         </Col>
-                        <Col md="4" xs="12">
+                        <Col lg="4" xs="12" md="12">
                             <Container>
-                                <Row className="pt-3 justify-content-end mb-4">
-                                    <Numbering/>
-                                </Row>
-                                <Row>
+                                <Row className="mt-1">
+                                    <h4>Related bugs:</h4>
                                     <Bugs/>
                                 </Row>
                             </Container>
@@ -92,7 +95,7 @@ function Numbering(props) {
     return (
         <div className="font-size">
             <span>1 of ....</span>
-            <a href="#" className="pl-3 pr-3"><FontAwesomeIcon icon ="angle-left" size={70}/></a>
+            <a href="#" className="pl-3 pr-3"><FontAwesomeIcon icon ="angle-left"/></a>
             <a href="#"><FontAwesomeIcon icon="angle-right"/></a>
         </div>
     );
