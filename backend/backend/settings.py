@@ -25,7 +25,7 @@ SECRET_KEY = 'yzhty&#tvaaat#p^%$(af5lgx972%vk9(umy*=4#513d^$^d8o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['rainbowshaggy.com']
 
 
 # Application definition
