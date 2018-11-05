@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {ErrorBoundary} from './utils';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import {Route, Switch} from "react-router";
+import {Redirect, Route, Switch} from "react-router";
 import RegisterView from "./views/RegisterView";
 import TicketView from "./views/TicketView";
 import LoginView from "./views/LoginView";
@@ -19,7 +19,8 @@ class App extends Component {
     return (
       <ErrorBoundary>
           <Switch>
-              <Route exact path="/" component={TicketView} />
+              <Redirect exact from="/" to="/ticket" />
+              <Route path="/ticket" component={TicketView} />
               <Route path="/login" component={LoginView} />
               <Route path="/register" component={RegisterView} />
           </Switch>

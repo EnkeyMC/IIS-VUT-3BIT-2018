@@ -7,7 +7,7 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
-export default class TicketList extends Component {
+export default class TicketInfo extends Component {
     render() {
         return (
             <div className="ticket-info content-height">

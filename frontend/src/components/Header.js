@@ -42,7 +42,7 @@ export default class Header extends Component {
 
 Header = connect(
     state => {
-        return { isOpen: state.navbarIsOpen }
+        return { isOpen: state.global.navbarIsOpen }
     },
     dispatch => {
         return { onToggleNavbar: () => dispatch(toggleNavbar()) }
