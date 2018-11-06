@@ -7,6 +7,7 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {connect} from "react-redux";
 import {getTicket} from '../actions';
+import {Link} from "react-router-dom";
 
 
 export default class TicketInfo extends Component {
@@ -46,7 +47,7 @@ export default class TicketInfo extends Component {
                                     <h1>{ticket.title}</h1>
                                 </Row>
                                 <Row className="pt-3">
-                                    <Detail/>
+                                    <Detail ticket={ticket} />
                                 </Row>
                                 <Row className="pt-3">
                                     <Description>{ticket.description}</Description>
@@ -92,12 +93,12 @@ function Detail(props) {
             <Media heading>Details</Media>
             <Row>
                 <Col md="6" xs="12">
-                    <Row className="no-margin">Relevance:</Row>
-                    <Row className="no-margin">Vulnerability:</Row>
+                    <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;{props.ticket.author}</Row>
+                    <Row className="no-margin"><span className="text-muted">Vulnerability:</span>&nbsp;</Row>
                 </Col>
                 <Col md="6" xs="12">
-                    <Row className="no-margin">State:</Row>
-                    <Row className="no-margin">Date:</Row>
+                    <Row className="no-margin"><span className="text-muted">State:</span>&nbsp;{props.ticket.status}&nbsp;{props.ticket.status === 'duplicate' ? <Link to={"/ticket/"+props.ticket.duplicate} >#{props.ticket.duplicate}</Link> : null}</Row>
+                    <Row className="no-margin"><span className="text-muted">Date:</span>&nbsp;{props.ticket.created}</Row>
                 </Col>
             </Row>
         </Container>
@@ -107,7 +108,7 @@ function Detail(props) {
 function Description(props) {
     return (
         <Media className="border-bottom pb-3">
-            <Media body>
+            <Media body className="text-justify">
                 <Media heading>Description</Media>
                 {props.children}
             </Media>
