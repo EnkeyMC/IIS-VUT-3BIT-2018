@@ -1,5 +1,6 @@
 export const TOGGLE_NAVBAR = 'TOGGLE_NAVBAR';
 export const GET_TICKETS = 'GET_TICKETS_REQ';
+export const GET_TICKET = 'GET_TICKET_REQ';
 export const SUBMIT_FORM = 'SUBMIT_FORM';
 
 export function toggleNavbar() {
@@ -15,6 +16,18 @@ export function getTickets() {
             }
         }
     };
+}
+
+export function getTicekt(ticketId) {
+    return {
+        type: GET_TICKET,
+        id: ticketId,
+        payload: {
+            request: {
+                url: '/api/tickets/'+ticketId
+            }
+        }
+    }
 }
 
 export function submitForm(id, event) {

@@ -5,6 +5,7 @@ import {
     Card, Button, CardTitle, CardText
 } from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {connect} from "react-redux";
 
 
 export default class TicketInfo extends Component {
@@ -48,6 +49,16 @@ export default class TicketInfo extends Component {
         );
     }
 }
+
+TicketInfo = connect(
+    (state, ownProps) => {
+        return {
+            ticket: state.ticketView.ticketInfo[ownProps.match.params.ticketId],
+            loading: state.ticketView.ticketInfo.loading === ownProps.match.params.ticketId,
+
+        }
+    }
+)(TicketInfo);
 
 function Detail(props) {
     return (

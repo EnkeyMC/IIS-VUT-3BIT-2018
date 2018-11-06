@@ -1,14 +1,20 @@
 import React from "react";
 import Header from '../components/Header';
-import Main from '../components/Main';
+import SidePanel from "../components/SidePanel";
+import TicketList from "../components/TicketList";
+import TicketInfo from "../components/TicketInfo";
+import {Route} from "react-router";
 
 export default class TicketView extends React.Component {
     render () {
-        console.log(this.props.match);
         return (
             <div>
                 <Header />
-                <Main />
+                <div className="pt-header position-relative">
+                    <SidePanel/>
+                    <TicketList/>
+                    <Route path={this.props.match.path+'/:ticketId'} component={TicketInfo} />
+                </div>
             </div>
         )
     }
