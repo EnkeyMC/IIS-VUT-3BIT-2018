@@ -10,10 +10,23 @@ class Language(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    USER = 'user'
+    PROGRAMMER = 'programmer'
+    SUPERVISOR = 'supervisor'
+    USER_TYPES = (
+        (USER, 'regular user'),
+        (PROGRAMMER, 'programmer'),
+        (SUPERVISOR, 'supervisor'),
+    )
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True
+    )
     languages = models.ManyToManyField(Language)
     birth_date = models.DateField(null=True)
-    position = models.CharField(max_length=50, default='')
+    user_type = models.CharField(
+        max_length=20, choices=USER_TYPES, default=USER
+    )
 
     def __str__(self):
         return self.user.username
@@ -50,7 +63,8 @@ class Patch(models.Model):
 
 class Bug(models.Model):
     severity = models.ForeignKey(
-            Severity, on_delete=models.SET_NULL, null=True)
+        Severity, on_delete=models.SET_NULL, null=True
+    )
     module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
     patch = models.ForeignKey(Patch, on_delete=models.SET_NULL, null=True)
     vulnerability = models.CharField(max_length=50)
@@ -62,14 +76,27 @@ class Bug(models.Model):
 
 
 class Ticket(models.Model):
-    expert = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
-                               related_name='tickets_under_supervision')
+    STATUS_OPEN = 'open'
+    STATUS_CLOSED = 'closed'
+    STATUS_FEEDBACK = 'feedback'
+    STATUS_CHOICES = (
+        (STATUS_OPEN, 'open'),
+        (STATUS_CLOSED, 'closed'),
+        (STATUS_FEEDBACK, 'feedback'),
+    )
+
+    expert = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True,
+        related_name='tickets_assigned'
+    )
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     bugs = models.ManyToManyField(Bug)
     duplicate = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    status = models.CharField(max_length=50)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=STATUS_OPEN
+    )
     created = models.DateField(auto_now_add=True)
     attachment = models.FileField()
 

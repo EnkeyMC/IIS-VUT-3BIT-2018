@@ -140,7 +140,7 @@
     "pk": 2,
     "fields": {
         "birth_date": "1996-06-16",
-        "position": "administrator",
+        "user_type": "supervisor",
         "languages": [
             1,
             2,
@@ -154,7 +154,7 @@
     "pk": 3,
     "fields": {
         "birth_date": "1997-07-12",
-        "position": "programmer",
+        "user_type": "programmer",
         "languages": [
             2,
             3,
@@ -167,7 +167,7 @@
     "pk": 4,
     "fields": {
         "birth_date": "1997-01-07",
-        "position": "programmer",
+        "user_type": "programmer",
         "languages": [
             1
         ]
@@ -178,7 +178,7 @@
     "pk": 5,
     "fields": {
         "birth_date": "1992-01-22",
-        "position": "regular user",
+        "user_type": "user",
         "languages": [
             1
         ]
@@ -189,7 +189,7 @@
     "pk": 6,
     "fields": {
         "birth_date": "1984-09-29",
-        "position": "regular user",
+        "user_type": "user",
         "languages": [
             3
         ]
