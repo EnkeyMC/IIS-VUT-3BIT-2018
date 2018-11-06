@@ -18,7 +18,7 @@ export function getTickets() {
     };
 }
 
-export function getTicekt(ticketId) {
+export function getTicket(ticketId) {
     return {
         type: GET_TICKET,
         id: ticketId,

@@ -15,7 +15,10 @@ import axiosMiddleware from 'redux-axios-middleware';
 
 const client = axios.create();
 
-const store = createStore(zeroBugsApp, applyMiddleware(axiosMiddleware(client)));
+const store = createStore(
+    zeroBugsApp,
+    applyMiddleware(axiosMiddleware(client)),
+);
 
 ReactDOM.render((
     <BrowserRouter>

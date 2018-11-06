@@ -16,7 +16,7 @@ import {Link} from "react-router-dom";
 export default class Header extends Component {
     render () {
         return (
-                <Navbar color="light" light expand="md" className="border-bottom position-absolute w-100 header-height">
+                <Navbar color="light" light expand="md" className="border-bottom position-fixed w-100 header-height">
                     <NavbarBrand href="/">
                         <img className="mr-2 logo align-middle" src={Logo} alt="Logo"/>
                         <span className="h2 align-middle">ZeroBugs</span>

@@ -18,19 +18,27 @@ const initialTicketsViewState = {
     },
     ticketInfo: {
         loading: false,
-        error: null,
+        error: false,
         data: {}
     }
 };
 
-export const zeroBugsApp = combineReducers({
+export const zeroBugsApp = (state, action) => {
+    console.log(state);
+    console.log(action);
+
+    const newState = rootReducer(state, action);
+    console.log(newState);
+    return newState;
+};
+
+const rootReducer = combineReducers({
     global: reduceGlobal,
     ticketView: reduceTicketView,
     forms: reduceForms,
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
-    console.log(action);
     switch (action.type) {
         case TOGGLE_NAVBAR:
             return {navbarIsOpen: !state.navbarIsOpen};
@@ -75,18 +83,19 @@ function reduceGetTickets(state, action) {
 function reduceGetTicket(state, action) {
     switch (action.type) {
         case GET_TICKET:
-            return {loading: action.id};
+            return copyMerge(state, {loading: action.id, error: false});
         case GET_TICKET+SUCC: {
             const id = action.payload.data.id;
-            return {
+            return copyMerge(state, {
                 loading: false,
+                error: false,
                 data: copyMerge(state.data, {
                     [id]: action.payload.data
                 })
-            };
+            });
         }
         case GET_TICKET+FAIL:
-            return {loading: false, error: "Error loading ticket"};
+            return copyMerge(state, {loading: false, error: action.meta.previousAction.id});
         default:
             return state;
     }

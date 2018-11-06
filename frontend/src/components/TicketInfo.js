@@ -6,10 +6,31 @@ import {
 } from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {connect} from "react-redux";
+import {getTicket} from '../actions';
 
 
 export default class TicketInfo extends Component {
+    constructor(props) {
+        super(props);
+
+        this._lastTicket = this.props.match.params.ticketId;
+    }
+
+    componentDidMount() {
+        this.props.getTicket(this.props.match.params.ticketId);
+    }
+
+    componentDidUpdate() {
+        if (this._lastTicket !== this.props.match.params.ticketId) {
+            this._lastTicket = this.props.match.params.ticketId;
+            this.props.getTicket(this.props.match.params.ticketId);
+        }
+    }
+
     render() {
+        const ticket = this.props.ticket;
+        if (!ticket)
+            return null;
         return (
             <div className="ticket-info content-height">
                 <Container>
@@ -22,13 +43,13 @@ export default class TicketInfo extends Component {
                         <Col lg="8" xs="12" md="12">
                             <Container>
                                 <Row>
-                                    <h1>Name of ticket</h1>
+                                    <h1>{ticket.title}</h1>
                                 </Row>
                                 <Row className="pt-3">
                                     <Detail/>
                                 </Row>
                                 <Row className="pt-3">
-                                    <Description/>
+                                    <Description>{ticket.description}</Description>
                                 </Row>
                                 <Row className="pt-3">
                                     <UploadFiles/>
@@ -53,9 +74,14 @@ export default class TicketInfo extends Component {
 TicketInfo = connect(
     (state, ownProps) => {
         return {
-            ticket: state.ticketView.ticketInfo[ownProps.match.params.ticketId],
+            ticket: state.ticketView.ticketInfo.data[ownProps.match.params.ticketId],
             loading: state.ticketView.ticketInfo.loading === ownProps.match.params.ticketId,
-
+            error: state.ticketView.ticketInfo.error === ownProps.match.params.ticketId
+        }
+    },
+    (dispatch) => {
+        return {
+            getTicket: (ticketId) => dispatch(getTicket(ticketId))
         }
     }
 )(TicketInfo);
@@ -83,12 +109,7 @@ function Description(props) {
         <Media className="border-bottom pb-3">
             <Media body>
                 <Media heading>Description</Media>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
-                purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
-                vulputate fringilla. Donec lacinia congue felis in faucibus.
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
-                purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
-                vulputate fringilla. Donec lacinia congue felis in faucibus.
+                {props.children}
             </Media>
         </Media>
     );
