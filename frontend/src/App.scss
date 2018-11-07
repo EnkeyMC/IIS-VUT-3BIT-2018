@@ -19,6 +19,11 @@ code {
   monospace;
 }
 
+.disabled {
+  color: #6c757d;
+  pointer-events: none;
+}
+
 .no-margin {
   margin: 0 !important;
   padding: 0 !important;
@@ -101,6 +106,13 @@ code {
     &.state-duplicate {
       border-left: 5px solid darkgrey;
     }
+
+    .ticket-list-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 254px;
+    }
   }
 }
 
@@ -109,3 +121,4 @@ code {
   width: 100%;
   padding-left: 350px;
 }
+

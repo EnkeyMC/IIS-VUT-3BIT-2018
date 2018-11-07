@@ -32,12 +32,24 @@ export default class TicketInfo extends Component {
         const ticket = this.props.ticket;
         if (!ticket)
             return null;
+
+        let prevTicketId, nextTicketId, idx, ticketIdx;
+        for (idx = 0; idx < this.props.tickets.data.length; idx++) {
+            if (String(this.props.tickets.data[idx].id) === String(this.props.match.params.ticketId)) {
+                ticketIdx = idx+1;
+                break;
+            }
+            prevTicketId = this.props.tickets.data[idx].id;
+        }
+        ++idx;
+        nextTicketId = this.props.tickets.data[idx] ? this.props.tickets.data[idx].id : undefined;
+
         return (
             <div className="ticket-info content-height">
                 <Container>
                     <Row className="mb-3">
                         <Col className="pt-1 text-right">
-                            <Numbering/>
+                            <Numbering prevId={prevTicketId} nextId={nextTicketId} thisIdx={ticketIdx} size={this.props.tickets.data.length} />
                         </Col>
                     </Row>
                     <Row>
@@ -76,6 +88,7 @@ TicketInfo = connect(
     (state, ownProps) => {
         return {
             ticket: state.ticketView.ticketInfo.data[ownProps.match.params.ticketId],
+            tickets: state.ticketView.tickets,
             loading: state.ticketView.ticketInfo.loading === ownProps.match.params.ticketId,
             error: state.ticketView.ticketInfo.error === ownProps.match.params.ticketId
         }
@@ -124,12 +137,12 @@ function UploadFiles(props) {
     );
 }
 
-function Numbering(props) {
+function Numbering(props) {console.log(props);
     return (
         <div className="font-size">
-            <span>1 of ....</span>
-            <a href="#" className="pl-3 pr-3"><FontAwesomeIcon icon ="angle-left"/></a>
-            <a href="#"><FontAwesomeIcon icon="angle-right"/></a>
+            <span>{props.thisIdx} of {props.size}</span>
+            <Link to={"/ticket/"+props.prevId} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
+            <Link to={"/ticket/"+props.nextId} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
         </div>
     );
 }

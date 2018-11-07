@@ -30,7 +30,7 @@ export default class LoginView extends React.Component {
 class LoginForm extends React.Component {
     render () {
         return (
-            <Form id="login">
+            <Form id="login" url="/api/api-auth/login/">
                 <FormGroup>
                     <Label for="username">Username</Label>
                     <Input name="username" id="username" />

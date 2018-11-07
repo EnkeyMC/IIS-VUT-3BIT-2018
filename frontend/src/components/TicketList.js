@@ -37,7 +37,7 @@ function Ticket(props) {
     return (
         <Link to={"/ticket/"+props.ticket.id} className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.ticket.status}>
             <div className="d-flex w-100 justify-content-between">
-                <h6 className="mb-1">#{props.ticket.id} {props.ticket.title}</h6>
+                <h6 className="mb-1 ticket-list-title">#{props.ticket.id} {props.ticket.title}</h6>
             </div>
             <small className="float-left">{props.ticket.author}</small>
             <small className="float-right">{props.ticket.created}</small>

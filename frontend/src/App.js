@@ -9,10 +9,10 @@ import {
     faCheckCircle,
     faBoxOpen,
     faUser,
-    faAngleLeft,
-    faAngleRight
+    faAngleUp,
+    faAngleDown
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faCheckCircle, faBoxOpen, faUser, faAngleRight, faAngleLeft);
+library.add(faCheckCircle, faBoxOpen, faUser, faAngleUp, faAngleDown);
 
 class App extends Component {
   render() {

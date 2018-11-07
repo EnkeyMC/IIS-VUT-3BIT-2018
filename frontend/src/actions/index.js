@@ -1,3 +1,6 @@
+import { client } from '../index';
+
+
 export const TOGGLE_NAVBAR = 'TOGGLE_NAVBAR';
 export const GET_TICKETS = 'GET_TICKETS_REQ';
 export const GET_TICKET = 'GET_TICKET_REQ';
@@ -30,8 +33,12 @@ export function getTicket(ticketId) {
     }
 }
 
-export function submitForm(id, event) {
+export function submitForm(id, url, data) {
     return {
-        type: SUBMIT_FORM
+        type: SUBMIT_FORM,
+        id: id,
+        payload:{
+            request: client.post(url, data)
+        }
     }
 }

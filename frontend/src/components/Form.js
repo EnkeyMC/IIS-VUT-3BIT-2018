@@ -3,6 +3,7 @@ import { Form as BsForm, Input as BsInput } from 'reactstrap';
 import {connect} from "react-redux";
 import {submitForm} from "../actions";
 import {copyMerge} from "../utils";
+import axios from 'axios';
 
 const FormContext = React.createContext();
 
@@ -41,7 +42,27 @@ export class Form extends React.Component {
     }
 
     onSubmit(event) {
-        //this.props.onSubmit(this.props.id, event);
+        // var data = new FormData();
+        // data.append('submit', 'Log in');
+        //
+        // for (const name in this.state.fields) {
+        //     if (this.state.fields.hasOwnProperty(name)) {
+        //         data.append(name, this.state.fields[name].value);
+        //     }
+        // }
+
+        /*var data = {};
+        for (const name in this.state.fields) {
+            if (this.state.fields.hasOwnProperty(name)) {
+                data[name] = this.state.fields[name].value;
+            }
+        }*/
+
+        // this.props.onSubmit(this.props.id, this.props.url, data)
+
+        // axios.post(this.props.url, data).then((response) => console.log(response)).catch((err) => console.log(err));
+
+        //this.props.onSubmit(this.props.id, this.props.url, data);
 
         event.preventDefault();
     }
