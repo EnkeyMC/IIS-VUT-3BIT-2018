@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from datetime import timedelta
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'django_filters',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +128,12 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
 
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'knox.auth.TokenAuthentication',
+    ),
+
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
@@ -133,4 +142,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 
     'ORDERING_PARAM': 'order',
+}
+
+REST_KNOX = {
+    'USER_SERIALIZER': 'api.serializers.UserLoginSerializer',
+    'TOKEN_TTL': timedelta(minutes=20),
+    'AUTO_REFRESH': True,
 }

@@ -4,16 +4,30 @@ from bugtracker.models import Profile
 
 
 class IsOwnerOrStaffOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission to only allow owner or staff person to edit it
-    """
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Write permissions are only allowed to the owner of the ticket
-        # or staff person
         staff = (Profile.PROGRAMMER, Profile.SUPERVISOR)
-        user = request.user
-        return obj.author == user or user.profile.user_type in staff
+        return (obj.author == request.user or
+                request.user.profile.user_type in staff)
+
+
+class IsSelfOrReadOnly(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj == request.user
+
+
+class IsStaffOrReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        staff = (Profile.PROGRAMMER, Profile.SUPERVISOR)
+        return request.user.profile.user_type in staff
