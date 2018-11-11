@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bugtracker.apps.BugtrackerConfig',
     'api.apps.ApiConfig',
+    'authentication.apps.AuthenticationConfig',
     'rest_framework',
     'django_filters',
     'knox',
@@ -145,7 +146,7 @@ REST_FRAMEWORK = {
 }
 
 REST_KNOX = {
-    'USER_SERIALIZER': 'api.serializers.UserLoginSerializer',
+    'USER_SERIALIZER': 'authentication.serializers.UserLoginSerializer',
     'TOKEN_TTL': timedelta(minutes=20),
     'AUTO_REFRESH': True,
 }

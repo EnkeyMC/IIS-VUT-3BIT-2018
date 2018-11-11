@@ -12,7 +12,4 @@ router.register(r'tickets', api_views.TicketViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
-    path('auth/register/', api_views.RegisterView.as_view()),
-    path('auth/login/', api_views.LoginView.as_view()),
-    path('auth/logout/', knox_views.LogoutView.as_view()),
 ]
