@@ -24,6 +24,10 @@ code {
   pointer-events: none;
 }
 
+.user-name {
+  cursor: pointer;
+}
+
 .no-margin {
   margin: 0 !important;
   padding: 0 !important;
@@ -44,10 +48,6 @@ code {
 /* Header css */
 .header-height {
   min-height: 70px;
-  .logo {
-    height: 40px;
-    width: auto;
-  }
 }
 
 .navbar {

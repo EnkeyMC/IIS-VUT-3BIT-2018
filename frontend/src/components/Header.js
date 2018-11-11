@@ -8,7 +8,12 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink, } from 'reactstrap';
+    NavLink,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+} from 'reactstrap';
 
 import { toggleNavbar } from '../actions';
 import {Link} from "react-router-dom";
@@ -18,7 +23,7 @@ export default class Header extends Component {
         return (
                 <Navbar color="light" light expand="md" className="border-bottom position-fixed w-100 header-height">
                     <NavbarBrand href="/">
-                        <img className="mr-2 logo align-middle" src={Logo} alt="Logo"/>
+                        <img className="mr-2 align-middle" src={Logo} width="30px" height="40px" />
                         <span className="h2 align-middle">ZeroBugs</span>
                     </NavbarBrand>
                     <NavbarToggler onClick={this.props.onToggleNavbar} />
@@ -31,7 +36,7 @@ export default class Header extends Component {
                                 <SearchBar />
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} to="/login" className="text-dark">Log In</NavLink>
+                                <UserName />
                             </NavItem>
                         </Nav>
                     </Collapse>
@@ -62,4 +67,25 @@ class SearchBar extends Component {
             </div>
         );
     }
+}
+
+function LogIn(props) {
+    return (
+        <NavLink tag={Link} to="/login" className="text-dark">Log In</NavLink>
+    );
+}
+
+function UserName(props) {
+    return (
+        <UncontrolledDropdown setActiveFromChild>
+            <DropdownToggle tag="a" className="nav-link user-name" caret>
+                Zdenda Chovanec
+            </DropdownToggle>
+            <DropdownMenu right className="shadow">
+                <DropdownItem tag="a" href="/blah">My profile</DropdownItem>
+                <DropdownItem divider/>
+                <DropdownItem tag="a" href="/blah">Log out</DropdownItem>
+            </DropdownMenu>
+        </UncontrolledDropdown>
+    );
 }
