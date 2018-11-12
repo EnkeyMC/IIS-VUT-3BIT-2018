@@ -36,3 +36,10 @@ class RegisterView(generics.GenericAPIView):
                 context=self.get_serializer_context()).data,
             'token': AuthToken.objects.create(user),
         })
+
+
+class LoggedInView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        return Response({'user': UserLoginSerializer(request.user).data})
