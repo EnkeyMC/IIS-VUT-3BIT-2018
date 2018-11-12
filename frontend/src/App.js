@@ -5,14 +5,23 @@ import {Redirect, Route, Switch} from "react-router";
 import RegisterView from "./views/RegisterView";
 import TicketView from "./views/TicketView";
 import LoginView from "./views/LoginView";
+import ProfileView from "./views/ProfileView";
 import {
     faCheckCircle,
     faBoxOpen,
     faUser,
     faAngleUp,
-    faAngleDown
+    faAngleDown,
+    faEnvelope,
+    faBirthdayCake,
+    faLaptopCode,
+    faCalendarAlt,
+    faClock
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faCheckCircle, faBoxOpen, faUser, faAngleUp, faAngleDown);
+library.add(
+    faCheckCircle, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
+    faBirthdayCake, faLaptopCode, faCalendarAlt, faClock
+);
 
 class App extends Component {
   render() {
@@ -23,6 +32,7 @@ class App extends Component {
               <Route path="/ticket" component={TicketView} />
               <Route path="/login" component={LoginView} />
               <Route path="/register" component={RegisterView} />
+              <Route path="/profile" component={ProfileView}/>
           </Switch>
       </ErrorBoundary>
     );

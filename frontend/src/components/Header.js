@@ -102,7 +102,7 @@ function UserName(props) {
                 {props.user.username}
             </DropdownToggle>
             <DropdownMenu right className="shadow">
-                <DropdownItem tag="a" href="/blah">My profile</DropdownItem>
+                <DropdownItem tag={Link} to="/profile">My profile</DropdownItem>
                 <DropdownItem divider/>
                 <DropdownItem tag={Link} to="/" onClick={props.logout}>Log out</DropdownItem>
             </DropdownMenu>
