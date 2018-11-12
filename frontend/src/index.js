@@ -12,18 +12,28 @@ import { zeroBugsApp } from './reducers';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
+import {setToken, setUser} from "./actions";
 
 export const client = axios.create();
 
 const axiosMiddlewareConfig = {
     interceptors: {
         request: [
-            (context, config) => {
-                if (context.getState().global.token) {
-                    config.headers['Authorization'] = 'Token ' + context.getState().global.token;
+            (store, request) => {
+                if (store.getState().global.token) {
+                    request.headers['Authorization'] = 'Token ' + store.getState().global.token;
                 }
 
-                return config;
+                return request;
+            }
+        ],
+        response: [
+            (store, response) => {
+                if (response.status === 401) {
+                    store.dispatch(setToken(null));
+                    store.dispatch(setUser(null));
+                }
+                return response;
             }
         ]
     }

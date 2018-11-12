@@ -47,8 +47,6 @@ function reduceGlobal(state = initialGlobalState, action) {
             return copyMerge(state, {user: action.user});
         case LOGOUT+SUCC:
             return copyMerge(state, {user: null, token: null});
-        case LOGOUT+FAIL:
-            return copyMerge(state, {user: null, token: null});
         default:
             return state;
     }

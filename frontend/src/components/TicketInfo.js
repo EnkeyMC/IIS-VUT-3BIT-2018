@@ -141,7 +141,7 @@ function UploadFiles(props) {
     );
 }
 
-function Numbering(props) {console.log(props);
+function Numbering(props) {
     return (
         <div className="font-size">
             <span>{props.thisIdx} of {props.size}</span>

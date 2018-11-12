@@ -1,5 +1,5 @@
 import React from "react";
-import {Form as BsForm, FormFeedback, FormGroup, Input as BsInput, Label} from 'reactstrap';
+import {Form as BsForm, FormFeedback, FormGroup, FormText, Input as BsInput, Label} from 'reactstrap';
 import {connect} from "react-redux";
 import {submitForm} from "../actions";
 import {copyMerge} from "../utils";
@@ -14,6 +14,7 @@ export class Form extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.registerInput = this.registerInput.bind(this);
+        this.setState = this.setState.bind(this);
 
         this.state = {
             fields: {}
@@ -42,6 +43,14 @@ export class Form extends React.Component {
     }
 
     onSubmit(event) {
+        if (this.props.beforeSubmit) {
+            const ret = this.props.beforeSubmit(this.state, event, this.setState);
+            if (ret === false) {
+                event.preventDefault();
+                return false;
+            }
+        }
+
         var data = new FormData();
 
         for (const name in this.state.fields) {
@@ -136,6 +145,8 @@ Form = connect(
     }
 )(withAlert(Form));
 
+
+
 export class Input extends React.Component {
     constructor(props) {
         super(props);
@@ -149,7 +160,7 @@ export class Input extends React.Component {
     }
 
     render() {
-        const {label: labelProps, formGroup: formGroupProps, form, ...inputProps} = this.props;
+        const {label: labelProps, formGroup: formGroupProps, hint, form, ...inputProps} = this.props;
         if (!form.state.fields[this.props.name])
             return null;
 
@@ -165,6 +176,7 @@ export class Input extends React.Component {
                     {...inputProps}
                 />
                 <FormFeedback>{error}</FormFeedback>
+                { hint ? <FormText>{hint}</FormText> : null }
             </FormGroup>
         );
     }

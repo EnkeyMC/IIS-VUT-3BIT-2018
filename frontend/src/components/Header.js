@@ -17,6 +17,7 @@ import {
 
 import {Link} from "react-router-dom";
 import {logout} from "../actions";
+import {withAlert} from "react-alert";
 
 export default class Header extends Component {
 
@@ -89,13 +90,22 @@ class SearchBar extends Component {
     }
 }
 
-function LogIn(props) {
+function LogIn() {
     return (
         <NavLink tag={Link} to="/login" className="text-dark">Log In</NavLink>
     );
 }
 
 function UserName(props) {
+    const logout = () => {
+        props.logout()
+            .then(action => {
+                if (action.payload)
+                    props.alert.success('You have been successfully logged out.');
+                else
+                    props.alert.error(action.error.message);
+            });
+    };
     return (
         <UncontrolledDropdown setActiveFromChild>
             <DropdownToggle tag="a" className="nav-link user-name" caret>
@@ -104,7 +114,7 @@ function UserName(props) {
             <DropdownMenu right className="shadow">
                 <DropdownItem tag={Link} to="/profile">My profile</DropdownItem>
                 <DropdownItem divider/>
-                <DropdownItem tag={Link} to="/" onClick={props.logout}>Log out</DropdownItem>
+                <DropdownItem tag="button" to="/" onClick={logout}>Log out</DropdownItem>
             </DropdownMenu>
         </UncontrolledDropdown>
     );
@@ -117,4 +127,4 @@ UserName = connect(
             logout: () => dispatch(logout())
         }
     }
-)(UserName);
+)(withAlert(UserName));

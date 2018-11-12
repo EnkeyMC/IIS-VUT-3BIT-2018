@@ -62,7 +62,7 @@ export function logout() {
         type: LOGOUT,
         payload: {
             request: {
-                method: "get",
+                method: "post",
                 url: "/auth/logout/"
             }
         }
