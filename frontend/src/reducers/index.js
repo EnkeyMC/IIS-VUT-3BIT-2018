@@ -1,4 +1,4 @@
-import {TOGGLE_NAVBAR, GET_TICKETS, SUBMIT_FORM, GET_TICKET} from '../actions'
+import {GET_TICKETS, SUBMIT_FORM, GET_TICKET, SET_TOKEN, SET_USER, LOGOUT} from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
 
@@ -7,7 +7,8 @@ const SUCC = '_SUCCESS';
 const FAIL = '_FAIL';
 
 const initialGlobalState = {
-    navbarIsOpen: false,
+    user: JSON.parse(localStorage.getItem('AUTH_USER')),
+    token: localStorage.getItem('AUTH_TOKEN')
 };
 
 const initialTicketsViewState = {
@@ -40,8 +41,14 @@ const rootReducer = combineReducers({
 
 function reduceGlobal(state = initialGlobalState, action) {
     switch (action.type) {
-        case TOGGLE_NAVBAR:
-            return {navbarIsOpen: !state.navbarIsOpen};
+        case SET_TOKEN:
+            return copyMerge(state, {token: action.token});
+        case SET_USER:
+            return copyMerge(state, {user: action.user});
+        case LOGOUT+SUCC:
+            return copyMerge(state, {user: null, token: null});
+        case LOGOUT+FAIL:
+            return copyMerge(state, {user: null, token: null});
         default:
             return state;
     }
@@ -72,7 +79,7 @@ function reduceGetTickets(state, action) {
         case GET_TICKETS+FAIL: {
             const tickets = copyMerge(state);
             tickets.loading = false;
-            tickets.error = "Error loading tickets";
+            tickets.error = action.error.message;
             return tickets;
         }
         default:

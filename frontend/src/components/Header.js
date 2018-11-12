@@ -15,19 +15,35 @@ import {
     DropdownItem
 } from 'reactstrap';
 
-import { toggleNavbar } from '../actions';
 import {Link} from "react-router-dom";
+import {logout} from "../actions";
 
 export default class Header extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isOpen: false
+        };
+
+        this.handleToggleNavbar = this.handleToggleNavbar.bind(this);
+    }
+
+
+    handleToggleNavbar() {
+        this.setState({isOpen: !this.state.isOpen})
+    }
+
     render () {
         return (
                 <Navbar color="light" light expand="md" className="border-bottom position-fixed w-100 header-height">
                     <NavbarBrand href="/">
-                        <img className="mr-2 align-middle" src={Logo} width="30px" height="40px" />
+                        <img className="mr-2 align-middle" src={Logo} alt="" width="30px" height="40px" />
                         <span className="h2 align-middle">ZeroBugs</span>
                     </NavbarBrand>
-                    <NavbarToggler onClick={this.props.onToggleNavbar} />
-                    <Collapse isOpen={this.props.isOpen} navbar>
+                    <NavbarToggler onClick={this.handleToggleNavbar} />
+                    <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
                                 <NavLink>Category</NavLink>
@@ -36,7 +52,12 @@ export default class Header extends Component {
                                 <SearchBar />
                             </NavItem>
                             <NavItem>
-                                <UserName />
+                                {
+                                    this.props.user ?
+                                        <UserName user={this.props.user} />
+                                        :
+                                        <LogIn />
+                                }
                             </NavItem>
                         </Nav>
                     </Collapse>
@@ -47,10 +68,9 @@ export default class Header extends Component {
 
 Header = connect(
     state => {
-        return { isOpen: state.global.navbarIsOpen }
-    },
-    dispatch => {
-        return { onToggleNavbar: () => dispatch(toggleNavbar()) }
+        return {
+            user: state.global.user
+        }
     }
 )(Header);
 
@@ -79,13 +99,22 @@ function UserName(props) {
     return (
         <UncontrolledDropdown setActiveFromChild>
             <DropdownToggle tag="a" className="nav-link user-name" caret>
-                Zdenda Chovanec
+                {props.user.username}
             </DropdownToggle>
             <DropdownMenu right className="shadow">
                 <DropdownItem tag="a" href="/blah">My profile</DropdownItem>
                 <DropdownItem divider/>
-                <DropdownItem tag="a" href="/blah">Log out</DropdownItem>
+                <DropdownItem tag={Link} to="/" onClick={props.logout}>Log out</DropdownItem>
             </DropdownMenu>
         </UncontrolledDropdown>
     );
 }
+
+UserName = connect(
+    null,
+    dispatch => {
+        return {
+            logout: () => dispatch(logout())
+        }
+    }
+)(UserName);

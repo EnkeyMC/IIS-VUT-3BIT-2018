@@ -7,6 +7,9 @@ import {
 } from 'reactstrap';
 import {Link} from "react-router-dom";
 import { Form, Input } from "../components/Form";
+import {connect} from "react-redux";
+import {setToken, setUser} from "../actions";
+import {Redirect, withRouter} from "react-router";
 
 export default class LoginView extends React.Component {
     render() {
@@ -28,16 +31,36 @@ export default class LoginView extends React.Component {
 }
 
 class LoginForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    handleFormSuccess(id, data) {
+        this.props.setToken(data.token);
+        this.props.setUser(data.user);
+
+    }
+
     render () {
+        if (this.props.user) {
+            const state = this.props.location.state;
+            if (state)
+                return <Redirect to={state.from.pathname} />;
+            else
+                return <Redirect to="/"/>;
+        }
+
         return (
-            <Form id="login" url="/api/api-auth/login/">
+            <Form id="login" url="/auth/login/" onSubmitSuccess={this.handleFormSuccess}>
                 <FormGroup>
                     <Label for="username">Username</Label>
                     <Input name="username" id="username" />
                 </FormGroup>
                 <FormGroup>
                     <Label for="password">Password</Label>
-                    {<Input name="password" id="password" type="password" />}
+                    <Input name="password" id="password" type="password" />
                 </FormGroup>
                 <FormGroup>
                     <Button type="submit" color="primary" className="w-100 mt-4">Login</Button>
@@ -46,3 +69,17 @@ class LoginForm extends React.Component {
         );
     }
 }
+
+LoginForm = connect(
+    state => {
+        return {
+            user: state.global.user
+        };
+    },
+    dispatch => {
+        return {
+            setToken: token => dispatch(setToken(token)),
+            setUser: user => dispatch(setUser(user))
+        }
+    }
+)(withRouter(LoginForm));

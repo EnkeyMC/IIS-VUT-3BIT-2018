@@ -1,14 +1,10 @@
-import { client } from '../index';
-
-
-export const TOGGLE_NAVBAR = 'TOGGLE_NAVBAR';
 export const GET_TICKETS = 'GET_TICKETS_REQ';
 export const GET_TICKET = 'GET_TICKET_REQ';
 export const SUBMIT_FORM = 'SUBMIT_FORM';
+export const SET_TOKEN = 'SET_TOKEN';
+export const SET_USER = 'SET_USER';
+export const LOGOUT = 'LOGOUT';
 
-export function toggleNavbar() {
-    return {type: TOGGLE_NAVBAR};
-}
 
 export function getTickets() {
     return {
@@ -38,7 +34,37 @@ export function submitForm(id, url, data) {
         type: SUBMIT_FORM,
         id: id,
         payload:{
-            request: client.post(url, data)
+            request: {
+                method: "post",
+                url: url,
+                data: data
+            }
+        }
+    }
+}
+
+export function setToken(token) {
+    return {
+        type: SET_TOKEN,
+        token: token
+    }
+}
+
+export function setUser(user) {
+    return {
+        type: SET_USER,
+        user: user
+    }
+}
+
+export function logout() {
+    return {
+        type: LOGOUT,
+        payload: {
+            request: {
+                method: "get",
+                url: "/auth/logout/"
+            }
         }
     }
 }

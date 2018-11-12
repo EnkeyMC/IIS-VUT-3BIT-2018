@@ -3,7 +3,6 @@ import { Form as BsForm, Input as BsInput } from 'reactstrap';
 import {connect} from "react-redux";
 import {submitForm} from "../actions";
 import {copyMerge} from "../utils";
-import axios from 'axios';
 
 const FormContext = React.createContext();
 
@@ -42,27 +41,19 @@ export class Form extends React.Component {
     }
 
     onSubmit(event) {
-        // var data = new FormData();
-        // data.append('submit', 'Log in');
-        //
-        // for (const name in this.state.fields) {
-        //     if (this.state.fields.hasOwnProperty(name)) {
-        //         data.append(name, this.state.fields[name].value);
-        //     }
-        // }
+        var data = new FormData();
 
-        /*var data = {};
         for (const name in this.state.fields) {
             if (this.state.fields.hasOwnProperty(name)) {
-                data[name] = this.state.fields[name].value;
+                data.append(name, this.state.fields[name].value);
             }
-        }*/
+        }
 
-        // this.props.onSubmit(this.props.id, this.props.url, data)
-
-        // axios.post(this.props.url, data).then((response) => console.log(response)).catch((err) => console.log(err));
-
-        //this.props.onSubmit(this.props.id, this.props.url, data);
+        this.props.onSubmit(this.props.id, this.props.url, data)
+            .then(action => {
+                if (action.payload && this.props.onSubmitSuccess)
+                    this.props.onSubmitSuccess(this.props.id, action.payload.data);
+            });
 
         event.preventDefault();
     }
@@ -115,11 +106,11 @@ const withForm = WrappedComponent => {
 
 Form = connect(
     (state, ownProps) => {
-        return {}
+        return {storeState: state.forms[ownProps.id]}
     },
     dispatch => {
         return {
-            onSubmit: () => dispatch(submitForm())
+            onSubmit: (id, url, data) => dispatch(submitForm(id, url, data))
         }
     }
 )(Form);
