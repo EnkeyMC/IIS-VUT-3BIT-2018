@@ -14,18 +14,22 @@ export default class TicketInfo extends Component {
     constructor(props) {
         super(props);
 
-        this._lastTicket = this.props.match.params.ticketId;
+        this._lastTicket = this.getTicketId();
     }
 
     componentDidMount() {
-        this.props.getTicket(this.props.match.params.ticketId);
+        this.props.getTicket(this.getTicketId());
     }
 
     componentDidUpdate() {
-        if (this._lastTicket !== this.props.match.params.ticketId) {
-            this._lastTicket = this.props.match.params.ticketId;
-            this.props.getTicket(this.props.match.params.ticketId);
+        if (this._lastTicket !== this.getTicketId()) {
+            this._lastTicket = this.getTicketId();
+            this.props.getTicket(this.getTicketId());
         }
+    }
+
+    getTicketId() {
+        return this.props.match.params.ticketId ? this.props.match.params.ticketId : this.props.defaultId;
     }
 
     render() {
@@ -35,7 +39,7 @@ export default class TicketInfo extends Component {
 
         let prevTicketId, nextTicketId, idx, ticketIdx;
         for (idx = 0; idx < this.props.tickets.data.length; idx++) {
-            if (String(this.props.tickets.data[idx].id) === String(this.props.match.params.ticketId)) {
+            if (String(this.props.tickets.data[idx].id) === String(this.getTicketId())) {
                 ticketIdx = idx+1;
                 break;
             }
@@ -56,7 +60,7 @@ export default class TicketInfo extends Component {
                         <Col lg="8" xs="12" md="12">
                             <Container>
                                 <Row>
-                                    <h1>{ticket.title}</h1>
+                                    <h1>#{ticket.id} - {ticket.title}</h1>
                                 </Row>
                                 <Row className="pt-3">
                                     <Detail ticket={ticket} />
@@ -87,10 +91,10 @@ export default class TicketInfo extends Component {
 TicketInfo = connect(
     (state, ownProps) => {
         return {
-            ticket: state.ticketView.ticketInfo.data[ownProps.match.params.ticketId],
+            ticket: state.ticketView.ticketInfo.data[ownProps.match.params.ticketId ? ownProps.match.params.ticketId : ownProps.defaultId],
             tickets: state.ticketView.tickets,
-            loading: state.ticketView.ticketInfo.loading === ownProps.match.params.ticketId,
-            error: state.ticketView.ticketInfo.error === ownProps.match.params.ticketId
+            loading: state.ticketView.ticketInfo.loading === (ownProps.match.params.ticketId ? ownProps.match.params.ticketId : ownProps.defaultId),
+            error: state.ticketView.ticketInfo.error === (ownProps.match.params.ticketId ? ownProps.match.params.ticketId : ownProps.defaultId)
         }
     },
     (dispatch) => {

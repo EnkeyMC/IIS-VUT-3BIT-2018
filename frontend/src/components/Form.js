@@ -1,8 +1,9 @@
 import React from "react";
-import { Form as BsForm, Input as BsInput } from 'reactstrap';
+import {Form as BsForm, FormFeedback, FormGroup, Input as BsInput, Label} from 'reactstrap';
 import {connect} from "react-redux";
 import {submitForm} from "../actions";
 import {copyMerge} from "../utils";
+import {withAlert} from "react-alert";
 
 const FormContext = React.createContext();
 
@@ -51,8 +52,28 @@ export class Form extends React.Component {
 
         this.props.onSubmit(this.props.id, this.props.url, data)
             .then(action => {
-                if (action.payload && this.props.onSubmitSuccess)
+                if (action.payload && this.props.onSubmitSuccess) {
                     this.props.onSubmitSuccess(this.props.id, action.payload.data);
+                } else if (action.error && action.error.response.status === 400) {
+                    var fields = {};
+
+                    const data = action.error.response.data;
+                    for (const name in this.state.fields) {
+                        if (data.hasOwnProperty(name)) {
+                            fields[name] = copyMerge(this.state.fields[name], {error: data[name]});
+                        } else if (this.state.fields.hasOwnProperty(name)) {
+                            fields[name] = copyMerge(this.state.fields[name], {error: null});
+                        }
+                    }
+
+                    this.setState({
+                        fields: copyMerge(this.state.fields, fields)
+                    });
+
+                    if (data.non_field_errors) {
+                        data.non_field_errors.forEach(item => this.props.alert.error(item));
+                    }
+                }
             });
 
         event.preventDefault();
@@ -113,7 +134,7 @@ Form = connect(
             onSubmit: (id, url, data) => dispatch(submitForm(id, url, data))
         }
     }
-)(Form);
+)(withAlert(Form));
 
 export class Input extends React.Component {
     constructor(props) {
@@ -128,12 +149,23 @@ export class Input extends React.Component {
     }
 
     render() {
+        const {label: labelProps, formGroup: formGroupProps, form, ...inputProps} = this.props;
+        if (!form.state.fields[this.props.name])
+            return null;
+
+        const error = form.state.fields[this.props.name].error;
+
         return (
+            <FormGroup {...formGroupProps}>
+                {labelProps ? <Label {...labelProps} for={this.props.id}>{labelProps.text}</Label> : null }
                 <BsInput
-                    {...this.props}
-                    onChange={this.props.form.onChange}
-                    value={this.props.form.state[this.props.name]}
+                    {...(error ? {invalid: true} : {})}
+                    onChange={form.onChange}
+                    value={form.state.fields[this.props.name].value}
+                    {...inputProps}
                 />
+                <FormFeedback>{error}</FormFeedback>
+            </FormGroup>
         );
     }
 }

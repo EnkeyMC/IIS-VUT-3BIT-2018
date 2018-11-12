@@ -20,6 +20,8 @@
     "react-scripts": "2.0.4",
     "reactstrap": "^6.5.0",
     "redux": "^4.0.0",
+    "react-alert": "^4.0.4",
+    "react-alert-template-basic": "^1.0.0",
     "redux-axios-middleware": "^4.0.0"
   },
   "scripts": {

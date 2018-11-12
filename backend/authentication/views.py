@@ -1,24 +1,27 @@
-from django.contrib.auth import login
-
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from knox.models import AuthToken
-from knox.views import LoginView as KnoxLoginView
 
-from .serializers import UserLoginSerializer, CreateUserSerializer
+from .serializers import (LoginSerializer,
+                          UserLoginSerializer,
+                          CreateUserSerializer)
 
 
-class LoginView(KnoxLoginView):
+class LoginView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
+    serializer_class = LoginSerializer
 
     def post(self, request, format=None):
-        serializer = AuthTokenSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return super().post(request, format=None)
+        user = serializer.validated_data
+        return Response({
+            'user': UserLoginSerializer(
+                user,
+                context=self.get_serializer_context()).data,
+            'token': AuthToken.objects.create(user),
+        })
 
 
 class RegisterView(generics.GenericAPIView):
