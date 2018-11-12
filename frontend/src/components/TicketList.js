@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import {getTickets} from "../actions";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Link} from "react-router-dom";
+import {Redirect, withRouter} from "react-router";
 
 export default class TicketList extends Component {
     componentDidMount() {
@@ -10,6 +10,9 @@ export default class TicketList extends Component {
     }
 
     render() {
+        if (this.props.match.path === '/ticket' && this.props.tickets.data.length > 0)
+            return <Redirect to={'/ticket/'+this.props.tickets.data[0].id} />;
+
         return (
             <div className="ticket-list border-right content-height position-fixed">
                 <div className="list-group">
@@ -31,7 +34,7 @@ TicketList = connect(
             getTickets: () => dispatch(getTickets())
         }
     }
-)(TicketList);
+)(withRouter(TicketList));
 
 function Ticket(props) {
     return (
