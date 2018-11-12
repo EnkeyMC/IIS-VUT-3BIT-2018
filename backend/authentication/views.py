@@ -1,25 +1,23 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from knox.models import AuthToken
 
-from .serializers import (LoginSerializer,
-                          UserLoginSerializer,
-                          CreateUserSerializer)
+from .serializers import UserLoginSerializer, CreateUserSerializer
 
 
-class LoginView(generics.GenericAPIView):
+class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
-    serializer_class = LoginSerializer
 
     def post(self, request, format=None):
-        serializer = self.get_serializer(data=request.data)
+        serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
+        user = serializer.validated_data['user']
+        context = {'request': self.request, 'view': self}
         return Response({
-            'user': UserLoginSerializer(
-                user,
-                context=self.get_serializer_context()).data,
+            'user': UserLoginSerializer(user, context=context).data,
             'token': AuthToken.objects.create(user),
         })
 
