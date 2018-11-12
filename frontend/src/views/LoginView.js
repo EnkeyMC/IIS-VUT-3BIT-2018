@@ -10,6 +10,7 @@ import { Form, Input } from "../components/Form";
 import {connect} from "react-redux";
 import {setToken, setUser} from "../actions";
 import {Redirect, withRouter} from "react-router";
+import {withAlert} from "react-alert";
 
 export default class LoginView extends React.Component {
     render() {
@@ -41,6 +42,7 @@ class LoginForm extends React.Component {
         this.props.setToken(data.token);
         this.props.setUser(data.user);
 
+        this.props.alert.success("You have been successfully logged in.");
     }
 
     render () {
@@ -54,17 +56,9 @@ class LoginForm extends React.Component {
 
         return (
             <Form id="login" url="/auth/login/" onSubmitSuccess={this.handleFormSuccess}>
-                <FormGroup>
-                    <Label for="username">Username</Label>
-                    <Input name="username" id="username" />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="password">Password</Label>
-                    <Input name="password" id="password" type="password" />
-                </FormGroup>
-                <FormGroup>
-                    <Button type="submit" color="primary" className="w-100 mt-4">Login</Button>
-                </FormGroup>
+                <Input label={{text: "Username"}} name="username" id="username" />
+                <Input label={{text: "Password"}} name="password" id="password" type="password" />
+                <Button type="submit" color="primary" className="w-100 mt-4">Login</Button>
             </Form>
         );
     }
@@ -82,4 +76,4 @@ LoginForm = connect(
             setUser: user => dispatch(setUser(user))
         }
     }
-)(withRouter(LoginForm));
+)(withRouter(withAlert(LoginForm)));
