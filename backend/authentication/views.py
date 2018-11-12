@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
+from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 
 from .serializers import UserLoginSerializer, CreateUserSerializer
@@ -39,6 +40,7 @@ class RegisterView(generics.GenericAPIView):
 
 
 class LoggedInView(APIView):
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
