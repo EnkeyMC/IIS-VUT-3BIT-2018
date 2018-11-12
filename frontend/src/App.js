@@ -19,7 +19,8 @@ library.add(faCheckCircle, faBoxOpen, faUser, faAngleUp, faAngleDown);
 const alertConfig = {
     timeout: 4000,
     offset: '50px',
-    transition: 'scale'
+    transition: 'scale',
+    zIndex: 9999
 };
 
 class App extends Component {
