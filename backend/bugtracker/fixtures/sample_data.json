@@ -137,6 +137,16 @@
 },
 {
     "model": "bugtracker.profile",
+    "pk": 1,
+    "fields": {
+        "birth_date": "1970-01-01",
+        "user_type": "supervisor",
+        "languages": [
+        ]
+    }
+},
+{
+    "model": "bugtracker.profile",
     "pk": 2,
     "fields": {
         "birth_date": "1996-06-16",
