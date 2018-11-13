@@ -78,8 +78,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'date_joined', 'profile')
+                  'last_login', 'date_joined', 'profile')
         extra_kwargs = {'email': {'read_only': True},
+                        'last_login': {'read_only': True},
                         'date_joined': {'read_only': True}}
 
     def update(self, instance, validated_data):

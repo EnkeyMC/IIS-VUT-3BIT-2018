@@ -1,3 +1,4 @@
+from django.contrib.auth.signals import user_logged_in
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,6 +18,7 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         context = {'request': self.request, 'view': self}
+        user_logged_in.send(sender=user.__class__, request=request, user=user)
         return Response({
             'user': UserLoginSerializer(user, context=context).data,
             'token': AuthToken.objects.create(user),
@@ -31,6 +33,7 @@ class RegisterView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        user_logged_in.send(sender=user.__class__, request=request, user=user)
         return Response({
             'user': UserLoginSerializer(
                 user,
