@@ -28,12 +28,14 @@ const axiosMiddlewareConfig = {
             }
         ],
         response: [
-            (store, response) => {
-                if (response.status === 401) {
-                    store.dispatch(setToken(null));
-                    store.dispatch(setUser(null));
+            {
+                error: (store, response) => {
+                    if (response.response.status === 401) {
+                        store.dispatch(setToken(null));
+                        store.dispatch(setUser(null));
+                    }
+                    return Promise.reject(response);
                 }
-                return response;
             }
         ]
     }

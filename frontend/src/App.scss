@@ -86,6 +86,7 @@ code {
 .ticket-list {
   width: 300px;
   left: 50px;
+  overflow-y: auto;
   .list-group-item {
     border: 1px solid #dee2e6;
     border-left: none;
@@ -111,7 +112,6 @@ code {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 254px;
     }
   }
 }
@@ -120,6 +120,7 @@ code {
 .ticket-info {
   width: 100%;
   padding-left: 350px;
+  overflow-y: auto;
 }
 
 /* Profile css */

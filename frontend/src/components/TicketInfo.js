@@ -18,7 +18,9 @@ export default class TicketInfo extends Component {
     }
 
     componentDidMount() {
-        this.props.getTicket(this.getTicketId());
+        const ticketId = this.getTicketId();
+        if (ticketId !== null)
+            this.props.getTicket(ticketId);
     }
 
     componentDidUpdate() {

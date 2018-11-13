@@ -33,7 +33,7 @@ export function submitForm(id, url, data) {
     return {
         type: SUBMIT_FORM,
         id: id,
-        payload:{
+        payload: {
             request: {
                 method: "post",
                 url: url,
