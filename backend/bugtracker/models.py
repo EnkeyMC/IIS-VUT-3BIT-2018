@@ -52,8 +52,18 @@ class Severity(models.Model):
 
 
 class Patch(models.Model):
+    STATUS_APPLIED = 'applied'
+    STATUS_APPROVED = 'approved'
+    STATUS_DEVELOP = 'in development'
+    STATUS_CHOICES = (
+        (STATUS_APPLIED, 'applied'),
+        (STATUS_APPROVED, 'approved'),
+        (STATUS_DEVELOP, 'in development'),
+    )
+
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=50)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=STATUS_DEVELOP)
     date_released = models.DateField(null=True)
     date_applied = models.DateField(null=True)
 
@@ -65,7 +75,8 @@ class Bug(models.Model):
     severity = models.ForeignKey(
         Severity, on_delete=models.SET_NULL, null=True
     )
-    module = models.ForeignKey(Module, on_delete=models.SET_NULL, null=True)
+    module = models.ForeignKey(
+        Module, related_name='bugs', on_delete=models.SET_NULL, null=True)
     patch = models.ForeignKey(Patch, on_delete=models.SET_NULL, null=True)
     vulnerability = models.CharField(max_length=50)
     title = models.CharField(max_length=100)

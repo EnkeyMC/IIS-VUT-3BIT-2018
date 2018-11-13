@@ -106,6 +106,7 @@ class ModuleSerializer(serializers.ModelSerializer):
         slug_field='username', allow_null=True, queryset=User.objects.all())
     languages = serializers.SlugRelatedField(
         slug_field='name', many=True, queryset=models.Language.objects.all())
+    bugs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = models.Module
