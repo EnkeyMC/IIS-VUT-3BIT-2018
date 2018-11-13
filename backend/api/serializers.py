@@ -99,3 +99,14 @@ class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Language
         fields = ('id', 'name')
+
+
+class ModuleSerializer(serializers.ModelSerializer):
+    expert = serializers.SlugRelatedField(
+        slug_field='username', allow_null=True, queryset=User.objects.all())
+    languages = serializers.SlugRelatedField(
+        slug_field='name', many=True, queryset=models.Language.objects.all())
+
+    class Meta:
+        model = models.Module
+        fields = '__all__'

@@ -68,3 +68,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
         if self.action == 'list':
             return serializers.UserListSerializer
         return serializers.UserDetailSerializer
+
+
+class ModuleViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.ModuleSerializer
+    queryset = models.Module.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsStaffOrReadOnly)
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_class = bugtracker_filters.ModuleFilter
+    search_fields = ('name',)
+    ordering_fields = ('id', 'name')
+    ordering = ('id',)
