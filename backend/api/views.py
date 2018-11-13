@@ -80,3 +80,14 @@ class ModuleViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('id', 'name')
     ordering = ('id',)
+
+
+class SeverityViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.SeveritySerializer
+    queryset = models.Severity.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsStaffOrReadOnly)
+    filter_backends = (OrderingFilter, SearchFilter)
+    search_fields = ('name',)
+    ordering_fields = ('level', 'name')
+    ordering = ('level',)

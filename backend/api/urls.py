@@ -9,6 +9,7 @@ router.register(r'languages', api_views.LanguageViewSet)
 router.register(r'users', api_views.UserViewSet)
 router.register(r'tickets', api_views.TicketViewSet)
 router.register(r'modules', api_views.ModuleViewSet)
+router.register(r'severities', api_views.SeverityViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

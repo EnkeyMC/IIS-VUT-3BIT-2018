@@ -110,3 +110,9 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
         fields = '__all__'
+
+
+class SeveritySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Severity
+        fields = '__all__'
