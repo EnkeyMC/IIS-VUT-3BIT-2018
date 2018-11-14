@@ -52,30 +52,6 @@ export default class Profile extends Component {
                                                 </Col>
                                             </Row>
                                         </Container>
-                                        {/*<Col>*/}
-                                        {/*<Row className="pb-lg-4">*/}
-                                        {/*<div className="icons text-center mr-2">*/}
-                                        {/*<FontAwesomeIcon icon ="laptop-code" fixedWidth/>*/}
-                                        {/*</div>*/}
-                                        {/*Programming languages*/}
-                                        {/*</Row>*/}
-                                        {/*</Col>*/}
-                                        {/*<Col>*/}
-                                        {/*<Row className="pb-lg-4">*/}
-                                        {/*Jan Novak*/}
-                                        {/*</Row>*/}
-                                        {/*<Row className="pb-lg-4">*/}
-                                        {/*jan.novak@email.com*/}
-                                        {/*</Row>*/}
-                                        {/*<Row className="pb-lg-4">*/}
-                                        {/*4.1.1987*/}
-                                        {/*</Row>*/}
-                                        {/*<Row className="pb-lg-4">*/}
-                                        {/*<Badge color="warning" pill className="mr-1">Javascript</Badge>*/}
-                                        {/*<Badge color="primary" pill className="mr-1">C++</Badge>*/}
-                                        {/*<Badge color="danger" pill>Java</Badge>*/}
-                                        {/*</Row>*/}
-                                        {/*</Col>*/}
                                     </Row>
                                     <Row className="mt-2">
                                         <Col>
