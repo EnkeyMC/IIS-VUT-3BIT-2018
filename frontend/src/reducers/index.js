@@ -1,4 +1,4 @@
-import {GET_TICKETS, SUBMIT_FORM, GET_TICKET, SET_TOKEN, SET_USER, LOGOUT} from '../actions'
+import {GET_TICKETS, SUBMIT_FORM, GET_TICKET, SET_TOKEN, SET_USER, LOGOUT, GET_USER} from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
 
@@ -24,6 +24,11 @@ const initialTicketsViewState = {
     }
 };
 
+const initialProfileViewState = {
+    user: null,
+    loading: false
+};
+
 export const zeroBugsApp = (state, action) => {
     console.log(state);
     console.log(action);
@@ -37,6 +42,7 @@ const rootReducer = combineReducers({
     global: reduceGlobal,
     ticketView: reduceTicketView,
     forms: reduceForms,
+    profileView: reduceUserView
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -112,6 +118,19 @@ function reduceForms(state = {}, action) {
             return state;
         }
 
+        default:
+            return state;
+    }
+}
+
+function reduceUserView(state = initialProfileViewState, action) {
+    switch (action.type) {
+        case GET_USER:
+            return copyMerge(state, {loading: true});
+        case GET_USER+SUCC:
+            return copyMerge(state, {user: action.payload.data, loading: false});
+        case GET_USER+FAIL:
+            return copyMerge(state, {loading: false});
         default:
             return state;
     }

@@ -1,9 +1,10 @@
 export const GET_TICKETS = 'GET_TICKETS_REQ';
 export const GET_TICKET = 'GET_TICKET_REQ';
-export const SUBMIT_FORM = 'SUBMIT_FORM';
+export const GET_USER = 'GET_USER_REQ';
+export const SUBMIT_FORM = 'SUBMIT_FORM_REQ';
 export const SET_TOKEN = 'SET_TOKEN';
 export const SET_USER = 'SET_USER';
-export const LOGOUT = 'LOGOUT';
+export const LOGOUT = 'LOGOUT_REQ';
 
 
 export function getTickets() {
@@ -64,6 +65,17 @@ export function logout() {
             request: {
                 method: "post",
                 url: "/auth/logout/"
+            }
+        }
+    }
+}
+
+export function getUser(userId) {
+    return {
+        type: GET_USER,
+        payload: {
+            request: {
+                url: "/api/users/"+userId
             }
         }
     }
