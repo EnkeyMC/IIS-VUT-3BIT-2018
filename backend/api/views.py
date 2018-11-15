@@ -59,10 +59,11 @@ class UserViewSet(mixins.RetrieveModelMixin,
     queryset = User.objects.exclude(is_superuser=True)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsSelfOrReadOnly)
-    filter_backends = (OrderingFilter, SearchFilter)
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     ordering_fields = ('id', 'username', 'first_name', 'last_name')
     ordering = ('id',)
-    search_fields = ('=username',)
+    search_fields = ('username', 'first_name', 'last_name')
+    filterset_fields = ('username',)
 
     def get_serializer_class(self):
         if self.action == 'list':
