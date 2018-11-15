@@ -62,7 +62,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     filter_backends = (OrderingFilter, SearchFilter)
     ordering_fields = ('id', 'username', 'first_name', 'last_name')
     ordering = ('id',)
-    search_fields = ('=username')
+    search_fields = ('=username',)
 
     def get_serializer_class(self):
         if self.action == 'list':
