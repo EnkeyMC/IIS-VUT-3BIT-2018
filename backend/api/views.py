@@ -66,6 +66,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
     filterset_fields = ('username',)
 
     def get_serializer_class(self):
+        if self.request.query_params.get('username', False):
+            return serializers.UserDetailSerializer
         if self.action == 'list':
             return serializers.UserListSerializer
         return serializers.UserDetailSerializer
