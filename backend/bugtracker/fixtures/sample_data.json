@@ -4,7 +4,6 @@
     "pk": 1,
     "fields": {
         "password": "pbkdf2_sha256$120000$7AOTxLmVWBbH$P7muMAt19DuMZZWRBfNitbDDyrdacZAvO9EWPygk19U=",
-        "last_login": "2018-10-22T16:26:38.260Z",
         "is_superuser": true,
         "username": "admin",
         "first_name": "",
@@ -22,7 +21,6 @@
     "pk": 2,
     "fields": {
         "password": "pbkdf2_sha256$120000$117GqYjvldj7$85/X2CyzenOU56BBvypGHTeBqAy+c7FfyxqFCJjtlR8=",
-        "last_login": null,
         "is_superuser": false,
         "username": "xomach00",
         "first_name": "Martin",
@@ -40,7 +38,6 @@
     "pk": 3,
     "fields": {
         "password": "pbkdf2_sha256$120000$y8LRWT6MCNFF$JYtKxm01J853jHgvI1tMKQLMouHVG+F/j9zuS/gwuv0=",
-        "last_login": null,
         "is_superuser": false,
         "username": "xhendr03",
         "first_name": "Petr",
@@ -58,7 +55,6 @@
     "pk": 4,
     "fields": {
         "password": "pbkdf2_sha256$120000$DHT2VKndINgT$a7ANVMX8hTukKwD8Ln6dg+3zcbeEouh5vZUHFOvIh8Y=",
-        "last_login": null,
         "is_superuser": false,
         "username": "xchova19",
         "first_name": "Zden\u011bk",
@@ -76,7 +72,6 @@
     "pk": 5,
     "fields": {
         "password": "pbkdf2_sha256$120000$jl6q5sr2Iq8S$F2DVeeVvJi6G18BU21Ymj+ZO/6CZIkQn7eajvm7dXYU=",
-        "last_login": null,
         "is_superuser": false,
         "username": "john",
         "first_name": "John",
@@ -94,7 +89,6 @@
     "pk": 6,
     "fields": {
         "password": "pbkdf2_sha256$120000$xu5JNbMDsPuX$rHZ1QXR36TCk5PIM/ehgFPwNBKrQF5I0PxcylsJdfUQ=",
-        "last_login": null,
         "is_superuser": false,
         "username": "jane",
         "first_name": "Jane",
