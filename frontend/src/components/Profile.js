@@ -10,33 +10,32 @@ import {
     Badge
 } from 'reactstrap';
 import {connect} from "react-redux";
-import {Link} from "react-router-dom";
 import {getUser} from "../actions";
 
 
 export default class Profile extends Component {
     constructor(props) {
         super(props);
-        this._lastUserId = this.props.userId;
+        this._lastUsername = this.props.username;
     }
 
 
     componentDidMount() {
-        this.props.getUser(this._lastUserId);
+        this.props.getUser(this._lastUsername);
     }
 
     componentDidUpdate() {
-        if (this.props.userId !== this._lastUserId) {
-            this._lastUserId = this.props._lastUserId;
-            this.props.getUser(this._lastUserId);
+        if (this.props.username !== this._lastUsername) {
+            this._lastUsername = this.props._lastUsername;
+            this.props.getUser(this._lastUsername);
         }
     }
 
     render () {
-        if (this.props.userId === null)
+        if (this.props.username === null)
             return null; // TODO 404 page, or login page
 
-        if (this.props.user === null)
+        if (!this.props.user)
             return null; // TODO show loading
 
         return (
@@ -101,7 +100,7 @@ Profile = connect(
     (state, ownProps) => {
         return {
             user: state.profileView.user,
-            userId: ownProps.match.params.userId ? ownProps.match.params.userId : (state.global.user ? state.global.user.id : null),
+            username: ownProps.match.params.username ? ownProps.match.params.username : (state.global.user ? state.global.user.username : null),
             loading: state.profileView.loading
         }
     },

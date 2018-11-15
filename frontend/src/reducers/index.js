@@ -127,8 +127,8 @@ function reduceUserView(state = initialProfileViewState, action) {
     switch (action.type) {
         case GET_USER:
             return copyMerge(state, {loading: true});
-        case GET_USER+SUCC:
-            return copyMerge(state, {user: action.payload.data, loading: false});
+        case GET_USER+SUCC: // TODO not found
+            return copyMerge(state, {user: action.payload.data.results[0], loading: false});
         case GET_USER+FAIL:
             return copyMerge(state, {loading: false});
         default:

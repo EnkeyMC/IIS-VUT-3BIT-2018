@@ -112,7 +112,7 @@ function Detail(props) {
             <Media heading>Details</Media>
             <Row>
                 <Col md="6" xs="12">
-                    <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;{props.ticket.author}</Row>
+                    <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;<Link to={"/profile/"+props.ticket.author} >{props.ticket.author}</Link></Row>
                     <Row className="no-margin"><span className="text-muted">Vulnerability:</span>&nbsp;</Row>
                 </Col>
                 <Col md="6" xs="12">

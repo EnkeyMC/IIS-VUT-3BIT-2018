@@ -21,7 +21,7 @@ function Ticket(props) {
             <div className="d-flex w-100 justify-content-between">
                 <h6 className="mb-1 ticket-list-title">#{props.ticket.id} - {props.ticket.title}</h6>
             </div>
-            <small className="float-left">{props.ticket.author}</small>
+            <Link to={"/profile/"+props.ticket.author}><small className="float-left">{props.ticket.author}</small></Link>
             <small className="float-right">{props.ticket.created}</small>
         </Link>
     );

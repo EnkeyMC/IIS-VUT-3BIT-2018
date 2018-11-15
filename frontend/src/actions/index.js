@@ -70,12 +70,12 @@ export function logout() {
     }
 }
 
-export function getUser(userId) {
+export function getUser(username) {
     return {
         type: GET_USER,
         payload: {
             request: {
-                url: "/api/users/"+userId
+                url: "/api/users/?username="+username
             }
         }
     }

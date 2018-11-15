@@ -9,7 +9,7 @@ export default class ProfileView extends React.Component {
             <div>
                 <Header />
                 <div className="pt-header position-relative">
-                    <Route path="/profile/:userId?" component={Profile} />
+                    <Route path="/profile/:username?" component={Profile} />
                 </div>
             </div>
         )
