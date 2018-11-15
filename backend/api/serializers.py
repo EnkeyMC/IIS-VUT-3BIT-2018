@@ -79,9 +79,11 @@ class UserDetailSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'last_login', 'date_joined', 'profile')
-        extra_kwargs = {'email': {'read_only': True},
-                        'last_login': {'read_only': True},
-                        'date_joined': {'read_only': True}}
+        extra_kwargs = {
+            'email': {'read_only': True},
+            'last_login': {'read_only': True, 'format': '%Y-%m-%d, %H:%M'},
+            'date_joined': {'read_only': True, 'format': '%Y-%m-%d'}
+        }
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile')
