@@ -64,10 +64,10 @@ export default class TicketInfo extends Component {
                                 <Row>
                                     <h1>#{ticket.id} - {ticket.title}</h1>
                                 </Row>
-                                <Row className="pt-3">
+                                <Row className="pt-3 border-bottom">
                                     <Detail ticket={ticket} />
                                 </Row>
-                                <Row className="pt-3">
+                                <Row className="pt-3 border-bottom">
                                     <Description>{ticket.description}</Description>
                                 </Row>
                                 <Row className="pt-3">
@@ -108,12 +108,12 @@ TicketInfo = connect(
 
 function Detail(props) {
     return (
-        <Container className="no-margin mt-md-4 border-bottom pb-3">
+        <Container className="no-margin mt-md-4 pb-3">
             <Media heading>Details</Media>
             <Row>
                 <Col md="6" xs="12">
                     <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;<Link to={"/profile/"+props.ticket.author} >{props.ticket.author}</Link></Row>
-                    <Row className="no-margin"><span className="text-muted">Vulnerability:</span>&nbsp;</Row>
+                    <Row className="no-margin"><span className="text-muted">Assigned programmer:</span>&nbsp;</Row>
                 </Col>
                 <Col md="6" xs="12">
                     <Row className="no-margin"><span className="text-muted">State:</span>&nbsp;{props.ticket.status}&nbsp;{props.ticket.status === 'duplicate' ? <Link to={"/ticket/"+props.ticket.duplicate} >#{props.ticket.duplicate}</Link> : null}</Row>
@@ -126,7 +126,7 @@ function Detail(props) {
 
 function Description(props) {
     return (
-        <Media className="border-bottom pb-3">
+        <Media className="pb-3">
             <Media body className="text-justify">
                 <Media heading>Description</Media>
                 {props.children}
