@@ -68,6 +68,8 @@ code {
     align-items: center;
     .icon-text {
       position: absolute;
+      color: #ffffff;
+      background: #d41212;
       height: 50px;
       padding-top: 6px;
       padding-right: 9px;
@@ -80,9 +82,7 @@ code {
       color: #ffffff;
       background: #d41212;
       .icon-text {
-        @include prefix(transform, translate(calc(100% - calc(100% - 50px))), webkit moz ms o);
-        color: #ffffff;
-        background: #d41212;
+        @include prefix(transform, translate(95px), webkit moz ms o);
       }
     }
   }
