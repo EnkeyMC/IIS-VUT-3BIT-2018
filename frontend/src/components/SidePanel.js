@@ -6,23 +6,29 @@ export default class SidePanel extends Component {
     render() {
         return (
             <nav className="position-fixed side-panel content-height">
-                <div className="w100 mt-5 side-icon">
-                    <div className="icon-text">
+                <div className="w100 mt-5 side-container">
+                    <div className="icon-text flex-mid">
                         Done
                     </div>
-                    <FontAwesomeIcon icon="check-circle"/>
+                    <div className="flex-mid side-icon">
+                        <FontAwesomeIcon icon="check-circle"/>
+                    </div>
                 </div>
-                <div className="w100 side-icon">
-                    <div className="icon-text">
+                <div className="w100 side-container">
+                    <div className="icon-text flex-mid">
                         Opened tickets
                     </div>
-                    <FontAwesomeIcon icon ="box-open" />
+                    <div className="flex-mid side-icon">
+                        <FontAwesomeIcon icon ="box-open" />
+                    </div>
                 </div>
-                <div className="w100 side-icon">
-                    <div className="icon-text">
+                <div className="w100 side-container">
+                    <div className="icon-text flex-mid">
                         My reports
                     </div>
-                    <FontAwesomeIcon icon ="user" />
+                    <div className="flex-mid side-icon">
+                        <FontAwesomeIcon icon ="user" />
+                    </div>
                 </div>
             </nav>
         );
