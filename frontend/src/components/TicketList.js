@@ -31,14 +31,14 @@ function Ticket(props) {
 
 function Select(props) {
     return (
-        <div className="w-100 d-flex justify-content-center select">
+        <div className="w-100 flex-mid select">
             <FormGroup className=" w-75">
-                <Label for="exampleSelect">Order</Label>
+                {/*<Label for="exampleSelect">Order</Label>*/}
                 <Input type="select" name="select" id="exampleSelect">
                     <option>Most recent</option>
                     <option>Oldest</option>
-                    <option>Alphabetical</option>
-                    <option>5</option>
+                    <option>User A-Z</option>
+                    <option>User Z-A</option>
                 </Input>
             </FormGroup>
         </div>

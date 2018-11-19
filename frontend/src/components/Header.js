@@ -111,7 +111,7 @@ function UserName(props) {
             <DropdownToggle tag="a" className="nav-link user-name" caret>
                 {props.user.username}
             </DropdownToggle>
-            <DropdownMenu right className="shadow">
+            <DropdownMenu className="shadow">
                 <DropdownItem tag={Link} to="/profile">My profile</DropdownItem>
                 <DropdownItem divider/>
                 <DropdownItem tag="button" to="/" onClick={logout}>Log out</DropdownItem>
