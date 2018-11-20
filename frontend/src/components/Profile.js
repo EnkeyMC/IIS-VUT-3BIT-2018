@@ -46,7 +46,7 @@ export default class Profile extends Component {
                         <Card>
                             <CardHeader className="h4">
                                 {this.props.user.username}
-                                <Button color="primary" className="float-right">Edit</Button>
+                                <Button color="primary" className="float-right">Edit <FontAwesomeIcon icon="edit"/></Button>
                             </CardHeader>
                             <CardBody>
                                 <Container>

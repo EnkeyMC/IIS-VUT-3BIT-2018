@@ -6,31 +6,26 @@ export default class SidePanel extends Component {
     render() {
         return (
             <nav className="position-fixed side-panel content-height">
-                <div className="w100 mt-5 side-container">
-                    <div className="icon-text flex-mid">
-                        Done
-                    </div>
-                    <div className="flex-mid side-icon">
-                        <FontAwesomeIcon icon="check-circle"/>
-                    </div>
-                </div>
-                <div className="w100 side-container">
-                    <div className="icon-text flex-mid">
-                        Opened tickets
-                    </div>
-                    <div className="flex-mid side-icon">
-                        <FontAwesomeIcon icon ="box-open" />
-                    </div>
-                </div>
-                <div className="w100 side-container">
-                    <div className="icon-text flex-mid">
-                        My reports
-                    </div>
-                    <div className="flex-mid side-icon">
-                        <FontAwesomeIcon icon ="user" />
-                    </div>
-                </div>
+                <Icon icon="archive" label="All tickets" margin="mt-4"/>
+                <Icon icon="folder-open" label="Opened tickets" margin="mt-0"/>
+                <Icon icon="check-circle" label="Closed tickets" margin="mt-0"/>
+                <Icon icon="user" label="My reports" margin="mt-0"/>
+                <Icon icon="bug" label="Bugs" margin="mt-5"/>
+                <Icon icon="clone" label="Modules" margin="mt-0"/>
             </nav>
         );
     }
+}
+
+function Icon(props) {
+    return (
+        <div className={"w100 side-container " + props.margin}>
+            <div className="icon-text flex-mid">
+                {props.label}
+            </div>
+            <div className="flex-mid side-icon">
+                <FontAwesomeIcon icon={props.icon} />
+            </div>
+        </div>
+    );
 }

@@ -8,7 +8,7 @@ import LoginView from "./views/LoginView";
 import ProfileView from "./views/ProfileView";
 import {
     faCheckCircle,
-    faBoxOpen,
+    faFolderOpen,
     faUser,
     faAngleUp,
     faAngleDown,
@@ -17,14 +17,19 @@ import {
     faLaptopCode,
     faCalendarAlt,
     faClock,
-    faSpinner
+    faSpinner,
+    faArchive,
+    faEdit,
+    faBug,
+    faClone
 } from '@fortawesome/free-solid-svg-icons';
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
 
 library.add(
-    faCheckCircle, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
-    faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner
+    faCheckCircle, faFolderOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
+    faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner, faArchive,
+    faEdit, faBug, faClone
 );
 
 const alertConfig = {
