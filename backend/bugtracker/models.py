@@ -90,10 +90,12 @@ class Ticket(models.Model):
     STATUS_OPEN = 'open'
     STATUS_CLOSED = 'closed'
     STATUS_FEEDBACK = 'feedback'
+    STATUS_DUPLICATE = 'duplicate'
     STATUS_CHOICES = (
         (STATUS_OPEN, 'open'),
         (STATUS_CLOSED, 'closed'),
         (STATUS_FEEDBACK, 'feedback'),
+        (STATUS_DUPLICATE, 'duplicate'),
     )
 
     expert = models.ForeignKey(
