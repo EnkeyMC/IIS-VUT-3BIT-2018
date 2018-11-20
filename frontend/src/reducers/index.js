@@ -19,14 +19,15 @@ const initialTicketsViewState = {
     },
     ticketInfo: {
         loading: false,
-        error: false,
-        data: {}
+        error: null,
+        data: null
     }
 };
 
 const initialProfileViewState = {
     user: null,
-    loading: false
+    loading: false,
+    error: null
 };
 
 export const zeroBugsApp = (state, action) => {
@@ -70,6 +71,7 @@ function reduceGetTickets(state, action) {
         case GET_TICKETS: {
             const tickets = copyMerge(state);
             tickets.loading = true;
+            tickets.error = null;
             return tickets;
         }
 
@@ -94,19 +96,18 @@ function reduceGetTickets(state, action) {
 function reduceGetTicket(state, action) {
     switch (action.type) {
         case GET_TICKET:
-            return copyMerge(state, {loading: action.id, error: false});
+            return copyMerge(state, {loading: true, error: false});
         case GET_TICKET+SUCC: {
-            const id = action.payload.data.id;
             return copyMerge(state, {
                 loading: false,
-                error: false,
-                data: copyMerge(state.data, {
-                    [id]: action.payload.data
-                })
+                error: null,
+                data: copyMerge(state.data, action.payload.data)
             });
         }
         case GET_TICKET+FAIL:
-            return copyMerge(state, {loading: false, error: action.meta.previousAction.id});
+            if (action.error.response.status === 404)
+                return copyMerge(state, {loading: false, error: "Ticket not found"});
+            return copyMerge(state, {loading: false, error: action.error.message});
         default:
             return state;
     }
@@ -126,11 +127,13 @@ function reduceForms(state = {}, action) {
 function reduceUserView(state = initialProfileViewState, action) {
     switch (action.type) {
         case GET_USER:
-            return copyMerge(state, {loading: true});
+            return copyMerge(state, {loading: true, error: null});
         case GET_USER+SUCC: // TODO not found
+            if (action.payload.data.count === 0)
+                return copyMerge(state, {user: null, loading: false, error: "User not found"});
             return copyMerge(state, {user: action.payload.data.results[0], loading: false});
         case GET_USER+FAIL:
-            return copyMerge(state, {loading: false});
+            return copyMerge(state, {loading: false, error: action.error.message});
         default:
             return state;
     }

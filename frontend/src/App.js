@@ -22,7 +22,8 @@ import {
     faEdit,
     faBug,
     faClone,
-    faPlus
+    faPlus,
+    faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons';
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
@@ -30,7 +31,7 @@ import AlertTemplate from 'react-alert-template-basic';
 library.add(
     faBoxes, faBox, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
-    faEdit, faBug, faClone, faPlus
+    faEdit, faBug, faClone, faPlus, faExclamationCircle
 );
 
 const alertConfig = {

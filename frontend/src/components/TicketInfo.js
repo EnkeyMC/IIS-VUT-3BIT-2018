@@ -8,6 +8,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {connect} from "react-redux";
 import {getTicket} from '../actions';
 import {Link} from "react-router-dom";
+import Error from "./Error";
+import {Spinner} from "../utils";
 
 
 export default class TicketInfo extends Component {
@@ -36,6 +38,25 @@ export default class TicketInfo extends Component {
 
     render() {
         const ticket = this.props.ticket;
+
+        if (this.props.loading) {
+            return (
+                <div className="ticket-info content-height flex-mid">
+                    <Spinner size="5x" />
+                </div>
+            );
+        }
+
+        if (this.props.error) {
+            return (
+                <div className="ticket-info content-height flex-mid">
+                    <Error>
+                        {this.props.error}
+                    </Error>
+                </div>
+            );
+        }
+
         if (!ticket)
             return null;
 
@@ -91,12 +112,12 @@ export default class TicketInfo extends Component {
 }
 
 TicketInfo = connect(
-    (state, ownProps) => {
+    (state) => {
         return {
-            ticket: state.ticketView.ticketInfo.data[ownProps.match.params.ticketId ? ownProps.match.params.ticketId : ownProps.defaultId],
+            ticket: state.ticketView.ticketInfo.data,
             tickets: state.ticketView.tickets,
-            loading: state.ticketView.ticketInfo.loading === (ownProps.match.params.ticketId ? ownProps.match.params.ticketId : ownProps.defaultId),
-            error: state.ticketView.ticketInfo.error === (ownProps.match.params.ticketId ? ownProps.match.params.ticketId : ownProps.defaultId)
+            loading: state.ticketView.ticketInfo.loading,
+            error: state.ticketView.ticketInfo.error
         }
     },
     (dispatch) => {

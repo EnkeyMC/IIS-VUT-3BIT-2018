@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Link} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, Label, Input, Button, UncontrolledTooltip } from 'reactstrap';
+import {Spinner} from "../utils";
+import Error from "./Error";
 
 export default class TicketList extends Component {
     render() {
@@ -9,6 +11,24 @@ export default class TicketList extends Component {
             <div className="ticket-list content-height position-fixed">
                 <Select/>
                 <div className="list-group">
+                    {
+                        this.props.tickets.loading ?
+                            <div className="flex-mid mt-4">
+                                <Spinner size="2x" />
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        this.props.tickets.error ?
+                            <div className="flex-mid mt-3 mb-">
+                                <Error>
+                                    {this.props.tickets.error}
+                                </Error>
+                            </div>
+                            :
+                            null
+                    }
                     {this.props.tickets.data.map(ticket => {
                         return <Ticket key={ticket.id} ticket={ticket} />;
                     })}

@@ -35,6 +35,6 @@ export class ErrorBoundary extends React.Component {
 
 export function Spinner(props) {
     return (
-        <FontAwesomeIcon icon="spinner" size={props.size} spin/>
+        <FontAwesomeIcon className="text-muted" icon="spinner" size={props.size} spin/>
     );
 }

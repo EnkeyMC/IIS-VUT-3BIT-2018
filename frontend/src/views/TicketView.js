@@ -4,7 +4,7 @@ import SidePanel from "../components/SidePanel";
 import TicketList from "../components/TicketList";
 import TicketInfo from "../components/TicketInfo";
 import {Route, withRouter} from "react-router";
-import connect from "react-redux/es/connect/connect";
+import {connect} from "react-redux";
 import {getTickets} from "../actions";
 
 export default class TicketView extends React.Component {
@@ -15,14 +15,14 @@ export default class TicketView extends React.Component {
     render () {
         let defaultId = null;
         if (this.props.tickets.data.length > 0)
-            defaultId = this.props.tickets.data.length;
+            defaultId = this.props.tickets.data[0].id;
 
         return (
             <div>
                 <Header />
                 <div className="pt-header position-relative">
                     <SidePanel/>
-                    <TicketList tickets={this.props.tickets}/>
+                    <TicketList tickets={this.props.tickets} />
                     <Route path={this.props.match.path+'/:ticketId?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
                 </div>
             </div>
