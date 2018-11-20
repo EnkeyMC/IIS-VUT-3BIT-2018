@@ -16,14 +16,15 @@ import {
     faBirthdayCake,
     faLaptopCode,
     faCalendarAlt,
-    faClock
+    faClock,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
 
 library.add(
     faCheckCircle, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
-    faBirthdayCake, faLaptopCode, faCalendarAlt, faClock
+    faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner
 );
 
 const alertConfig = {

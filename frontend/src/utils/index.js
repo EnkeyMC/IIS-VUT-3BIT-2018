@@ -1,5 +1,7 @@
 import React from 'react';
 import { Container, Row } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 export function copyMerge(obj1, obj2 = null) {
     return Object.assign({}, obj1, obj2);
@@ -29,4 +31,10 @@ export class ErrorBoundary extends React.Component {
         }
         return this.props.children;
     }
+}
+
+export function Spinner(props) {
+    return (
+        <FontAwesomeIcon icon="spinner" size={props.size} spin/>
+    );
 }

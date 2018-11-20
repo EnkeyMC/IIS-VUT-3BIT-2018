@@ -7,7 +7,8 @@ import {
     Container,
     Row,
     Col,
-    Badge
+    Badge,
+    Button
 } from 'reactstrap';
 import {connect} from "react-redux";
 import {getUser} from "../actions";
@@ -43,7 +44,10 @@ export default class Profile extends Component {
                 <Row className="justify-content-center">
                     <Col lg="8">
                         <Card>
-                            <CardHeader className="h4">{this.props.user.username}</CardHeader>
+                            <CardHeader className="h4">
+                                {this.props.user.username}
+                                <Button color="primary" className="float-right">Edit</Button>
+                            </CardHeader>
                             <CardBody>
                                 <Container>
                                     <Row className="border-bottom pb-1">
