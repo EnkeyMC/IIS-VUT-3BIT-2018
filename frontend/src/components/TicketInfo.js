@@ -165,7 +165,7 @@ function BugsContainer() {
 
 function Bug(props) {
     return (
-        <Card body outline color="danger" className="mb-2 bugs">
+        <Card body outline className="mb-2 bugs">
             <CardTitle>Insert bugs of ticket</CardTitle>
             <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
         </Card>
