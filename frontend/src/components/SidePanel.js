@@ -6,10 +6,10 @@ export default class SidePanel extends Component {
     render() {
         return (
             <nav className="position-fixed side-panel content-height">
-                <Icon icon="archive" label="All tickets" margin="mt-4"/>
-                <Icon icon="folder-open" label="Opened tickets" margin="mt-0"/>
-                <Icon icon="check-circle" label="Closed tickets" margin="mt-0"/>
-                <Icon icon="user" label="My reports" margin="mt-0"/>
+                <Icon icon="boxes" label="All tickets" margin="mt-4"/>
+                <Icon icon="box-open" label="Opened tickets" margin="mt-0"/>
+                <Icon icon="box" label="Closed tickets" margin="mt-0"/>
+                <Icon icon="user" label="My tickets" margin="mt-0"/>
                 <Icon icon="bug" label="Bugs" margin="mt-5"/>
                 <Icon icon="clone" label="Modules" margin="mt-0"/>
             </nav>

@@ -79,7 +79,7 @@ export default class TicketInfo extends Component {
                             <Container>
                                 <Row className="mt-1">
                                     <h4>Related bugs:</h4>
-                                    <Bugs/>
+                                    <BugsContainer/>
                                 </Row>
                             </Container>
                         </Col>
@@ -153,24 +153,21 @@ function Numbering(props) {
     );
 }
 
-const Bugs = (props) => {
+function BugsContainer() {
     return (
         <div>
-            <Card body outline color="danger" className="mb-2">
-                <CardTitle>Insert bugs of ticket</CardTitle>
-                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                <Button color="secondary">Probably not needed</Button>
-            </Card>
-            <Card body outline color="danger" className="mb-2">
-                <CardTitle>Insert bugs of ticket</CardTitle>
-                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                <Button color="secondary">Probably not needed</Button>
-            </Card>
-            <Card body outline color="danger" className="mb-2">
-                <CardTitle>Insert bugs of ticket</CardTitle>
-                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                <Button color="secondary">Probably not needed</Button>
-            </Card>
+            <Bug/>
+            <Bug/>
+            <Bug/>
         </div>
     );
-};
+}
+
+function Bug(props) {
+    return (
+        <Card body outline color="danger" className="mb-2 bugs">
+            <CardTitle>Insert bugs of ticket</CardTitle>
+            <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+        </Card>
+    );
+}

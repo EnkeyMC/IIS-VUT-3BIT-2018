@@ -47,7 +47,15 @@ export default class Header extends Component {
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink>Category</NavLink>
+                                {/**TODO switching look up */}
+                                <UncontrolledDropdown setActiveFromChild>
+                                    <DropdownToggle tag="a" className="nav-link" caret>
+                                        Dropdown
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem tag="a" href="/blah" active>Link</DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>
                             </NavItem>
                             <NavItem>
                                 <SearchBar />

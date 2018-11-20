@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from "react-router-dom";
-import { FormGroup, Label, Input } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FormGroup, Label, Input, Button, UncontrolledTooltip } from 'reactstrap';
 
 export default class TicketList extends Component {
     render() {
@@ -31,8 +32,8 @@ function Ticket(props) {
 
 function Select(props) {
     return (
-        <div className="w-100 flex-mid select">
-            <FormGroup className=" w-75">
+        <div className="w-100 pl-2 select">
+            <FormGroup className="d-inline-block w-75">
                 {/*<Label for="exampleSelect">Order</Label>*/}
                 <Input type="select" name="select" id="exampleSelect">
                     <option>Most recent</option>
@@ -41,9 +42,20 @@ function Select(props) {
                     <option>User Z-A</option>
                 </Input>
             </FormGroup>
+            <NewTicket/>
         </div>
     );
 }
 
+function NewTicket(props) {
+    return (
+        <div className="mr-2 float-right">
+            <Button className="bg-red" id="createBtn"><FontAwesomeIcon icon="plus" size="md"/></Button>
+            <UncontrolledTooltip placement="bottom" target="createBtn">
+                Create New Ticket
+            </UncontrolledTooltip>
+        </div>
+    );
+}
 
 

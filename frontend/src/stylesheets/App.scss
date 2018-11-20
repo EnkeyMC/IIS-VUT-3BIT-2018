@@ -61,6 +61,11 @@ code {
   align-items: center;
 }
 
+.bg-red {
+  background: #d41212 !important;
+  border: 1px solid #bf1111 !important;
+}
+
 /* Side panel css */
 .side-panel {
   z-index: 100;
@@ -147,6 +152,12 @@ code {
   width: 100%;
   padding-left: 350px;
   overflow-y: auto;
+}
+.bugs {
+  &:hover {
+    cursor: pointer;
+    background: #f8f9fa;
+  }
 }
 
 /* Profile css */
