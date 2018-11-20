@@ -120,3 +120,12 @@ class SeveritySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Severity
         fields = '__all__'
+
+
+class BugSerializer(serializers.ModelSerializer):
+    tickets = serializers.PrimaryKeyRelatedField(
+            many=True, queryset=models.Bug.objects.all())
+
+    class Meta:
+        model = models.Bug
+        fields = '__all__'

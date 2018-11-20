@@ -101,7 +101,7 @@ class Ticket(models.Model):
         related_name='tickets_assigned'
     )
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    bugs = models.ManyToManyField(Bug)
+    bugs = models.ManyToManyField(Bug, related_name='tickets')
     duplicate = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=100)
     description = models.TextField()

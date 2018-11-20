@@ -94,3 +94,14 @@ class SeverityViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('level', 'name')
     ordering = ('level',)
+
+
+class BugViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.BugSerializer
+    queryset = models.Bug.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsStaffOrReadOnly)
+    filter_backends = (OrderingFilter, SearchFilter)
+    search_fields = ('title',)
+    ordering_fields = ('severity', 'id')
+    ordering = ('id',)
