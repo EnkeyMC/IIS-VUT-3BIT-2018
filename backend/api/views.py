@@ -24,7 +24,7 @@ class TicketViewSet(viewsets.ModelViewSet):
     search_fields = ('title',)
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == 'list' or self.action == 'create':
             return serializers.TicketListSerializer
         if not self.request.user.is_authenticated:
             return serializers.TicketDetailSerializer
