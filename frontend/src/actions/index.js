@@ -1,5 +1,6 @@
 export const GET_TICKETS = 'GET_TICKETS_REQ';
 export const GET_TICKET = 'GET_TICKET_REQ';
+export const SET_TICKET_ERROR = 'SET_TICKET_ERROR';
 export const GET_USER = 'GET_USER_REQ';
 export const SUBMIT_FORM = 'SUBMIT_FORM_REQ';
 export const SET_TOKEN = 'SET_TOKEN';
@@ -38,7 +39,7 @@ export function getUserTickets(username) {
         type: GET_TICKETS,
         payload: {
             request: {
-                url: '/api/tickets?author='+username
+                url: '/api/tickets?username='+username
             }
         }
     };
@@ -53,6 +54,13 @@ export function getTicket(ticketId) {
                 url: '/api/tickets/'+ticketId
             }
         }
+    }
+}
+
+export function setTicketError(msg) {
+    return {
+        type: SET_TICKET_ERROR,
+        error: msg
     }
 }
 

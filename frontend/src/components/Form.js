@@ -148,11 +148,6 @@ Form = connect(
 
 
 export class Input extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-
     componentDidMount() {
         this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : "");
         if (this.props.onMount)
@@ -160,7 +155,7 @@ export class Input extends React.Component {
     }
 
     render() {
-        const {label: labelProps, formGroup: formGroupProps, hint, form, ...inputProps} = this.props;
+        const {label: labelProps, formGroup: formGroupProps, hint, form, required, ...inputProps} = this.props;
         if (!form.state.fields[this.props.name])
             return null;
 
@@ -168,7 +163,16 @@ export class Input extends React.Component {
 
         return (
             <FormGroup {...formGroupProps}>
-                {labelProps ? <Label {...labelProps} for={this.props.id}>{labelProps.text}</Label> : null }
+                {
+                    labelProps ?
+                        <Label
+                            {...labelProps}
+                            for={this.props.id}>
+                            {labelProps.text}{required ? <span className="text-danger">&nbsp;*</span> : null}
+                        </Label>
+                        :
+                        null
+                }
                 <BsInput
                     {...(error ? {invalid: true} : {})}
                     onChange={form.onChange}

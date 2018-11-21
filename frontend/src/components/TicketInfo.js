@@ -2,34 +2,40 @@ import React, {Component} from 'react';
 import {
     Col, Container, Row,
     Media,
-    Card, Button, CardTitle, CardText
+    Card, CardTitle, CardText
 } from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {connect} from "react-redux";
-import {getTicket} from '../actions';
+import {getTicket, setTicketError} from '../actions';
 import {Link} from "react-router-dom";
 import Error from "./Error";
 import {Spinner} from "../utils";
+import Observable from "../utils/Observable";
 
 
 export default class TicketInfo extends Component {
     constructor(props) {
         super(props);
 
-        this._lastTicket = this.getTicketId();
+        this.ticketObservable = new Observable(this.getTicketId());
+        this.ticketObservable.setOnChanged(newValue => {
+            if (newValue !== null)
+                this.props.getTicket(newValue);
+            else
+                this.props.setTicketError("Nothing to show");
+        });
     }
 
     componentDidMount() {
-        const ticketId = this.getTicketId();
+        const ticketId = this.ticketObservable.get();
         if (ticketId !== null)
             this.props.getTicket(ticketId);
+        else
+            this.props.setTicketError("Nothing to show");
     }
 
     componentDidUpdate() {
-        if (this._lastTicket !== this.getTicketId()) {
-            this._lastTicket = this.getTicketId();
-            this.props.getTicket(this.getTicketId());
-        }
+        this.ticketObservable.update(this.getTicketId());
     }
 
     getTicketId() {
@@ -56,6 +62,9 @@ export default class TicketInfo extends Component {
                 </div>
             );
         }
+
+        if (!this.props.tickets.data)
+            return null;
 
         if (!ticket)
             return null;
@@ -122,7 +131,8 @@ TicketInfo = connect(
     },
     (dispatch) => {
         return {
-            getTicket: (ticketId) => dispatch(getTicket(ticketId))
+            getTicket: (ticketId) => dispatch(getTicket(ticketId)),
+            setTicketError: (msg) => dispatch(setTicketError(msg))
         }
     }
 )(TicketInfo);

@@ -22,7 +22,7 @@ export const RestrictedRoute = connect(
     }
 )(withRouter(({component: Component, minRole, user, location, ...rest}) => {
     if (!user || roleNameToLvl[user.user_type] < minRole) {
-        return <Redirect to={{pathname: "/no-permission", state: {from: this.props.location}}} />
+        return <Redirect to={{pathname: "/no-permission", state: {from: location}}} />
     }
     return <Route {...rest} component={(props) => <Component {...rest} {...props} />} />;
 }));

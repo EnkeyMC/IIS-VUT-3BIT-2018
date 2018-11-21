@@ -1,4 +1,14 @@
-import {GET_TICKETS, SUBMIT_FORM, GET_TICKET, SET_TOKEN, SET_USER, LOGOUT, GET_USER, VERIFY_USER} from '../actions'
+import {
+    GET_TICKETS,
+    SUBMIT_FORM,
+    GET_TICKET,
+    SET_TOKEN,
+    SET_USER,
+    LOGOUT,
+    GET_USER,
+    VERIFY_USER,
+    SET_TICKET_ERROR
+} from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
 
@@ -16,7 +26,7 @@ const initialTicketsViewState = {
     tickets: {
         loading: false,
         error: null,
-        data: []
+        data: null
     },
     ticketInfo: {
         loading: false,
@@ -77,6 +87,7 @@ function reduceGetTickets(state, action) {
             const tickets = copyMerge(state);
             tickets.loading = true;
             tickets.error = null;
+            tickets.data = null;
             return tickets;
         }
 
@@ -101,7 +112,7 @@ function reduceGetTickets(state, action) {
 function reduceGetTicket(state, action) {
     switch (action.type) {
         case GET_TICKET:
-            return copyMerge(state, {loading: true, error: false});
+            return copyMerge(state, {loading: true, error: false, data: null});
         case GET_TICKET+SUCC: {
             return copyMerge(state, {
                 loading: false,
@@ -113,6 +124,8 @@ function reduceGetTicket(state, action) {
             if (action.error.response.status === 404)
                 return copyMerge(state, {loading: false, error: "Ticket not found"});
             return copyMerge(state, {loading: false, error: action.error.message});
+        case SET_TICKET_ERROR:
+            return copyMerge(state, {error: action.error});
         default:
             return state;
     }

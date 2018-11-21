@@ -6,12 +6,16 @@ import TicketInfo from "../components/TicketInfo";
 import {Route, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {getTickets, getUserTickets} from "../actions";
+import Observable from "../utils/Observable";
 
 export default class TicketView extends React.Component {
     constructor(props) {
         super(props);
 
-        this._lastPath = this.props.match.path;
+        this.pathObservable = new Observable(this.props.match.path);
+        this.pathObservable.setOnChanged(() => {
+            this.updateTickets();
+        });
     }
 
 
@@ -20,10 +24,7 @@ export default class TicketView extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this._lastPath !== this.props.match.path) {
-            this._lastPath = this.props.match.path;
-            this.updateTickets()
-        }
+        this.pathObservable.update(this.props.match.path);
     }
 
     updateTickets() {
@@ -39,8 +40,9 @@ export default class TicketView extends React.Component {
 
     render () {
         let defaultId = null;
-        if (this.props.tickets.data.length > 0)
-            defaultId = this.props.tickets.data[0].id;
+        const data = this.props.tickets.data;
+        if (data && data.length > 0)
+            defaultId = data[0].id;
 
         return (
             <div>

@@ -119,7 +119,14 @@ function LogIn() {
     );
 }
 
-function UserName(props) {
+const UserName = connect(
+    null,
+    dispatch => {
+        return {
+            logout: () => dispatch(logout())
+        }
+    }
+)(withAlert(props => {
     const logout = () => {
         props.logout()
             .then(action => {
@@ -141,13 +148,4 @@ function UserName(props) {
             </DropdownMenu>
         </UncontrolledDropdown>
     );
-}
-
-UserName = connect(
-    null,
-    dispatch => {
-        return {
-            logout: () => dispatch(logout())
-        }
-    }
-)(withAlert(UserName));
+}));

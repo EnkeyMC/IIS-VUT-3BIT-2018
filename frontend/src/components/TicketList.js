@@ -1,36 +1,52 @@
 import React, { Component } from 'react';
-import {Link, NavLink} from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormGroup, Label, Input, Button, UncontrolledTooltip } from 'reactstrap';
+import { FormGroup, Input, Button, UncontrolledTooltip } from 'reactstrap';
 import {Spinner} from "../utils";
 import Error from "./Error";
 import {withRouter} from "react-router";
 
 export default class TicketList extends Component {
     render() {
+        const tickets = this.props.tickets;
+
         return (
             <div className="ticket-list content-height position-fixed">
                 <Select/>
                 <div className="list-group">
                     {
-                        this.props.tickets.error ?
-                            <div className="flex-mid mt-3 mb-">
+                        tickets.error ?
+                            <div className="flex-mid mt-3 mb-3">
                                 <Error>
-                                    {this.props.tickets.error}
+                                    {tickets.error}
                                 </Error>
                             </div>
                             :
                             null
                     }
                     {
-                        this.props.tickets.loading ?
+                        tickets.loading ?
                             <div className="flex-mid mt-4">
                                 <Spinner size="2x" />
                             </div>
                             :
-                            this.props.tickets.data.map(ticket => {
+                            null
+                    }
+                    {
+                        tickets.data && tickets.data.length === 0 ?
+                            <div className="flex-mid mt-3 mb-3">
+                                No tickets found
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        tickets.data ?
+                            tickets.data.map(ticket => {
                                 return <Ticket key={ticket.id} ticket={ticket} />;
                             })
+                            :
+                            null
                     }
                 </div>
             </div>
@@ -50,7 +66,7 @@ const Ticket = withRouter((props) => {
     );
 });
 
-function Select(props) {
+function Select() {
     return (
         <div className="w-100 pl-2 select">
             <FormGroup className="d-inline-block w-75">
@@ -67,7 +83,7 @@ function Select(props) {
     );
 }
 
-function NewTicket(props) {
+function NewTicket() {
     return (
         <div className="mr-2 float-right">
             <Button className="bg-red" id="createBtn"><FontAwesomeIcon icon="plus" /></Button>

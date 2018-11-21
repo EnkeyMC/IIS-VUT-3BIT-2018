@@ -22,7 +22,7 @@ export default class RegisterView extends React.Component {
                     <Card className="p-4">
                         <CardBody>
                             <h1>Register</h1>
-                            <p className="text-muted">Create new account</p>
+                            <p className="text-muted">Create new account. All fields are required.</p>
                             <RegisterForm />
                         </CardBody>
                     </Card>

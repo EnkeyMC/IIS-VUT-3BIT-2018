@@ -16,6 +16,7 @@ import {Spinner} from "../utils";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import Error from "./Error";
+import Observable from "../utils/Observable";
 
 
 function ProfileContainer(props) {
@@ -35,19 +36,19 @@ function ProfileContainer(props) {
 export default class Profile extends Component {
     constructor(props) {
         super(props);
-        this._lastUsername = this.props.username;
+        this.usernameObservable = new Observable(this.props.username);
+        this.usernameObservable.setOnChanged(newValue => {
+            this.props.getUser(newValue);
+        });
     }
 
 
     componentDidMount() {
-        this.props.getUser(this._lastUsername);
+        this.props.getUser(this.usernameObservable.get());
     }
 
     componentDidUpdate() {
-        if (this.props.username !== this._lastUsername) {
-            this._lastUsername = this.props.username;
-            this.props.getUser(this._lastUsername);
-        }
+        this.usernameObservable.update(this.props.username);
     }
 
     render () {

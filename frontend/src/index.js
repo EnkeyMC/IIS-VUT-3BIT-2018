@@ -31,9 +31,14 @@ const axiosMiddlewareConfig = {
             {
                 error: (store, response) => {
                     if (response.response.status === 401) {
-                        store.dispatch(setToken(null));
-                        store.dispatch(setUser(null));
+                        if (store.getState().global.token !== null) {
+                            store.dispatch(setToken(null));
+                            store.dispatch(setUser(null));
+                            // Retry the action
+                            store.dispatch(response.config.reduxSourceAction);
+                        }
                     }
+
                     return Promise.reject(response);
                 }
             }
