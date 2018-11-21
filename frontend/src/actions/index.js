@@ -5,14 +5,40 @@ export const SUBMIT_FORM = 'SUBMIT_FORM_REQ';
 export const SET_TOKEN = 'SET_TOKEN';
 export const SET_USER = 'SET_USER';
 export const LOGOUT = 'LOGOUT_REQ';
+export const VERIFY_USER = 'VERIFY_USER_REQ';
 
 
-export function getTickets() {
+export function verifyUser() {
+    return {
+        type: VERIFY_USER,
+        payload: {
+            request: {
+                url: '/auth/logged_in'
+            }
+        }
+    }
+}
+
+export function getTickets(status = null) {
+    let url = '/api/tickets';
+    if (status)
+        url += '?status='+status;
     return {
         type: GET_TICKETS,
         payload: {
             request: {
-                url: '/api/tickets'
+                url: url
+            }
+        }
+    };
+}
+
+export function getUserTickets(username) {
+    return {
+        type: GET_TICKETS,
+        payload: {
+            request: {
+                url: '/api/tickets?author='+username
             }
         }
     };

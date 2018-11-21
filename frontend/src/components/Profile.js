@@ -14,7 +14,8 @@ import {connect} from "react-redux";
 import {getUser} from "../actions";
 import {Spinner} from "../utils";
 import {withAlert} from "react-alert";
-import {Redirect} from "react-router";
+import {Redirect, withRouter} from "react-router";
+import Error from "./Error";
 
 
 function ProfileContainer(props) {
@@ -52,13 +53,15 @@ export default class Profile extends Component {
     render () {
         if (this.props.username === null) {
             this.props.alert.error("Login to view your profile");
-            return <Redirect to="/login" />;
+            return <Redirect to={{pathname: "/login", state: {from: this.props.location}}} />;
         }
 
         if (this.props.error) {
             return (
                 <ProfileContainer>
-
+                    <Error className="mt-5 mb-5">
+                        {this.props.error}
+                    </Error>
                 </ProfileContainer>
             );
         }
@@ -157,4 +160,4 @@ Profile = connect(
             getUser: userId => dispatch(getUser(userId))
         }
     }
-)(withAlert(Profile));
+)(withAlert(withRouter(Profile)));

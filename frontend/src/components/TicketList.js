@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, Label, Input, Button, UncontrolledTooltip } from 'reactstrap';
 import {Spinner} from "../utils";
 import Error from "./Error";
+import {withRouter} from "react-router";
 
 export default class TicketList extends Component {
     render() {
@@ -11,14 +12,6 @@ export default class TicketList extends Component {
             <div className="ticket-list content-height position-fixed">
                 <Select/>
                 <div className="list-group">
-                    {
-                        this.props.tickets.loading ?
-                            <div className="flex-mid mt-4">
-                                <Spinner size="2x" />
-                            </div>
-                            :
-                            null
-                    }
                     {
                         this.props.tickets.error ?
                             <div className="flex-mid mt-3 mb-">
@@ -29,26 +22,33 @@ export default class TicketList extends Component {
                             :
                             null
                     }
-                    {this.props.tickets.data.map(ticket => {
-                        return <Ticket key={ticket.id} ticket={ticket} />;
-                    })}
+                    {
+                        this.props.tickets.loading ?
+                            <div className="flex-mid mt-4">
+                                <Spinner size="2x" />
+                            </div>
+                            :
+                            this.props.tickets.data.map(ticket => {
+                                return <Ticket key={ticket.id} ticket={ticket} />;
+                            })
+                    }
                 </div>
             </div>
         );
     }
 }
 
-function Ticket(props) {
+const Ticket = withRouter((props) => {
     return (
-        <Link to={"/ticket/"+props.ticket.id} className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.ticket.status}>
+        <NavLink to={props.match.path+'/'+props.ticket.id} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.ticket.status}>
             <div className="d-flex w-100 justify-content-between">
                 <h6 className="mb-1 ticket-list-title">#{props.ticket.id} - {props.ticket.title}</h6>
             </div>
-            <Link to={"/profile/"+props.ticket.author}><small className="float-left">{props.ticket.author}</small></Link>
+            <small className="float-left">{props.ticket.author}</small>
             <small className="float-right">{props.ticket.created}</small>
-        </Link>
+        </NavLink>
     );
-}
+});
 
 function Select(props) {
     return (
@@ -70,7 +70,7 @@ function Select(props) {
 function NewTicket(props) {
     return (
         <div className="mr-2 float-right">
-            <Button className="bg-red" id="createBtn"><FontAwesomeIcon icon="plus" size="md"/></Button>
+            <Button className="bg-red" id="createBtn"><FontAwesomeIcon icon="plus" /></Button>
             <UncontrolledTooltip placement="bottom" target="createBtn">
                 Create New Ticket
             </UncontrolledTooltip>

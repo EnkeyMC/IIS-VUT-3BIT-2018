@@ -1,4 +1,4 @@
-import {GET_TICKETS, SUBMIT_FORM, GET_TICKET, SET_TOKEN, SET_USER, LOGOUT, GET_USER} from '../actions'
+import {GET_TICKETS, SUBMIT_FORM, GET_TICKET, SET_TOKEN, SET_USER, LOGOUT, GET_USER, VERIFY_USER} from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
 
@@ -8,7 +8,8 @@ const FAIL = '_FAIL';
 
 const initialGlobalState = {
     user: JSON.parse(localStorage.getItem('AUTH_USER')),
-    token: localStorage.getItem('AUTH_TOKEN')
+    token: localStorage.getItem('AUTH_TOKEN'),
+    verifyingUser: true
 };
 
 const initialTicketsViewState = {
@@ -54,6 +55,10 @@ function reduceGlobal(state = initialGlobalState, action) {
             return copyMerge(state, {user: action.user});
         case LOGOUT+SUCC:
             return copyMerge(state, {user: null, token: null});
+        case VERIFY_USER+SUCC:
+            return copyMerge(state, {verifyingUser: false});
+        case VERIFY_USER+FAIL:
+            return copyMerge(state, {verifyingUser: false, user: null, token: null});
         default:
             return state;
     }
@@ -128,7 +133,7 @@ function reduceUserView(state = initialProfileViewState, action) {
     switch (action.type) {
         case GET_USER:
             return copyMerge(state, {loading: true, error: null});
-        case GET_USER+SUCC: // TODO not found
+        case GET_USER+SUCC:
             if (action.payload.data.count === 0)
                 return copyMerge(state, {user: null, loading: false, error: "User not found"});
             return copyMerge(state, {user: action.payload.data.results[0], loading: false});

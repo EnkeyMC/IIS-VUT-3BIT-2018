@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {ErrorBoundary} from './utils';
+import {ErrorBoundary, Spinner} from './utils';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {Redirect, Route, Switch} from "react-router";
 import RegisterView from "./views/RegisterView";
@@ -28,6 +28,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
+import {RestrictedRoute, ROLE_USER} from "./components/RoleRestriction";
+import {connect} from "react-redux";
+import {verifyUser} from "./actions";
 
 library.add(
     faBoxes, faBox, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
@@ -42,23 +45,56 @@ const alertConfig = {
     zIndex: 9999
 };
 
-class App extends Component {
+const UserVerificator = connect(
+    state => {
+        return {
+            verifyingUser: state.global.verifyingUser && state.global.token !== null
+        }
+    },
+    dispatch => {
+        return {
+            verifyUser: () => dispatch(verifyUser())
+        }
+    }
+)(class UserVerificatorCls extends React.Component{
+    constructor(props) {
+        super(props);
+
+        this.props.verifyUser();
+    }
+
+    render() {
+        if (this.props.verifyingUser) {
+            return (
+                <div className="h-100 flex-mid">
+                    <Spinner size="5x" />
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+});
+
+export default class App extends Component {
   render() {
     return (
       <ErrorBoundary>
-          <Provider template={AlertTemplate} {...alertConfig} >
-              <Switch>
-                  <Redirect exact from="/" to="/ticket" />
-                  <Route path="/ticket" component={TicketView} />
-                  <Route path="/login" component={LoginView} />
-                  <Route path="/register" component={RegisterView} />
-                  <Route path="/profile" component={ProfileView}/>
-                  <Route path="/no-permission" component={ErrorView}/>
-              </Switch>
-          </Provider>
+          <UserVerificator>
+              <Provider template={AlertTemplate} {...alertConfig} >
+                  <Switch>
+                      <Redirect exact from="/" to="/tickets/all" />
+                      <Route path="/tickets/all" component={TicketView} />
+                      <Route path="/tickets/open" component={TicketView} />
+                      <Route path="/tickets/closed" component={TicketView} />
+                      <RestrictedRoute path="/tickets/my" minRole={ROLE_USER} component={TicketView} />
+                      <Route path="/login" component={LoginView} />
+                      <Route path="/register" component={RegisterView} />
+                      <Route path="/profile" component={ProfileView}/>
+                      <Route path="/no-permission" component={ErrorView}/>
+                  </Switch>
+              </Provider>
+          </UserVerificator>
       </ErrorBoundary>
     );
   }
 }
-
-export default App;
