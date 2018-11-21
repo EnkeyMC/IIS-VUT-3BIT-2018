@@ -6,6 +6,7 @@ import RegisterView from "./views/RegisterView";
 import TicketView from "./views/TicketView";
 import LoginView from "./views/LoginView";
 import ProfileView from "./views/ProfileView";
+import ErrorView from "./views/ErrorView";
 import {
     faBoxes,
     faBox,
@@ -52,6 +53,7 @@ class App extends Component {
                   <Route path="/login" component={LoginView} />
                   <Route path="/register" component={RegisterView} />
                   <Route path="/profile" component={ProfileView}/>
+                  <Route path="/no-permission" component={ErrorView}/>
               </Switch>
           </Provider>
       </ErrorBoundary>
