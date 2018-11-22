@@ -79,19 +79,26 @@ class SearchCategory extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { term: '' };
+        this.state = { txt: 'Tickets' };
+
+        this.handleName = this.handleName.bind(this);
     }
+
+    handleName(event) {
+        this.setState({txt: event.target.innerHTML})
+    }
+
     render() {
         return (
             <UncontrolledDropdown setActiveFromChild>
                 <DropdownToggle tag="a" className="nav-link pointer" caret>
-                    Tickets
+                    {this.state.txt}
                 </DropdownToggle>
                 <DropdownMenu>
-                    <DropdownItem tag="a" href="/blah">Tickets</DropdownItem>
-                    <DropdownItem tag="a" href="/blah">Bugs</DropdownItem>
-                    <DropdownItem tag="a" href="/blah">Modules</DropdownItem>
-                    <DropdownItem tag="a" href="/blah">Users</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>Tickets</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>Bugs</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>Modules</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>Users</DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
         );
