@@ -24,3 +24,11 @@ class ModuleFilter(filters.FilterSet):
     class Meta:
         model = Module
         fields = ['expert', 'languages']
+
+
+class LanguageFilter(filters.FilterSet):
+    language = filters.CharFilter(field_name='name', lookup_expr='iexact')
+
+    class Meta:
+        model = Language
+        fields = ['language']

@@ -45,7 +45,8 @@ class LanguageViewSet(viewsets.ModelViewSet):
     queryset = models.Language.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsStaffOrReadOnly)
-    filter_backends = (OrderingFilter, SearchFilter)
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_class = bugtracker_filters.LanguageFilter
     search_fields = ('name',)
     ordering_fields = '__all__'
     ordering = ('id',)
