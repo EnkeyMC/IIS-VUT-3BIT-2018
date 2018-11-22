@@ -86,15 +86,17 @@ class UserDetailSerializer(serializers.ModelSerializer):
         }
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile')
-        info = utils.model_meta.get_field_info(instance.profile)
+        if validated_data.get('profile', False):
+            profile_data = validated_data.pop('profile')
+            info = utils.model_meta.get_field_info(instance.profile)
 
-        for attr, value in profile_data.items():
-            if attr in info.relations and info.relations[attr].to_many:
-                field = getattr(instance.profile, attr)
-                field.set(value)
-            else:
-                setattr(instance.profile, attr, value)
+            for attr, value in profile_data.items():
+                if attr in info.relations and info.relations[attr].to_many:
+                    field = getattr(instance.profile, attr)
+                    field.set(value)
+                else:
+                    setattr(instance.profile, attr, value)
+
         return super().update(instance, validated_data)
 
 
