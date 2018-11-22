@@ -160,6 +160,15 @@ code {
       text-overflow: ellipsis;
     }
   }
+
+  .btn-red {
+    &:focus, &:active {
+      box-shadow: 0 0 0 0.2rem #bf1111 !important;
+    }
+    &:hover {
+      box-shadow: 0 0 0 0.2rem #bf1111;
+    }
+  }
 }
 
 /* Ticket info css */

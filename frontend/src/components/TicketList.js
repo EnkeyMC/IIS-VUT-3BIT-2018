@@ -86,7 +86,7 @@ function Select() {
 function NewTicket() {
     return (
         <div className="mr-2 float-right">
-            <Button className="bg-red" id="createBtn"><FontAwesomeIcon icon="plus" /></Button>
+            <Button className="bg-red btn-red" id="createBtn"><FontAwesomeIcon icon="plus" /></Button>
             <UncontrolledTooltip placement="bottom" target="createBtn">
                 Create New Ticket
             </UncontrolledTooltip>
