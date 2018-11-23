@@ -7,12 +7,13 @@ import {
     LOGOUT,
     GET_USER,
     VERIFY_USER,
-    SET_TICKET_ERROR
+    SET_TICKET_ERROR, GET_LANGUAGES
 } from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
+import { createBrowserHistory } from 'history';
+import { connectRouter } from 'connected-react-router';
 
-// const REQ = '_REQ';
 const SUCC = '_SUCCESS';
 const FAIL = '_FAIL';
 
@@ -41,20 +42,29 @@ const initialProfileViewState = {
     error: null
 };
 
+const initialLanguageListState = {
+    loading: false,
+    error: null,
+    data: null
+};
+
 export const zeroBugsApp = (state, action) => {
-    console.log(state);
-    console.log(action);
+    console.log("State before", state);
+    console.log("Action", action);
 
     const newState = rootReducer(state, action);
-    console.log(newState);
+    console.log("State after", newState);
     return newState;
 };
 
+export const history = createBrowserHistory();
+
 const rootReducer = combineReducers({
+    router: connectRouter(history),
     global: reduceGlobal,
     ticketView: reduceTicketView,
-    forms: reduceForms,
-    profileView: reduceUserView
+    profileView: reduceUserView,
+    languages: reduceLanguageList,
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -65,8 +75,10 @@ function reduceGlobal(state = initialGlobalState, action) {
             return copyMerge(state, {user: action.user});
         case LOGOUT+SUCC:
             return copyMerge(state, {user: null, token: null});
+        case VERIFY_USER:
+            return copyMerge(state, {verifyingUser: true});
         case VERIFY_USER+SUCC:
-            return copyMerge(state, {verifyingUser: false});
+            return copyMerge(state, {verifyingUser: false, user: action.payload.data.user});
         case VERIFY_USER+FAIL:
             return copyMerge(state, {verifyingUser: false, user: null, token: null});
         default:
@@ -95,6 +107,7 @@ function reduceGetTickets(state, action) {
             const tickets = copyMerge(state);
             tickets.data = action.payload.data.results;
             tickets.loading = false;
+            tickets.error = null;
             return tickets;
         }
 
@@ -131,17 +144,6 @@ function reduceGetTicket(state, action) {
     }
 }
 
-function reduceForms(state = {}, action) {
-    switch (action.type) {
-        case SUBMIT_FORM: {
-            return state;
-        }
-
-        default:
-            return state;
-    }
-}
-
 function reduceUserView(state = initialProfileViewState, action) {
     switch (action.type) {
         case GET_USER:
@@ -157,3 +159,15 @@ function reduceUserView(state = initialProfileViewState, action) {
     }
 }
 
+function reduceLanguageList(state = initialLanguageListState, action) {
+    switch (action.type) {
+        case GET_LANGUAGES:
+            return copyMerge(state, {loading: true, error:null});
+        case GET_LANGUAGES+SUCC:
+            return copyMerge(state, {loading: false, data: action.payload.data.results});
+        case GET_LANGUAGES+FAIL:
+            return copyMerge(state, {loading: false, data: null, error: action.error.message});
+        default:
+            return state;
+    }
+}

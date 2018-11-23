@@ -1,12 +1,11 @@
 import React from "react";
-import Header from '../components/Header';
-import SidePanel from "../components/SidePanel";
 import TicketList from "../components/TicketList";
 import TicketInfo from "../components/TicketInfo";
 import {Route, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {getTickets, getUserTickets} from "../actions";
 import Observable from "../utils/Observable";
+import DefaultLayout from "./layouts/DefaultLayout";
 
 export default class TicketView extends React.Component {
     constructor(props) {
@@ -18,9 +17,8 @@ export default class TicketView extends React.Component {
         });
     }
 
-
     componentDidMount() {
-        this.updateTickets();
+        this.pathObservable.triggerOnChanged();
     }
 
     componentDidUpdate() {
@@ -45,14 +43,10 @@ export default class TicketView extends React.Component {
             defaultId = data[0].id;
 
         return (
-            <div>
-                <Header />
-                <div className="pt-header position-relative">
-                    <SidePanel/>
-                    <TicketList tickets={this.props.tickets} />
-                    <Route path={this.props.match.path+'/:ticketId?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
-                </div>
-            </div>
+            <DefaultLayout>
+                <TicketList tickets={this.props.tickets} />
+                <Route path={this.props.match.path+'/:ticketId?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
+            </DefaultLayout>
         )
     }
 }

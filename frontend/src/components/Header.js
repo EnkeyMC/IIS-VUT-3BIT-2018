@@ -15,7 +15,7 @@ import {
     DropdownItem
 } from 'reactstrap';
 
-import {Link} from "react-router-dom";
+import {NavLink as RouterNavLink, Link} from "react-router-dom";
 import {logout} from "../actions";
 import {withAlert} from "react-alert";
 
@@ -58,6 +58,14 @@ export default class Header extends Component {
                                         <UserName user={this.props.user} />
                                         :
                                         <LogIn />
+                                }
+                            </NavItem>
+                            <NavItem>
+                                {
+                                    this.props.user ?
+                                        null
+                                        :
+                                        <NavLink tag={Link} to="/register" className="text-dark">Register</NavLink>
                                 }
                             </NavItem>
                         </Nav>
@@ -122,7 +130,7 @@ class SearchBar extends Component {
 
 function LogIn() {
     return (
-        <NavLink tag={Link} to="/login" className="text-dark">Log In</NavLink>
+            <NavLink tag={RouterNavLink} to="/login" className="text-dark">Log In</NavLink>
     );
 }
 

@@ -7,6 +7,7 @@ export const SET_TOKEN = 'SET_TOKEN';
 export const SET_USER = 'SET_USER';
 export const LOGOUT = 'LOGOUT_REQ';
 export const VERIFY_USER = 'VERIFY_USER_REQ';
+export const GET_LANGUAGES = 'GET_LANGUAGES_REQ';
 
 
 export function verifyUser() {
@@ -64,13 +65,13 @@ export function setTicketError(msg) {
     }
 }
 
-export function submitForm(id, url, data) {
+export function submitForm(id, url, data, edit) {
     return {
         type: SUBMIT_FORM,
         id: id,
         payload: {
             request: {
-                method: "post",
+                method: edit ? "patch" : "post",
                 url: url,
                 data: data
             }
@@ -110,6 +111,17 @@ export function getUser(username) {
         payload: {
             request: {
                 url: "/api/users/?username="+username
+            }
+        }
+    }
+}
+
+export function getLanguages() {
+    return {
+        type: GET_LANGUAGES,
+        payload: {
+            request: {
+                url: '/api/languages'
             }
         }
     }

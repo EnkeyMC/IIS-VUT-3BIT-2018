@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, Input, Button, UncontrolledTooltip } from 'reactstrap';
-import {Spinner} from "../utils";
-import Error from "./Error";
+import {StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 
 export default class TicketList extends Component {
@@ -14,40 +13,21 @@ export default class TicketList extends Component {
             <div className="ticket-list content-height position-fixed">
                 <Select/>
                 <div className="list-group">
-                    {
-                        tickets.error ?
-                            <div className="flex-mid mt-3 mb-3">
-                                <Error>
-                                    {tickets.error}
-                                </Error>
-                            </div>
-                            :
-                            null
-                    }
-                    {
-                        tickets.loading ?
-                            <div className="flex-mid mt-4">
-                                <Spinner size="2x" />
-                            </div>
-                            :
-                            null
-                    }
-                    {
-                        tickets.data && tickets.data.length === 0 ?
-                            <div className="flex-mid mt-3 mb-3">
-                                No tickets found
-                            </div>
-                            :
-                            null
-                    }
-                    {
-                        tickets.data ?
-                            tickets.data.map(ticket => {
-                                return <Ticket key={ticket.id} ticket={ticket} />;
-                            })
-                            :
-                            null
-                    }
+                    <StateRenderer state={this.props.tickets}>
+                        {
+                            tickets.data && tickets.data.length === 0 ?
+                                <div className="flex-mid mt-3 mb-3">
+                                    No tickets found
+                                </div>
+                                :
+                            tickets.data ?
+                                tickets.data.map(ticket => {
+                                    return <Ticket key={ticket.id} ticket={ticket} />;
+                                })
+                                :
+                                null
+                        }
+                    </StateRenderer>
                 </div>
             </div>
         );

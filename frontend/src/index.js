@@ -2,13 +2,13 @@ import 'babel-polyfill';
 import './utils/polyfills';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router'
 import './stylesheets/App.scss';
 import 'bootstrap/dist/css/bootstrap.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from 'redux';
-import { zeroBugsApp } from './reducers';
+import {history, zeroBugsApp} from './reducers';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
@@ -66,11 +66,11 @@ store.subscribe(() => {
 });
 
 ReactDOM.render((
-    <BrowserRouter>
-        <Provider store={store}>
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
             <App />
-        </Provider>
-    </BrowserRouter>
+        </ConnectedRouter>
+    </Provider>
     ), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

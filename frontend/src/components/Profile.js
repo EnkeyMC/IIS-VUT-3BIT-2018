@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
-    Card,
     CardHeader,
     CardBody,
     Container,
@@ -17,21 +16,22 @@ import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import Error from "./Error";
 import Observable from "../utils/Observable";
+import CardContainer from "./CardContainer";
+import {Link} from "react-router-dom";
 
 
-function ProfileContainer(props) {
+function ProfileKey(props) {
     return (
-        <Container className="mt-5">
-            <Row className="justify-content-center">
-                <Col lg="8">
-                    <Card>
-                        {props.children}
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+        <Col md="6" xs="12" className="text-muted">
+            {props.children}
+        </Col>
     );
 }
+
+function ProfileValue(props) {
+    return <Col md="6" xs="12">{props.children}</Col>
+}
+
 
 export default class Profile extends Component {
     constructor(props) {
@@ -44,7 +44,7 @@ export default class Profile extends Component {
 
 
     componentDidMount() {
-        this.props.getUser(this.usernameObservable.get());
+        this.usernameObservable.triggerOnChanged();
     }
 
     componentDidUpdate() {
@@ -59,11 +59,11 @@ export default class Profile extends Component {
 
         if (this.props.error) {
             return (
-                <ProfileContainer>
+                <CardContainer>
                     <Error className="mt-5 mb-5">
                         {this.props.error}
                     </Error>
-                </ProfileContainer>
+                </CardContainer>
             );
         }
 
@@ -72,12 +72,19 @@ export default class Profile extends Component {
 
 
         return (
-            <ProfileContainer>
+            <CardContainer>
                 <CardHeader className="h4">
                     {!this.props.loading ? this.props.user.username : "Loading..."}
                     {
                         this.props.username === this.props.loggedInUserUsername ?
-                            <Button color="primary" className="float-right">Edit <FontAwesomeIcon icon="edit"/></Button>
+                            <Button
+                                tag={Link}
+                                to={{pathname: '/profile/edit', state: {from: this.props.location}}}
+                                color="primary"
+                                className="float-right"
+                            >
+                                Edit <FontAwesomeIcon icon="edit"/>
+                            </Button>
                             :
                             null
                     }
@@ -94,41 +101,46 @@ export default class Profile extends Component {
                             </Container>
                             :
                             <Container>
-                                <Row className="border-bottom pb-1">
+                                <Row className="border-bottom pb-4">
                                     <Container>
                                         <Row className="mb-3">
-                                            <Col md="6" xs="12">
+                                            <ProfileKey>
                                                 <FontAwesomeIcon icon="user" fixedWidth/> Name
-                                            </Col>
-                                            <Col md="6"
-                                                 xs="12">{this.props.user.first_name} {this.props.user.last_name}</Col>
+                                            </ProfileKey>
+                                            <ProfileValue>
+                                                {this.props.user.first_name} {this.props.user.last_name}
+                                            </ProfileValue>
                                         </Row>
                                         <Row className="mb-3">
-                                            <Col md="6" xs="12">
+                                            <ProfileKey>
                                                 <FontAwesomeIcon icon="envelope" fixedWidth/> Email
-                                            </Col>
-                                            <Col md="6" xs="12">{this.props.user.email}</Col>
+                                            </ProfileKey>
+                                            <ProfileValue>
+                                                {this.props.user.email}
+                                            </ProfileValue>
                                         </Row>
                                         <Row className="mb-3">
-                                            <Col md="6" xs="12">
+                                            <ProfileKey>
                                                 <FontAwesomeIcon icon="birthday-cake" fixedWidth/> Birthday
-                                            </Col>
-                                            <Col md="6" xs="12">{this.props.user.profile.birth_date}</Col>
+                                            </ProfileKey>
+                                            <ProfileValue>
+                                                {this.props.user.profile.birth_date}
+                                            </ProfileValue>
                                         </Row>
                                         <Row>
-                                            <Col md="6" xs="12">
+                                            <ProfileKey>
                                                 <FontAwesomeIcon icon="laptop-code" fixedWidth/> Programming
                                                 languages
-                                            </Col>
-                                            <Col md="6" xs="12">
+                                            </ProfileKey>
+                                            <ProfileValue>
                                                 {this.props.user.profile.languages.map(item => <Badge
                                                     color="primary" pill className="mr-1"
                                                     key={item}>{item}</Badge>)}
-                                            </Col>
+                                            </ProfileValue>
                                         </Row>
                                     </Container>
                                 </Row>
-                                <Row className="mt-2">
+                                <Row className="mt-3 text-muted">
                                     <Col>
                                         <FontAwesomeIcon icon="calendar-alt" fixedWidth/> Date Joined
                                     </Col>
@@ -141,7 +153,7 @@ export default class Profile extends Component {
                             </Container>
                     }
                 </CardBody>
-            </ProfileContainer>
+            </CardContainer>
         )
     }
 }
@@ -158,7 +170,7 @@ Profile = connect(
     },
     dispatch => {
         return {
-            getUser: userId => dispatch(getUser(userId))
+            getUser: username => dispatch(getUser(username))
         }
     }
 )(withAlert(withRouter(Profile)));

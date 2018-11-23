@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Error from "../components/Error";
 
 
 export function copyMerge(obj1, obj2 = null) {
@@ -37,4 +38,35 @@ export function Spinner(props) {
     return (
         <FontAwesomeIcon className="text-muted" icon="spinner" size={props.size} spin/>
     );
+}
+
+export function StateRenderer(props) {
+    if (props.state.loading) {
+        if (props.renderLoading)
+            return props.renderLoading(props);
+        return (
+            <div className="flex-mid mt-4">
+                <Spinner size="2x" />
+            </div>
+        );
+    }
+
+    if (props.state.error) {
+        if (props.renderError)
+            return props.renderError(props);
+        return (
+            <div className="flex-mid mt-3 mb-3">
+                <Error>
+                    {props.state.error}
+                </Error>
+            </div>
+        );
+    }
+
+    if (props.renderCondition === false)
+        return null;
+
+    if (typeof props.children === 'function')
+        return props.children(props.state);
+    return props.children;
 }

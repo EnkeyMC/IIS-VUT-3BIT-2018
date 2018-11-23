@@ -17,25 +17,27 @@ export default class TicketInfo extends Component {
     constructor(props) {
         super(props);
 
-        this.ticketObservable = new Observable(this.getTicketId());
-        this.ticketObservable.setOnChanged(newValue => {
-            if (newValue !== null)
+        this.ticketIdObservable = new Observable(this.props.match.params.ticketId);
+        this.ticketIdObservable.setOnChanged(newValue => {
+            if (newValue)
                 this.props.getTicket(newValue);
-            else
-                this.props.setTicketError("Nothing to show");
+        });
+
+        this.defaultTicketIdObservable = new Observable(this.props.defaultId);
+        this.defaultTicketIdObservable.setOnChanged(newValue => {
+            if (newValue !== null && !this.props.match.params.ticketId)
+                this.props.getTicket(newValue);
         });
     }
 
     componentDidMount() {
-        const ticketId = this.ticketObservable.get();
-        if (ticketId !== null)
-            this.props.getTicket(ticketId);
-        else
-            this.props.setTicketError("Nothing to show");
+        this.ticketIdObservable.triggerOnChanged();
+        this.props.setTicketError("Nothing to show");
     }
 
     componentDidUpdate() {
-        this.ticketObservable.update(this.getTicketId());
+        this.ticketIdObservable.update(this.props.match.params.ticketId);
+        this.defaultTicketIdObservable.update(this.props.defaultId);
     }
 
     getTicketId() {
@@ -125,6 +127,7 @@ TicketInfo = connect(
         return {
             ticket: state.ticketView.ticketInfo.data,
             tickets: state.ticketView.tickets,
+            ticketsLoading: state.ticketView.tickets.loading,
             loading: state.ticketView.ticketInfo.loading,
             error: state.ticketView.ticketInfo.error
         }
@@ -143,8 +146,8 @@ function Detail(props) {
             <Media heading>Details</Media>
             <Row>
                 <Col md="6" xs="12">
-                    <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;<Link to={"/profile/"+props.ticket.author} >{props.ticket.author}</Link></Row>
-                    <Row className="no-margin"><span className="text-muted">Assigned programmer:</span>&nbsp;<Link to={"/profile/"+props.ticket.expert} >{props.ticket.expert}</Link></Row>
+                    <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;<Link to={"/profile/view/"+props.ticket.author} >{props.ticket.author}</Link></Row>
+                    <Row className="no-margin"><span className="text-muted">Assigned programmer:</span>&nbsp;<Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link></Row>
                 </Col>
                 <Col md="6" xs="12">
                     <Row className="no-margin"><span className="text-muted">State:</span>&nbsp;{props.ticket.status}&nbsp;{props.ticket.status === 'duplicate' ? <Link to={"/ticket/"+props.ticket.duplicate} >#{props.ticket.duplicate}</Link> : null}</Row>
@@ -178,8 +181,8 @@ function Numbering(props) {
     return (
         <div className="font-size">
             <span>{props.thisIdx} of {props.size}</span>
-            <Link to={"/ticket/"+props.prevId} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
-            <Link to={"/ticket/"+props.nextId} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
+            <Link to={"/tickets/"+props.prevId} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
+            <Link to={"/tickets/"+props.nextId} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
         </div>
     );
 }

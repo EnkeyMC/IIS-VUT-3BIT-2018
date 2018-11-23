@@ -66,6 +66,10 @@ code {
   border: 1px solid #bf1111 !important;
 }
 
+.content-with-side-panel {
+  padding-left: 50px;
+}
+
 /* Side panel css */
 .side-panel {
   z-index: 100;
@@ -150,7 +154,6 @@ code {
 
     &.selected {
       border-right: 2px solid #d41212;
-      background-color: transparent;
       padding-right: calc(1.25rem - 2px);
     }
 

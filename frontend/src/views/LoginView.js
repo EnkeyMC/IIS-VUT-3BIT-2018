@@ -1,9 +1,8 @@
 import React from 'react';
-import AuthLayout from './layouts/AuthLayout';
 import {
     Col,
     Card,
-    CardBody, Button
+    CardBody, Button, Row, Container
 } from 'reactstrap';
 import {Link} from "react-router-dom";
 import { Form, Input } from "../components/Form";
@@ -11,22 +10,27 @@ import {connect} from "react-redux";
 import {setToken, setUser} from "../actions";
 import {Redirect, withRouter} from "react-router";
 import {withAlert} from "react-alert";
+import DefaultLayout from "./layouts/DefaultLayout";
 
 export default class LoginView extends React.Component {
     render() {
         return (
-            <AuthLayout>
-                <Col lg="5">
-                    <Card className="p-4">
-                        <CardBody>
-                            <h1>Login</h1>
-                            <p className="text-muted">All fields are required</p>
-                            <LoginForm/>
-                            <p className="mt-4">Do not have an account, yet? <Link to="/register">Register here!</Link></p>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </AuthLayout>
+            <DefaultLayout>
+                <Container>
+                    <Row className="justify-content-center align-self-center flex-fill">
+                        <Col lg="5">
+                            <Card className="p-4 mt-5">
+                                <CardBody>
+                                    <h1>Login</h1>
+                                    <p className="text-muted">All fields are required</p>
+                                    <LoginForm/>
+                                    <p className="mt-4">Do not have an account, yet? <Link to="/register">Register here!</Link></p>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </DefaultLayout>
         );
     }
 }

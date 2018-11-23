@@ -19,4 +19,8 @@ export default class Observable {
     get() {
         return this._lastValue;
     }
+
+    triggerOnChanged() {
+        this.onChanged(this._lastValue);
+    }
 }

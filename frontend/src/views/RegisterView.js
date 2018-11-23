@@ -1,10 +1,9 @@
 import React from 'react';
-import AuthLayout from './layouts/AuthLayout';
 import {
     Col,
     Card,
     CardBody,
-    Button
+    Button, Container, Row
 } from 'reactstrap';
 import {Link} from "react-router-dom";
 import {Form, Input} from "../components/Form";
@@ -13,21 +12,26 @@ import {Redirect, withRouter} from "react-router";
 import connect from "react-redux/es/connect/connect";
 import {setToken, setUser} from "../actions";
 import {withAlert} from "react-alert";
+import DefaultLayout from "./layouts/DefaultLayout";
 
 export default class RegisterView extends React.Component {
     render() {
         return (
-            <AuthLayout>
-                <Col md="7">
-                    <Card className="p-4">
-                        <CardBody>
-                            <h1>Register</h1>
-                            <p className="text-muted">Create new account. All fields are required.</p>
-                            <RegisterForm />
-                        </CardBody>
-                    </Card>
-                </Col>
-            </AuthLayout>
+            <DefaultLayout>
+                <Container>
+                    <Row className="justify-content-center align-self-center flex-fill">
+                        <Col md="7">
+                            <Card className="p-4 mt-5">
+                                <CardBody>
+                                    <h1>Register</h1>
+                                    <p className="text-muted">Create new account. All fields are required.</p>
+                                    <RegisterForm />
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </DefaultLayout>
         );
     }
 }
