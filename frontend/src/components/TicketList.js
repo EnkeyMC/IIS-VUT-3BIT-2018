@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Input, Button, UncontrolledTooltip, Label} from 'reactstrap';
 import {StateRenderer} from "../utils";
@@ -56,20 +56,20 @@ function Select() {
                 <option>User A-Z</option>
                 <option>User Z-A</option>
             </Input>
-            <NewTicket/>
+            <NewTicketBtn/>
         </div>
     );
 }
 
-function NewTicket() {
+const NewTicketBtn = withRouter((props) => {
     return (
         <div className="float-right">
-            <Button className="bg-red btn-red" id="createTicketBtn"><FontAwesomeIcon icon="plus" /></Button>
+            <Button tag={Link} to={props.match.path+'/create'} className="bg-red btn-red" id="createTicketBtn"><FontAwesomeIcon icon="plus" /></Button>
             <UncontrolledTooltip placement="bottom" target="createTicketBtn">
                 Create New Ticket
             </UncontrolledTooltip>
         </div>
     );
-}
+});
 
 

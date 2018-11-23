@@ -53,7 +53,7 @@ class RegisterForm extends React.Component {
         this.props.setUser(data.user);
 
         this.props.alert.success("You have been successfully registered.");
-        this.setState({redirect: true});
+        this.props.history.push('/profile');
     }
 
     handleBeforeSubmit(state, event, setFormState) {
@@ -79,9 +79,6 @@ class RegisterForm extends React.Component {
     }
 
     render() {
-        if (this.state.redirect)
-            return <Redirect to="/profile" />;
-
         return (
             <Form id="register" url="/auth/register/" beforeSubmit={this.handleBeforeSubmit} onSubmitSuccess={this.handleSuccess}>
                 <Input label={{text: "Username"}} name="username" id="username" />

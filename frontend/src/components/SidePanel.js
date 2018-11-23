@@ -24,7 +24,7 @@ export default class SidePanel extends Component {
 function PanelLink(props) {
     return (
         <NavLink to={props.to} className={"d-block w100 side-container " + props.margin}>
-            <div className="icon-text flex-mid">
+            <div className="icon-text">
                 {props.label}
             </div>
             <div className="flex-mid side-icon">

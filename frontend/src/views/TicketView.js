@@ -1,11 +1,12 @@
 import React from "react";
 import TicketList from "../components/TicketList";
 import TicketInfo from "../components/TicketInfo";
-import {Route, withRouter} from "react-router";
+import {Route, Switch, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {getTickets, getUserTickets} from "../actions";
 import Observable from "../utils/Observable";
 import DefaultLayout from "./layouts/DefaultLayout";
+import TicketCreate from "../components/TicketCreate";
 
 export default class TicketView extends React.Component {
     constructor(props) {
@@ -45,7 +46,10 @@ export default class TicketView extends React.Component {
         return (
             <DefaultLayout>
                 <TicketList tickets={this.props.tickets} />
-                <Route path={this.props.match.path+'/:ticketId?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
+                <Switch>
+                    <Route path={this.props.match.path+'/create'} component={TicketCreate} />
+                    <Route path={this.props.match.path+'/:ticketId(\\d+)?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
+                </Switch>
             </DefaultLayout>
         )
     }

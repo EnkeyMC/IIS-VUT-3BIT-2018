@@ -89,17 +89,27 @@ export default class TicketInfo extends Component {
                 <Container>
                     <Row className="mb-3">
                         <Col className="pt-1 text-right">
-                            <Numbering prevId={prevTicketId} nextId={nextTicketId} thisIdx={ticketIdx} size={this.props.tickets.data.length} />
+                            <Container>
+                                <Row>
+                                    <Col>
+                                        <Numbering prevId={prevTicketId} nextId={nextTicketId} thisIdx={ticketIdx} size={this.props.tickets.data.length} />
+                                    </Col>
+                                </Row>
+                            </Container>
                         </Col>
                     </Row>
                     <Row>
                         <Col lg="8" xs="12" md="12">
                             <Container>
                                 <Row>
-                                    <h1>#{ticket.id} - {ticket.title}</h1>
+                                    <Col>
+                                        <h1>#{ticket.id} - {ticket.title}</h1>
+                                    </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
-                                    <Detail ticket={ticket} />
+                                    <Col>
+                                        <Detail ticket={ticket} />
+                                    </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
                                     <Description>{ticket.description}</Description>
@@ -112,8 +122,10 @@ export default class TicketInfo extends Component {
                         <Col lg="4" xs="12" md="12">
                             <Container>
                                 <Row className="mt-1">
-                                    <h4>Related bugs:</h4>
-                                    <BugsContainer/>
+                                    <Col>
+                                        <h4>Related bugs:</h4>
+                                        <BugsContainer/>
+                                    </Col>
                                 </Row>
                             </Container>
                         </Col>
@@ -146,7 +158,7 @@ const Detail = withRouter((props) => {
     const toPath = pathToRegexp.compile(props.match.path);
     return (
         <Container className="no-margin mt-md-4 pb-3">
-            <Media heading>Details</Media>
+            <h4>Details</h4>
             <Row>
                 <Col md="6" xs="12">
                     <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;<Link to={"/profile/view/"+props.ticket.author} >{props.ticket.author}</Link></Row>
@@ -163,20 +175,18 @@ const Detail = withRouter((props) => {
 
 function Description(props) {
     return (
-        <Media className="pb-3">
-            <Media body className="text-justify">
-                <Media heading>Description</Media>
-                {props.children}
-            </Media>
-        </Media>
+        <Col className="pb-3 text-justify">
+            <h4>Description</h4>
+            {props.children}
+        </Col>
     );
 }
 
 function UploadFiles(props) {
     return (
-      <div className="w-100">
-          <Media heading>Uploaded files</Media>
-      </div>
+      <Col>
+          <h4>Uploaded files</h4>
+      </Col>
     );
 }
 

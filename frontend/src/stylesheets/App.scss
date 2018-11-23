@@ -90,8 +90,9 @@ code {
     .icon-text {
       height: 50px;
       background: #e9e9e9;
-      padding-right: 15px;
+      padding: 12px 15px 0 0;
       position: absolute;
+      left: 100%;
       transition: transform 0.3s;
       //transform: translateX(-100%);
       @include prefix(transform, translateX(-100%), webkit ms);
@@ -104,9 +105,10 @@ code {
       position: absolute;
       width: 50px;
     }
-    &:hover .icon-text {
+    &:hover .icon-text, &.test .icon-text {
       //transform: translate(calc(100% - calc(100% - 50px)));
-      @include prefix(transform, translate(calc(100% - calc(100% - 50px))), webkit ms);
+      //@include prefix(transform, translate(calc(100% - calc(100% - 50px))), webkit ms);  -- take složiteee zbytečně -_-
+      @include prefix(transform, translateX(0), webkit ms);
       color: #ffffff;
       background: #d41212;
     }
@@ -180,7 +182,7 @@ code {
 /* Ticket info css */
 .ticket-info {
   width: 100%;
-  padding-left: 350px;
+  padding-left: 300px;
   overflow-y: auto;
 }
 .bugs {
