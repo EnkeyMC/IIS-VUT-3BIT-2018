@@ -1,6 +1,5 @@
 import {
     GET_TICKETS,
-    SUBMIT_FORM,
     GET_TICKET,
     SET_TOKEN,
     SET_USER,

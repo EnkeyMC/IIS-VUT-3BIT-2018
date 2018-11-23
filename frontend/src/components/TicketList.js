@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormGroup, Input, Button, UncontrolledTooltip } from 'reactstrap';
+import {Input, Button, UncontrolledTooltip, Label} from 'reactstrap';
 import {StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 
@@ -48,16 +48,14 @@ const Ticket = withRouter((props) => {
 
 function Select() {
     return (
-        <div className="w-100 pl-2 select">
-            <FormGroup className="d-inline-block w-75">
-                {/*<Label for="exampleSelect">Order</Label>*/}
-                <Input type="select" name="select" id="exampleSelect">
-                    <option>Most recent</option>
-                    <option>Oldest</option>
-                    <option>User A-Z</option>
-                    <option>User Z-A</option>
-                </Input>
-            </FormGroup>
+        <div className="w-100 p-2 select">
+            <small><Label for="order-select" className="text-muted d-block">Ordering</Label></small>
+            <Input type="select" name="select" id="order-select" className="d-inline-block">
+                <option>Most recent</option>
+                <option>Oldest</option>
+                <option>User A-Z</option>
+                <option>User Z-A</option>
+            </Input>
             <NewTicket/>
         </div>
     );
@@ -65,7 +63,7 @@ function Select() {
 
 function NewTicket() {
     return (
-        <div className="mr-2 float-right">
+        <div className="float-right">
             <Button className="bg-red btn-red" id="createTicketBtn"><FontAwesomeIcon icon="plus" /></Button>
             <UncontrolledTooltip placement="bottom" target="createTicketBtn">
                 Create New Ticket

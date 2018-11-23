@@ -142,7 +142,8 @@ TicketInfo = connect(
     }
 )(TicketInfo);
 
-function Detail(props) {
+const Detail = withRouter((props) => {
+    const toPath = pathToRegexp.compile(props.match.path);
     return (
         <Container className="no-margin mt-md-4 pb-3">
             <Media heading>Details</Media>
@@ -152,13 +153,13 @@ function Detail(props) {
                     <Row className="no-margin"><span className="text-muted">Assigned programmer:</span>&nbsp;<Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link></Row>
                 </Col>
                 <Col md="6" xs="12">
-                    <Row className="no-margin"><span className="text-muted">State:</span>&nbsp;{props.ticket.status}&nbsp;{props.ticket.status === 'duplicate' ? <Link to={"/ticket/"+props.ticket.duplicate} >#{props.ticket.duplicate}</Link> : null}</Row>
+                    <Row className="no-margin"><span className="text-muted">State:</span>&nbsp;{props.ticket.status}&nbsp;{props.ticket.status === 'duplicate' ? <Link to={toPath({ticketId: props.ticket.duplicate})} >#{props.ticket.duplicate}</Link> : null}</Row>
                     <Row className="no-margin"><span className="text-muted">Date:</span>&nbsp;{props.ticket.created}</Row>
                 </Col>
             </Row>
         </Container>
     );
-}
+});
 
 function Description(props) {
     return (
