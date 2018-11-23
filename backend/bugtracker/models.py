@@ -89,14 +89,14 @@ class Bug(models.Model):
 
 
 class Ticket(models.Model):
-    STATUS_OPEN = 'open'
+    STATUS_NEW = 'new'
     STATUS_CLOSED = 'closed'
-    STATUS_FEEDBACK = 'feedback'
+    STATUS_ASSIGNED = 'assigned'
     STATUS_DUPLICATE = 'duplicate'
     STATUS_CHOICES = (
-        (STATUS_OPEN, 'open'),
+        (STATUS_NEW, 'new'),
         (STATUS_CLOSED, 'closed'),
-        (STATUS_FEEDBACK, 'feedback'),
+        (STATUS_ASSIGNED, 'assigned'),
         (STATUS_DUPLICATE, 'duplicate'),
     )
 
@@ -110,7 +110,7 @@ class Ticket(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default=STATUS_OPEN
+        max_length=20, choices=STATUS_CHOICES, default=STATUS_NEW
     )
     created = models.DateField(auto_now_add=True)
     attachment = models.FileField()
