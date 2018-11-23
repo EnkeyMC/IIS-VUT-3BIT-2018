@@ -106,3 +106,17 @@ class BugViewSet(viewsets.ModelViewSet):
     search_fields = ('title',)
     ordering_fields = ('severity', 'id')
     ordering = ('id',)
+
+
+class PatchViewset(viewsets.ModelViewSet):
+    serializer_class = serializers.PatchSerializer
+    queryset = models.Patch.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsStaffOrReadOnly)
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_class = bugtracker_filters.PatchFilter
+    ordering_fields = ('id', 'date_released', 'date_applied')
+    ordering = ('id',)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

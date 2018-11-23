@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from bugtracker.models import Ticket, Module, Language
+from bugtracker.models import Ticket, Module, Language, Patch
 
 
 class TicketFilter(filters.FilterSet):
@@ -16,10 +16,11 @@ class TicketFilter(filters.FilterSet):
 
 
 class ModuleFilter(filters.FilterSet):
-    expert = filters.CharFilter(
-        field_name='expert__username', lookup_expr='icontains')
+    expert = filters.CharFilter(field_name='expert__username')
     languages = filters.ModelMultipleChoiceFilter(
-        queryset=Language.objects.all())
+        queryset=Language.objects.all(),
+        field_name='languages__name', to_field_name='name',
+    )
 
     class Meta:
         model = Module
@@ -32,3 +33,18 @@ class LanguageFilter(filters.FilterSet):
     class Meta:
         model = Language
         fields = ['language']
+
+
+class PatchFilter(filters.FilterSet):
+    status = filters.ChoiceFilter(choices=Patch.STATUS_CHOICES)
+    username = filters.CharFilter(field_name='author__username')
+    applied = filters.BooleanFilter(
+        field_name='date_released', lookup_expr='isnull', exclude=True)
+    date_released = filters.DateFromToRangeFilter()
+    date_applied = filters.DateFromToRangeFilter()
+
+    class Meta:
+        model = Patch
+        fields = [
+            'status', 'username', 'applied', 'date_released', 'date_applied'
+        ]

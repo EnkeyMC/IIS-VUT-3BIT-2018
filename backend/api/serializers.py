@@ -126,8 +126,18 @@ class SeveritySerializer(serializers.ModelSerializer):
 
 class BugSerializer(serializers.ModelSerializer):
     tickets = serializers.PrimaryKeyRelatedField(
-            many=True, queryset=models.Bug.objects.all())
+            many=True, queryset=models.Ticket.objects.all())
 
     class Meta:
         model = models.Bug
+        fields = '__all__'
+
+
+class PatchSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+    bugs = serializers.PrimaryKeyRelatedField(
+            many=True, queryset=models.Bug.objects.all())
+
+    class Meta:
+        model = models.Patch
         fields = '__all__'
