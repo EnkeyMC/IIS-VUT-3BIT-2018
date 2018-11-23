@@ -11,6 +11,8 @@ import {Link} from "react-router-dom";
 import Error from "./Error";
 import {Spinner} from "../utils";
 import Observable from "../utils/Observable";
+import pathToRegexp from 'path-to-regexp';
+import {withRouter} from "react-router";
 
 
 export default class TicketInfo extends Component {
@@ -177,15 +179,16 @@ function UploadFiles(props) {
     );
 }
 
-function Numbering(props) {
+const Numbering = withRouter((props) => {
+    const toPath = pathToRegexp.compile(props.match.path);
     return (
         <div className="font-size">
             <span>{props.thisIdx} of {props.size}</span>
-            <Link to={"/tickets/"+props.prevId} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
-            <Link to={"/tickets/"+props.nextId} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
+            <Link to={toPath({ticketId: props.prevId})} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
+            <Link to={toPath({ticketId: props.nextId})} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
         </div>
     );
-}
+});
 
 function BugsContainer() {
     return (
