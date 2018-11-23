@@ -31,6 +31,7 @@ import AlertTemplate from 'react-alert-template-basic';
 import {RestrictedRoute, ROLE_USER} from "./components/RoleRestriction";
 import {connect} from "react-redux";
 import {verifyUser} from "./actions";
+import BugView from "./views/BugView";
 
 library.add(
     faBoxes, faBox, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
@@ -91,6 +92,7 @@ export default class App extends Component {
                       <Route path="/register" component={RegisterView} />
                       <Route path="/profile" component={ProfileView}/>
                       <Route path="/no-permission" component={ErrorView}/>
+                      <Route path="/bugs" component={BugView}/>
                   </Switch>
               </Provider>
           </UserVerificator>
