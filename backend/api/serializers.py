@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from rest_framework import serializers, utils
 
@@ -66,6 +68,14 @@ class UserListSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     languages = serializers.SlugRelatedField(
         slug_field='name', many=True, queryset=models.Language.objects.all())
+
+    def validate_birth_date(self, birth_date):
+        minimum_age = 15
+        if birth_date.year + minimum_age > date.today().year:
+            raise serializers.ValidationError((
+                'The minimum age requirement for '
+                'this site is {} years old.').format(minimum_age))
+        return birth_date
 
     class Meta:
         model = models.Profile
