@@ -24,6 +24,7 @@ import {
     faBug,
     faClone,
     faPlus,
+    faPeopleCarry,
     faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons';
 import {Provider} from "react-alert";
@@ -36,7 +37,7 @@ import BugView from "./views/BugView";
 library.add(
     faBoxes, faBox, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
-    faEdit, faBug, faClone, faPlus, faExclamationCircle
+    faEdit, faBug, faClone, faPlus, faExclamationCircle, faPeopleCarry
 );
 
 const alertConfig = {
