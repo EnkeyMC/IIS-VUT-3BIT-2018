@@ -135,6 +135,7 @@ class SeveritySerializer(serializers.ModelSerializer):
 
 
 class BugSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
     tickets = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Ticket.objects.all())
 

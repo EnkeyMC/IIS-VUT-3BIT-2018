@@ -71,6 +71,8 @@ class Patch(models.Model):
 
 
 class Bug(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created = models.DateField(auto_now_add=True)
     severity = models.ForeignKey(
         Severity, on_delete=models.SET_NULL, null=True
     )

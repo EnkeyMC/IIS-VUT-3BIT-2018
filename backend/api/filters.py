@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from bugtracker.models import Ticket, Module, Language, Patch
+from bugtracker.models import Ticket, Module, Language, Patch, Bug
 
 
 class TicketFilter(filters.FilterSet):
@@ -48,3 +48,11 @@ class PatchFilter(filters.FilterSet):
         fields = [
             'status', 'username', 'applied', 'date_released', 'date_applied'
         ]
+
+
+class BugFilter(filters.FilterSet):
+    username = filters.CharFilter(field_name='author__username')
+
+    class Meta:
+        model = Bug
+        fields = ['username']

@@ -102,10 +102,14 @@ class BugViewSet(viewsets.ModelViewSet):
     queryset = models.Bug.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsStaffOrReadOnly)
-    filter_backends = (OrderingFilter, SearchFilter)
+    filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_class = bugtracker_filters.BugFilter
     search_fields = ('title',)
-    ordering_fields = ('severity', 'id')
-    ordering = ('id',)
+    ordering_fields = ('severity', 'id', 'created')
+    ordering = ('-created',)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class PatchViewset(viewsets.ModelViewSet):
@@ -116,7 +120,7 @@ class PatchViewset(viewsets.ModelViewSet):
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.PatchFilter
     ordering_fields = ('id', 'date_released', 'date_applied')
-    ordering = ('id',)
+    ordering = ('-date_released',)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

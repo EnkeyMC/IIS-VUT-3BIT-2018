@@ -219,6 +219,8 @@
     "model": "bugtracker.bug",
     "pk": 1,
     "fields": {
+        "author": 4,
+        "created": "2017-11-14",
         "severity": 2,
         "module": 2,
         "patch": 1,
@@ -231,6 +233,8 @@
     "model": "bugtracker.bug",
     "pk": 2,
     "fields": {
+        "author": 3,
+        "created": "2018-11-23",
         "severity": 3,
         "module": 1,
         "patch": null,
@@ -243,6 +247,8 @@
     "model": "bugtracker.bug",
     "pk": 3,
     "fields": {
+        "author": 4,
+        "created": "2016-04-20",
         "severity": 4,
         "module": 2,
         "patch": 2,
@@ -255,6 +261,8 @@
     "model": "bugtracker.bug",
     "pk": 4,
     "fields": {
+        "author": 3,
+        "created": "2018-11-20",
         "severity": 2,
         "module": 1,
         "patch": null,
@@ -267,6 +275,8 @@
     "model": "bugtracker.bug",
     "pk": 5,
     "fields": {
+        "author": 4,
+        "created": "2018-11-22",
         "severity": 2,
         "module": 2,
         "patch": 6,
@@ -279,6 +289,8 @@
     "model": "bugtracker.bug",
     "pk": 6,
     "fields": {
+        "author": 4,
+        "created": "2018-11-21",
         "severity": 3,
         "module": 2,
         "patch": 5,
