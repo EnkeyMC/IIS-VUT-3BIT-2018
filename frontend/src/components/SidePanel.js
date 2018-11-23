@@ -8,7 +8,7 @@ export default class SidePanel extends Component {
         return (
             <nav className="position-fixed side-panel content-height">
                 <PanelLink to="/tickets/all" icon="boxes" label="All tickets" margin="mt-4"/>
-                <PanelLink to="/tickets/open" icon="box-open" label="Opened tickets" margin="mt-0"/>
+                <PanelLink to="/tickets/new" icon="box-open" label="New tickets" margin="mt-0"/>
                 <PanelLink to="/tickets/closed" icon="box" label="Closed tickets" margin="mt-0"/>
                 <RestrictedView minRole={ROLE_USER}>
                     <PanelLink to="/tickets/my" icon="user" label="My tickets" margin="mt-0"/>

@@ -26,8 +26,8 @@ export default class TicketView extends React.Component {
     }
 
     updateTickets() {
-        if (this.props.match.path.endsWith('/open'))
-            this.props.getTickets('open');
+        if (this.props.match.path.endsWith('/new'))
+            this.props.getTickets('new');
         else if (this.props.match.path.endsWith('/closed'))
             this.props.getTickets('closed');
         else if (this.props.match.path.endsWith('/my'))
