@@ -38,7 +38,7 @@ export default class BugInfo extends Component {
                         <Col lg="4" xs="12" md="12">
                             <Container>
                                 <Row className="mt-1">
-                                    <h4>Bugs occurrence:</h4>
+                                    <h4>Bug occurrence:</h4>
                                     <TicketsContainer/>
                                 </Row>
                             </Container>

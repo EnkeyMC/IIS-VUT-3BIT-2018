@@ -142,8 +142,11 @@ code {
     &:last-child {
       border-radius: 0;
     }
-    &.state-open {
+    &.state-solution {
       border-left: 5px solid lawngreen;
+    }
+    &.state-open {
+      border-left: 5px solid #f3ea19;
     }
     &.state-closed {
       border-left: 5px solid red;
