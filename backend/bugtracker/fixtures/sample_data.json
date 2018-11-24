@@ -128,7 +128,8 @@
     "pk": 1,
     "fields": {
         "name": "Cosmetic",
-        "description": "Bug is only cosmetic, does not affect program functions."
+        "description": "Bug is only cosmetic, does not affect program functions.",
+        "color": "#09c0fc"
     }
 },
 {
@@ -136,7 +137,8 @@
     "pk": 2,
     "fields": {
         "name": "Minor",
-        "description": "Insignificant problem of the program functioning."
+        "description": "Insignificant problem of the program functioning.",
+        "color": "#f3ea19"
     }
 },
 {
@@ -144,7 +146,8 @@
     "pk": 3,
     "fields": {
         "name": "Major",
-        "description": "Error in the main functionality of the program."
+        "description": "Error in the main functionality of the program.",
+        "color": "#f39110"
     }
 },
 {
@@ -152,7 +155,8 @@
     "pk": 4,
     "fields": {
         "name": "Critical",
-        "description": "Error that can affect security, cause crashes or data loss"
+        "description": "Error that can affect security, cause crashes or data loss",
+        "color": "#FF0000"
     }
 },
 {
