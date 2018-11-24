@@ -224,7 +224,7 @@
         "severity": 2,
         "module": 2,
         "patch": 1,
-        "vulnerability": "None",
+        "vulnerability": false,
         "title": "Bug #1",
         "description": "This is a minor bug"
     }
@@ -238,7 +238,7 @@
         "severity": 3,
         "module": 1,
         "patch": null,
-        "vulnerability": "None",
+        "vulnerability": false,
         "title": "Bug #2",
         "description": "This is a major bug"
     }
@@ -252,7 +252,7 @@
         "severity": 4,
         "module": 2,
         "patch": 2,
-        "vulnerability": "Possible threat",
+        "vulnerability": true,
         "title": "Bug #3",
         "description": "This is a critical bug and a security problem! Do something about it!"
     }
@@ -266,7 +266,7 @@
         "severity": 2,
         "module": 1,
         "patch": null,
-        "vulnerability": "None",
+        "vulnerability": false,
         "title": "Bug #4",
         "description": "This is a bug"
     }
@@ -280,7 +280,7 @@
         "severity": 2,
         "module": 2,
         "patch": 6,
-        "vulnerability": "None",
+        "vulnerability": false,
         "title": "Bug #5",
         "description": "This is a bug"
     }
@@ -294,7 +294,7 @@
         "severity": 3,
         "module": 2,
         "patch": 5,
-        "vulnerability": "None",
+        "vulnerability": false,
         "title": "Bug #6",
         "description": "This is a bug"
     }

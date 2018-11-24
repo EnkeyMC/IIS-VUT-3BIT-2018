@@ -80,7 +80,7 @@ class Bug(models.Model):
         Module, related_name='bugs', on_delete=models.SET_NULL, null=True)
     patch = models.ForeignKey(
         Patch, related_name='bugs', on_delete=models.SET_NULL, null=True)
-    vulnerability = models.CharField(max_length=50)
+    vulnerability = models.BooleanField(default=False)
     title = models.CharField(max_length=100)
     description = models.TextField()
 
