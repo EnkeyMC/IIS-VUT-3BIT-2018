@@ -15,6 +15,9 @@ class TicketListSerializer(serializers.ModelSerializer):
         model = models.Ticket
         exclude = ('expert', 'bugs')
         read_only_fields = ('status', 'duplicate')
+        extra_kwargs = {
+            'created': {'format': '%Y-%m-%d, %H:%M'},
+        }
 
 
 class TicketDetailSerializer(serializers.ModelSerializer):
@@ -142,6 +145,10 @@ class BugSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bug
         fields = '__all__'
+        extra_kwargs = {
+            'created': {'format': '%Y-%m-%d, %H:%M'},
+            'patch': {'read_only': True},
+        }
 
 
 class PatchSerializer(serializers.ModelSerializer):
@@ -152,3 +159,7 @@ class PatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Patch
         fields = '__all__'
+        extra_kwargs = {
+            'date_released': {'format': '%Y-%m-%d, %H:%M'},
+            'date_applied': {'format': '%Y-%m-%d, %H:%M'},
+        }

@@ -63,8 +63,8 @@ class Patch(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-    date_released = models.DateField(auto_now_add=True)
-    date_applied = models.DateField(null=True)
+    date_released = models.DateTimeField(auto_now_add=True)
+    date_applied = models.DateTimeField(null=True)
 
     def __str__(self):
         return '#' + str(self.id)
@@ -72,7 +72,7 @@ class Patch(models.Model):
 
 class Bug(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    created = models.DateField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     severity = models.ForeignKey(
         Severity, on_delete=models.SET_NULL, null=True
     )
@@ -112,7 +112,7 @@ class Ticket(models.Model):
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=STATUS_NEW
     )
-    created = models.DateField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     attachment = models.FileField()
 
     def __str__(self):

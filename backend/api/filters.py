@@ -39,7 +39,7 @@ class PatchFilter(filters.FilterSet):
     status = filters.ChoiceFilter(choices=Patch.STATUS_CHOICES)
     username = filters.CharFilter(field_name='author__username')
     applied = filters.BooleanFilter(
-        field_name='date_released', lookup_expr='isnull', exclude=True)
+        field_name='date_applied', lookup_expr='isnull', exclude=True)
     date_released = filters.DateFromToRangeFilter()
     date_applied = filters.DateFromToRangeFilter()
 
@@ -52,7 +52,8 @@ class PatchFilter(filters.FilterSet):
 
 class BugFilter(filters.FilterSet):
     username = filters.CharFilter(field_name='author__username')
+    date = filters.DateFromToRangeFilter(field_name='created')
 
     class Meta:
         model = Bug
-        fields = ['username']
+        fields = ['username', 'date']
