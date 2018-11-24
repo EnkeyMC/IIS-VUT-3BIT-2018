@@ -116,6 +116,9 @@ code {
       background: #d41212;
       color: white;
     }
+    &:focus {
+      outline: none;
+    }
   }
 }
 

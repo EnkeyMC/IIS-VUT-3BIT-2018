@@ -27,13 +27,14 @@ export default class TicketInfo extends Component {
 
         this.defaultTicketIdObservable = new Observable(this.props.defaultId);
         this.defaultTicketIdObservable.setOnChanged(newValue => {
-            if (newValue !== null && !this.props.match.params.ticketId)
+            if (newValue !== null && !this.props.match.params.ticketId && !this.props.tickets.loading)
                 this.props.getTicket(newValue);
         });
     }
 
     componentDidMount() {
         this.ticketIdObservable.triggerOnChanged();
+        this.defaultTicketIdObservable.triggerOnChanged();
         this.props.setTicketError("Nothing to show");
     }
 

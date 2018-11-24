@@ -3,15 +3,14 @@ import {
     Button,
     CardBody,
     CardHeader,
-    Col, Container, Row
+    Container
 } from "reactstrap";
 import CardContainer from "./CardContainer";
 import {Redirect, withRouter} from "react-router";
-import {Form, Input, Select} from "./Form";
-import {StateRenderer} from "../utils";
-import {Link} from "react-router-dom";
+import {Form, Input} from "./Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
+import {getTickets} from "../actions";
 
 export default function TicketCreate() {
     return (
@@ -36,30 +35,35 @@ class TicketCreateForm extends React.Component {
         super(props);
 
         this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
-
-        this.state = {
-            redirect: false
-        };
     }
 
     handleSubmitSuccess(id, data) {
-        this.setState({redirect: true});
-        if (data.username !== this.props.loggedUser.username)
-            this.props.verifyUser();
-        this.props.alert.success("Changes successfully saved.");
+        this.props.alert.success("Ticket successfully created.");
+        const newPath = this.props.location.pathname.replace('/create', '');
+
+        if (newPath.endsWith('/new'))
+            this.props.getTickets('new');
+        else if (newPath.endsWith('/closed'))
+            this.props.getTickets('closed');
+        else if (newPath.endsWith('/my'))
+            this.props.getUserTickets(this.props.username);
+        else if (newPath.endsWith('/assigned'))
+            this.props.getTickets('assigned');
+        else
+            this.props.getTickets();
+
+        this.props.history.push(this.props.location.pathname.replace('/create', ''));
     }
 
     render() {
-        if (this.state.redirect)
-            return <Redirect to={this.props.location.state ? this.props.location.state.from : '/profile'} />;
-
         return (
-            <Form edit id="create-ticket" url={"/api/tickets/"} onSubmitSuccess={this.handleSubmitSuccess}>
+            <Form id="create-ticket" url={"/api/tickets/"} onSubmitSuccess={this.handleSubmitSuccess}>
                 <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
                 <Input label={{text: "Title"}} name="title" id="title" required />
                 <Input type="textarea" rows="10" label={{text: "Description"}} name="description" id="description" required
                        hint="Please describe the problem in detail with steps to reproduce it, as well as the environment you run the software in."
                 />
+                <Input type="hidden" name="attachment" />
                 <p>TODO: file upload</p>
                 <Button type="submit" color="primary" className="w-100 mt-4">Submit</Button>
             </Form>
@@ -68,12 +72,10 @@ class TicketCreateForm extends React.Component {
 }
 
 TicketCreateForm = connect(
-    (state) => {
-        return {
-        }
-    },
+    null,
     dispatch => {
         return {
+            getTickets: (state = null) => dispatch(getTickets(state))
         }
     }
-)(withAlert(withRouter(TicketCreateForm)));
+) (withAlert(withRouter(TicketCreateForm)));

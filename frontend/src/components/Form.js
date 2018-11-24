@@ -25,7 +25,7 @@ export class Form extends React.Component {
         this._fieldsToRegister = [];
     }
 
-    componentDidMount() {
+    componentDidMount() {console.log("Form mounted");
         this._isMounted = true;
 
         let newFields = {};
@@ -202,7 +202,7 @@ Form = connect(
 
 
 export class Input extends React.Component {
-    componentDidMount() {
+    componentDidMount() {console.log("Input mounted");
         this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : "");
         if (this.props.onMount)
             this.props.onMount(this.props);

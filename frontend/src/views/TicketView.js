@@ -7,6 +7,7 @@ import {getTickets, getUserTickets} from "../actions";
 import Observable from "../utils/Observable";
 import DefaultLayout from "./layouts/DefaultLayout";
 import TicketCreate from "../components/TicketCreate";
+import {RestrictedRoute, ROLE_USER} from "../components/RoleRestriction";
 
 export default class TicketView extends React.Component {
     constructor(props) {
@@ -16,9 +17,6 @@ export default class TicketView extends React.Component {
         this.pathObservable.setOnChanged(() => {
             this.updateTickets();
         });
-    }
-
-    componentDidMount() {
         this.pathObservable.triggerOnChanged();
     }
 
@@ -33,6 +31,8 @@ export default class TicketView extends React.Component {
             this.props.getTickets('closed');
         else if (this.props.match.path.endsWith('/my'))
             this.props.getUserTickets(this.props.username);
+        else if (this.props.match.path.endsWith('/assigned'))
+            this.props.getTickets('assigned');
         else
             this.props.getTickets();
     }
@@ -47,7 +47,7 @@ export default class TicketView extends React.Component {
             <DefaultLayout>
                 <TicketList tickets={this.props.tickets} />
                 <Switch>
-                    <Route path={this.props.match.path+'/create'} component={TicketCreate} />
+                    <RestrictedRoute minRole={ROLE_USER} path={this.props.match.path+'/create'} component={TicketCreate} />
                     <Route path={this.props.match.path+'/:ticketId(\\d+)?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
                 </Switch>
             </DefaultLayout>

@@ -87,6 +87,7 @@ export default class App extends Component {
                       <Redirect exact from="/" to="/tickets/all" />
                       <Route path="/tickets/all" component={TicketView} />
                       <Route path="/tickets/new" component={TicketView} />
+                      <Route path="/tickets/assigned" component={TicketView} />
                       <Route path="/tickets/closed" component={TicketView} />
                       <RestrictedRoute path="/tickets/my" minRole={ROLE_USER} component={TicketView} />
                       <Route path="/login" component={LoginView} />
