@@ -25,6 +25,9 @@ class TicketDetailSerializer(serializers.ModelSerializer):
     expert = serializers.SlugRelatedField(
         slug_field='username', read_only=True
     )
+    created = serializers.DateTimeField(
+        format='%Y-%m-%d, %H:%M', read_only=True
+    )
 
     class Meta:
         model = models.Ticket
