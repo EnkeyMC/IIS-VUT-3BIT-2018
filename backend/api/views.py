@@ -98,7 +98,6 @@ class SeverityViewSet(viewsets.ModelViewSet):
 
 
 class BugViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.BugSerializer
     queryset = models.Bug.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsStaffOrReadOnly)
@@ -110,6 +109,11 @@ class BugViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return serializers.BugGETSerializer
+        return serializers.BugPOSTSerializer
 
 
 class PatchViewset(viewsets.ModelViewSet):

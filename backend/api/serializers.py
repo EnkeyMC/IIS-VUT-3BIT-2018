@@ -140,7 +140,22 @@ class SeveritySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BugSerializer(serializers.ModelSerializer):
+class BugGETSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+    tickets = serializers.PrimaryKeyRelatedField(
+            many=True, queryset=models.Ticket.objects.all())
+    severity = SeveritySerializer()
+
+    class Meta:
+        model = models.Bug
+        fields = '__all__'
+        extra_kwargs = {
+            'created': {'format': '%Y-%m-%d, %H:%M'},
+            'patch': {'read_only': True},
+        }
+
+
+class BugPOSTSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     tickets = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Ticket.objects.all())
