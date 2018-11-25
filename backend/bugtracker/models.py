@@ -114,7 +114,7 @@ class Ticket(models.Model):
         max_length=20, choices=STATUS_CHOICES, default=STATUS_NEW
     )
     created = models.DateTimeField(auto_now_add=True)
-    attachment = models.FileField()
+    attachment = models.FileField(upload_to='tickets/%Y/%m/%d')
 
     def __str__(self):
         return self.title
