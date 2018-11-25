@@ -8,7 +8,7 @@ import {
 import {Link} from "react-router-dom";
 import {Form, Input} from "../components/Form";
 import {copyMerge} from "../utils";
-import {Redirect, withRouter} from "react-router";
+import {withRouter} from "react-router";
 import connect from "react-redux/es/connect/connect";
 import {setToken, setUser} from "../actions";
 import {withAlert} from "react-alert";

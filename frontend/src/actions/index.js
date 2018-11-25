@@ -8,7 +8,20 @@ export const SET_USER = 'SET_USER';
 export const LOGOUT = 'LOGOUT_REQ';
 export const VERIFY_USER = 'VERIFY_USER_REQ';
 export const GET_LANGUAGES = 'GET_LANGUAGES_REQ';
+export const GET_BUGS = 'GET_BUGS_REQ';
+export const GET_BUG = 'GET_BUG_REQ';
+export const SET_BUG_ERROR = 'SET_BUG_ERROR';
+export const GET_BUG_TICKET = 'GET_BUG_TICKET_REQ';
+export const CLEAR_BUG_TICKETS = 'CLEAR_BUG_TICKETS';
+export const GET_TICKET_BUG = 'GET_TICKET_BUG_REQ';
+export const CLEAR_TICKET_BUGS = 'CLEAR_TICKET_BUGS';
 
+export const CANCEL_ACTION_REQUESTS = 'CANCEL_ACTION_REQUEST';
+export const CANCEL_DATA = {cancelled: true};
+
+export function cancelActionRequests(actionType) {
+    return { type: CANCEL_ACTION_REQUESTS, actionType };
+}
 
 export function verifyUser() {
     return {
@@ -124,5 +137,68 @@ export function getLanguages() {
                 url: '/api/languages'
             }
         }
+    }
+}
+
+export function getBugs() {
+    return {
+        type: GET_BUGS,
+        payload: {
+            request: {
+                url: '/api/bugs'
+            }
+        }
+    }
+}
+
+export function getBug(id) {
+    return {
+        type: GET_BUG,
+        payload: {
+            request: {
+                url: '/api/bugs/'+id
+            }
+        }
+    }
+}
+
+export function setBugError(msg) {
+    return {
+        type: SET_BUG_ERROR,
+        error: msg
+    }
+}
+
+export function getBugTicket(id) {
+    return {
+        type: GET_BUG_TICKET,
+        payload: {
+            request: {
+                url: '/api/tickets/'+id
+            }
+        }
+    }
+}
+
+export function clearBugTickets() {
+    return {
+        type: CLEAR_BUG_TICKETS
+    }
+}
+
+export function getTicketBug(id) {
+    return {
+        type: GET_TICKET_BUG,
+        payload: {
+            request: {
+                url: '/api/bugs/'+id
+            }
+        }
+    }
+}
+
+export function clearTicketBugs() {
+    return {
+        type: CLEAR_TICKET_BUGS
     }
 }

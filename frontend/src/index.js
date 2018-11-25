@@ -13,8 +13,15 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 import {setToken, setUser} from "./actions";
+import {createCancellationMiddleware} from './utils/cancellationMiddleware';
 
 export const client = axios.create();
+
+// client.post('http://api.platby.rainbowshaggy.xyz/api/oauth/token', {}, {
+//     headers: {
+//         'X-Requested-With': 'XMLHttpRequest'
+//     }
+// }).then((response) => console.log('response', response)).catch((err) => console.log(err));
 
 const axiosMiddlewareConfig = {
     interceptors: {
@@ -48,7 +55,7 @@ const axiosMiddlewareConfig = {
 
 const store = createStore(
     zeroBugsApp,
-    applyMiddleware(axiosMiddleware(client, axiosMiddlewareConfig)),
+    applyMiddleware(axiosMiddleware(client, axiosMiddlewareConfig), createCancellationMiddleware()),
 );
 
 store.subscribe(() => {

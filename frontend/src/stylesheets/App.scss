@@ -70,6 +70,10 @@ code {
   padding-left: 50px;
 }
 
+.badge {
+  line-height: inherit !important;
+}
+
 /* Side panel css */
 .side-panel {
   z-index: 100;
@@ -147,18 +151,6 @@ code {
     &:last-child {
       border-radius: 0;
     }
-    &.state-new {
-      border-left: 5px solid lawngreen;
-    }
-    &.state-assigned {
-      border-left: 5px solid #f3ea19;
-    }
-    &.state-closed {
-      border-left: 5px solid red;
-    }
-    &.state-duplicate {
-      border-left: 5px solid darkgrey;
-    }
 
     &.selected {
       border-right: 2px solid #d41212;
@@ -189,7 +181,12 @@ code {
   overflow-y: auto;
 }
 .bugs {
+  color: inherit;
+  text-decoration: none;
+
   &:hover {
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
     background: #f8f9fa;
   }
@@ -207,4 +204,43 @@ code {
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
+}
+
+.state-new {
+  border-left: 5px solid lawngreen !important;
+}
+.state-assigned {
+  border-left: 5px solid #f3ea19 !important;
+}
+.state-closed {
+  border-left: 5px solid red !important;
+}
+.state-duplicate {
+  border-left: 5px solid darkgrey !important;
+}
+
+.state-bgr-new {
+   background-color: lawngreen !important;
+ }
+.state-bgr-assigned {
+  background-color: #f3ea19 !important;
+}
+.state-bgr-closed {
+  background-color: red !important;
+}
+.state-bgr-duplicate {
+  background-color: darkgrey !important;
+}
+
+.state-color-new {
+  color: lawngreen !important;
+}
+.state-color-assigned {
+  color: #f3ea19 !important;
+}
+.state-color-closed {
+  color: red !important;
+}
+.state-color-duplicate {
+  color: darkgrey !important;
 }

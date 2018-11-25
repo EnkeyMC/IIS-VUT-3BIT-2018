@@ -6,7 +6,11 @@ import {
     LOGOUT,
     GET_USER,
     VERIFY_USER,
-    SET_TICKET_ERROR, GET_LANGUAGES
+    SET_TICKET_ERROR,
+    GET_LANGUAGES,
+    GET_BUGS,
+    GET_BUG,
+    SET_BUG_ERROR, GET_BUG_TICKET, CLEAR_BUG_TICKETS, GET_TICKET_BUG, CLEAR_TICKET_BUGS
 } from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
@@ -31,7 +35,12 @@ const initialTicketsViewState = {
     ticketInfo: {
         loading: false,
         error: null,
-        data: null
+        data: null,
+        ticketBugs: {
+            loading: 0,
+            error: null,
+            data: []
+        }
     }
 };
 
@@ -45,6 +54,24 @@ const initialLanguageListState = {
     loading: false,
     error: null,
     data: null
+};
+
+const initialBugsViewState = {
+    bugs: {
+        loading: false,
+        error: null,
+        data: null
+    },
+    bugInfo: {
+        loading: false,
+        error: null,
+        data: null,
+        bugTickets: {
+            loading: 0,
+            error: null,
+            data: []
+        }
+    }
 };
 
 export const zeroBugsApp = (state, action) => {
@@ -64,6 +91,7 @@ const rootReducer = combineReducers({
     ticketView: reduceTicketView,
     profileView: reduceUserView,
     languages: reduceLanguageList,
+    bugView: reduceBugView,
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -88,7 +116,10 @@ function reduceGlobal(state = initialGlobalState, action) {
 function reduceTicketView(state = initialTicketsViewState, action) {
     return {
         tickets: reduceGetTickets(state.tickets, action),
-        ticketInfo: reduceGetTicket(state.ticketInfo, action)
+        ticketInfo: Object.assign(
+            reduceGetTicket(state.ticketInfo, action),
+            {ticketBugs: reduceTicketBugs(state.ticketInfo.ticketBugs, action)}
+        )
     };
 }
 
@@ -143,6 +174,33 @@ function reduceGetTicket(state, action) {
     }
 }
 
+function reduceTicketBugs(state, action) {
+    switch (action.type) {
+        case GET_TICKET_BUG:
+            return copyMerge(state, {
+                loading: state.loading + 1
+            });
+        case GET_TICKET_BUG+SUCC:
+            return copyMerge(state, {
+                loading: state.loading - 1,
+                data: state.data.concat([action.payload.data])
+            });
+        case GET_TICKET_BUG+FAIL:
+            return copyMerge(state, {
+                loading: state.loading - 1,
+                error: state.error === null ? [action.error.message] : state.error.concat([action.error.message])
+            });
+        case CLEAR_TICKET_BUGS:
+            return copyMerge(state, {
+                loading: 0,
+                error: null,
+                data: []
+            });
+        default:
+            return state;
+    }
+}
+
 function reduceUserView(state = initialProfileViewState, action) {
     switch (action.type) {
         case GET_USER:
@@ -166,6 +224,95 @@ function reduceLanguageList(state = initialLanguageListState, action) {
             return copyMerge(state, {loading: false, data: action.payload.data.results});
         case GET_LANGUAGES+FAIL:
             return copyMerge(state, {loading: false, data: null, error: action.error.message});
+        default:
+            return state;
+    }
+}
+
+function reduceBugView(state = initialBugsViewState, action) {
+    return {
+        bugs: reduceGetBugs(state.bugs, action),
+        bugInfo: Object.assign(
+            reduceGetBug(state.bugInfo, action),
+            {bugTickets: reduceBugTickets(state.bugInfo.bugTickets, action)}
+        )
+    }
+}
+
+function reduceGetBugs(state, action) {
+    switch (action.type) {
+        case GET_BUGS: {
+            return copyMerge(state, {
+                data: null,
+                loading: true,
+                error: null
+            });
+        }
+
+        case GET_BUGS+SUCC: {
+            return copyMerge(state, {
+                data: action.payload.data.results,
+                loading: false,
+                error: null,
+            });
+        }
+
+        case GET_BUGS+FAIL: {
+            return copyMerge(state, {
+                data: null,
+                loading: false,
+                error: action.error.message
+            });
+        }
+        default:
+            return state;
+    }
+}
+
+function reduceGetBug(state, action) {
+    switch (action.type) {
+        case GET_BUG:
+            return copyMerge(state, {loading: true, error: false, data: null});
+        case GET_BUG+SUCC: {
+            return copyMerge(state, {
+                loading: false,
+                error: null,
+                data: copyMerge(state.data, action.payload.data)
+            });
+        }
+        case GET_BUG+FAIL:
+            if (action.error.response.status === 404)
+                return copyMerge(state, {loading: false, error: "Bug not found"});
+            return copyMerge(state, {loading: false, error: action.error.message});
+        case SET_BUG_ERROR:
+            return copyMerge(state, {error: action.error});
+        default:
+            return state;
+    }
+}
+
+function reduceBugTickets(state, action) {
+    switch (action.type) {
+        case GET_BUG_TICKET:
+            return copyMerge(state, {
+                loading: state.loading + 1
+            });
+        case GET_BUG_TICKET+SUCC:
+            return copyMerge(state, {
+                loading: state.loading - 1,
+                data: state.data.concat([action.payload.data])
+            });
+        case GET_BUG_TICKET+FAIL:
+            return copyMerge(state, {
+                loading: state.loading - 1,
+                error: state.error === null ? [action.error.message] : state.error.concat([action.error.message])
+            });
+        case CLEAR_BUG_TICKETS:
+            return copyMerge(state, {
+                loading: 0,
+                error: null,
+                data: []
+            });
         default:
             return state;
     }

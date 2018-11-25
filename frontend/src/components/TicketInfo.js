@@ -1,25 +1,31 @@
 import React, {Component} from 'react';
 import {
     Col, Container, Row,
-    Media,
-    Card, CardTitle, CardText
+    Card, CardTitle, CardText, Badge
 } from "reactstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {connect} from "react-redux";
-import {getTicket, setTicketError} from '../actions';
+import {
+    cancelActionRequests,
+    clearTicketBugs,
+    GET_TICKET_BUG,
+    getTicket,
+    getTicketBug,
+    setTicketError
+} from '../actions';
 import {Link} from "react-router-dom";
 import Error from "./Error";
 import {Spinner} from "../utils";
 import Observable from "../utils/Observable";
 import pathToRegexp from 'path-to-regexp';
 import {withRouter} from "react-router";
+import {Numbering} from "./Numbering";
 
 
 export default class TicketInfo extends Component {
     constructor(props) {
         super(props);
 
-        this.ticketIdObservable = new Observable(this.props.match.params.ticketId);
+        this.ticketIdObservable = new Observable(this.props.match.params.id);
         this.ticketIdObservable.setOnChanged(newValue => {
             if (newValue)
                 this.props.getTicket(newValue);
@@ -27,8 +33,14 @@ export default class TicketInfo extends Component {
 
         this.defaultTicketIdObservable = new Observable(this.props.defaultId);
         this.defaultTicketIdObservable.setOnChanged(newValue => {
-            if (newValue !== null && !this.props.match.params.ticketId && !this.props.tickets.loading)
+            if (newValue !== null && !this.props.match.params.id && !this.props.tickets.loading)
                 this.props.getTicket(newValue);
+        });
+
+        this.ticketObservable = new Observable(this.props.ticket);
+        this.ticketObservable.setOnChanged(newValue => {
+            if (newValue)
+                this.requestBugs();
         });
     }
 
@@ -39,12 +51,24 @@ export default class TicketInfo extends Component {
     }
 
     componentDidUpdate() {
-        this.ticketIdObservable.update(this.props.match.params.ticketId);
+        this.ticketIdObservable.update(this.props.match.params.id);
         this.defaultTicketIdObservable.update(this.props.defaultId);
+        this.ticketObservable.update(this.props.ticket);
+    }
+
+    componentWillUnmount() {
+        this.props.cancelActions(GET_TICKET_BUG);
+        this.props.clearTicketBugs();
     }
 
     getTicketId() {
-        return this.props.match.params.ticketId ? this.props.match.params.ticketId : this.props.defaultId;
+        return this.props.match.params.id ? this.props.match.params.id : this.props.defaultId;
+    }
+
+    requestBugs() {
+        this.props.cancelActions(GET_TICKET_BUG);
+        this.props.clearTicketBugs();
+        this.props.ticket.bugs.forEach(id => this.props.getTicketBug(id));
     }
 
     render() {
@@ -93,7 +117,12 @@ export default class TicketInfo extends Component {
                             <Container>
                                 <Row>
                                     <Col>
-                                        <Numbering prevId={prevTicketId} nextId={nextTicketId} thisIdx={ticketIdx} size={this.props.tickets.data.length} />
+                                        <Numbering
+                                            prevId={prevTicketId}
+                                            nextId={nextTicketId}
+                                            thisIdx={ticketIdx}
+                                            size={this.props.tickets.data.length}
+                                        />
                                     </Col>
                                 </Row>
                             </Container>
@@ -142,7 +171,6 @@ TicketInfo = connect(
         return {
             ticket: state.ticketView.ticketInfo.data,
             tickets: state.ticketView.tickets,
-            ticketsLoading: state.ticketView.tickets.loading,
             loading: state.ticketView.ticketInfo.loading,
             error: state.ticketView.ticketInfo.error
         }
@@ -150,7 +178,10 @@ TicketInfo = connect(
     (dispatch) => {
         return {
             getTicket: (ticketId) => dispatch(getTicket(ticketId)),
-            setTicketError: (msg) => dispatch(setTicketError(msg))
+            setTicketError: (msg) => dispatch(setTicketError(msg)),
+            getTicketBug: (id) => dispatch(getTicketBug(id)),
+            clearTicketBugs: () => dispatch(clearTicketBugs()),
+            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType))
         }
     }
 )(TicketInfo);
@@ -162,12 +193,43 @@ const Detail = withRouter((props) => {
             <h4>Details</h4>
             <Row>
                 <Col md="6" xs="12">
-                    <Row className="no-margin"><span className="text-muted">Author:</span>&nbsp;<Link to={"/profile/view/"+props.ticket.author} >{props.ticket.author}</Link></Row>
-                    <Row className="no-margin"><span className="text-muted">Assigned programmer:</span>&nbsp;<Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link></Row>
+                    <Row className="no-margin">
+                        <span className="text-muted">
+                            Author:
+                        </span>
+                        &nbsp;
+                        <Link to={"/profile/view/"+props.ticket.author} >{props.ticket.author}</Link>
+                    </Row>
+                    <Row className="no-margin">
+                        <span className="text-muted">
+                            Assigned programmer:
+                        </span>
+                        &nbsp;
+                        <Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link>
+                    </Row>
                 </Col>
                 <Col md="6" xs="12">
-                    <Row className="no-margin"><span className="text-muted">State:</span>&nbsp;{props.ticket.status}&nbsp;{props.ticket.status === 'duplicate' ? <Link to={toPath({ticketId: props.ticket.duplicate})} >#{props.ticket.duplicate}</Link> : null}</Row>
-                    <Row className="no-margin"><span className="text-muted">Date:</span>&nbsp;{props.ticket.created}</Row>
+                    <Row className="no-margin">
+                        <span className="text-muted">
+                            Status:
+                        </span>
+                        &nbsp;
+                        <Badge color="light" className={'state-bgr-'+props.ticket.status}>
+                            {props.ticket.status}
+                            {props.ticket.status === 'duplicate' ?
+                                <>&nbsp;<Link to={toPath({id: props.ticket.duplicate})} >#{props.ticket.duplicate}</Link></>
+                                :
+                                null
+                            }
+                        </Badge>
+                    </Row>
+                    <Row className="no-margin">
+                        <span className="text-muted">
+                            Created:
+                        </span>
+                        &nbsp;
+                        {props.ticket.created}
+                    </Row>
                 </Col>
             </Row>
         </Container>
@@ -191,32 +253,54 @@ function UploadFiles(props) {
     );
 }
 
-const Numbering = withRouter((props) => {
-    const toPath = pathToRegexp.compile(props.match.path);
+
+
+const BugsContainer = connect(
+    state => {
+        return {
+            loading: state.ticketView.ticketInfo.ticketBugs.loading !== 0,
+            error: state.ticketView.ticketInfo.ticketBugs.error,
+            data: state.ticketView.ticketInfo.ticketBugs.data
+        }
+    }
+)((props) => {
+    if (props.error) {
+        return props.error.map((err, idx) => {
+            return (
+                <div className="flex-mid mt-3 mb-3" key={idx}>
+                    <Error>
+                        {err}
+                    </Error>
+                </div>
+            );
+        });
+    }
+
     return (
-        <div className="font-size">
-            <span>{props.thisIdx} of {props.size}</span>
-            <Link to={toPath({ticketId: props.prevId})} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
-            <Link to={toPath({ticketId: props.nextId})} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
+        <div>
+            {props.data.map(bug => <Bug bug={bug} key={bug.id} />)}
+            {
+                props.loading ?
+                    <div className="flex-mid mt-4">
+                        <Spinner size="2x" />
+                    </div>
+                    :
+                    null
+            }
         </div>
     );
 });
 
-function BugsContainer() {
-    return (
-        <div>
-            <Bug/>
-            <Bug/>
-            <Bug/>
-        </div>
-    );
-}
-
 function Bug(props) {
     return (
-        <Card body outline className="mb-2 bugs">
-            <CardTitle>Insert bugs of ticket</CardTitle>
-            <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+        <Card body outline tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs"
+              style={{borderLeft: '5px solid '+props.bug.severity.color}}
+        >
+            <CardTitle>#{props.bug.id} - {props.bug.title}</CardTitle>
+            <CardText>
+                <small className="text-muted float-left">{props.bug.author}</small>
+                <small className="text-muted float-right">{props.bug.created}</small>
+            </CardText>
         </Card>
     );
 }

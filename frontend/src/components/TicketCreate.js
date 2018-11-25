@@ -6,7 +6,7 @@ import {
     Container
 } from "reactstrap";
 import CardContainer from "./CardContainer";
-import {Redirect, withRouter} from "react-router";
+import {withRouter} from "react-router";
 import {Form, Input} from "./Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
