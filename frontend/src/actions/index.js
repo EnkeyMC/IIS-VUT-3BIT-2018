@@ -15,6 +15,8 @@ export const GET_BUG_TICKET = 'GET_BUG_TICKET_REQ';
 export const CLEAR_BUG_TICKETS = 'CLEAR_BUG_TICKETS';
 export const GET_TICKET_BUG = 'GET_TICKET_BUG_REQ';
 export const CLEAR_TICKET_BUGS = 'CLEAR_TICKET_BUGS';
+export const GET_SEVERITIES = 'GET_SEVERITIES_REQ';
+export const GET_MODULES = 'GET_MODULES_REQ';
 
 export const CANCEL_ACTION_REQUESTS = 'CANCEL_ACTION_REQUEST';
 export const CANCEL_DATA = {cancelled: true};
@@ -200,5 +202,27 @@ export function getTicketBug(id) {
 export function clearTicketBugs() {
     return {
         type: CLEAR_TICKET_BUGS
+    }
+}
+
+export function getSeverities() {
+    return {
+        type: GET_SEVERITIES,
+        payload: {
+            request: {
+                url: '/api/severities/'
+            }
+        }
+    }
+}
+
+export function getModules() {
+    return {
+        type: GET_MODULES,
+        payload: {
+            request: {
+                url: '/api/modules/'
+            }
+        }
     }
 }

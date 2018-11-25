@@ -226,6 +226,7 @@ function Ticket(props) {
 }
 
 function Detail(props) {
+    const bug = props.bug;
     return (
         <Container className="no-margin mt-md-4 pb-3">
             <Media heading>Details</Media>
@@ -236,16 +237,20 @@ function Detail(props) {
                             Author:
                         </span>
                         &nbsp;
-                        <Link to={'/profile/view/'+props.bug.author} >{props.bug.author}</Link>
+                        <Link to={'/profile/view/'+bug.author} >{bug.author}</Link>
                     </Row>
                     <Row className="no-margin">
                         <span className="text-muted">
                             Severity:
                         </span>
+                        {
+                            bug.severity ?
+                                <>&nbsp;<Badge color="light" style={{backgroundColor: bug.severity.color}}>{bug.severity.name}</Badge></>
+                                :
+                                null
+                        }
                         &nbsp;
-                        <Badge color="light" style={{backgroundColor: props.bug.severity.color}}>{props.bug.severity.name}</Badge>
-                        &nbsp;
-                        {props.bug.vulnerability ? <Badge color="danger">Vulnerability</Badge> : null}
+                        {bug.vulnerability ? <Badge color="danger">Vulnerability</Badge> : null}
                     </Row>
                 </Col>
                 <Col md="6" xs="12">
@@ -259,7 +264,7 @@ function Detail(props) {
                             Created:
                         </span>
                         &nbsp;
-                        {props.bug.created}
+                        {bug.created}
                     </Row>
                 </Col>
             </Row>

@@ -52,7 +52,7 @@ class TicketCreateForm extends React.Component {
         else
             this.props.getTickets();
 
-        this.props.history.push(this.props.location.pathname.replace('/create', ''));
+        this.props.history.push(newPath);
     }
 
     render() {

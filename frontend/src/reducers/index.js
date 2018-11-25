@@ -10,7 +10,7 @@ import {
     GET_LANGUAGES,
     GET_BUGS,
     GET_BUG,
-    SET_BUG_ERROR, GET_BUG_TICKET, CLEAR_BUG_TICKETS, GET_TICKET_BUG, CLEAR_TICKET_BUGS
+    SET_BUG_ERROR, GET_BUG_TICKET, CLEAR_BUG_TICKETS, GET_TICKET_BUG, CLEAR_TICKET_BUGS, GET_SEVERITIES, GET_MODULES
 } from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
@@ -74,6 +74,18 @@ const initialBugsViewState = {
     }
 };
 
+const initialSeveritiesState = {
+    loading: false,
+    error: null,
+    data: null
+};
+
+const initialModulesState = {
+    loading: false,
+    error: null,
+    data: null
+};
+
 export const zeroBugsApp = (state, action) => {
     console.log("State before", state);
     console.log("Action", action);
@@ -92,6 +104,8 @@ const rootReducer = combineReducers({
     profileView: reduceUserView,
     languages: reduceLanguageList,
     bugView: reduceBugView,
+    severities: reduceSeverities,
+    modules: reduceModules,
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -115,7 +129,7 @@ function reduceGlobal(state = initialGlobalState, action) {
 
 function reduceTicketView(state = initialTicketsViewState, action) {
     return {
-        tickets: reduceGetTickets(state.tickets, action),
+        tickets: reduceGetList(state.tickets, action, GET_TICKETS),
         ticketInfo: Object.assign(
             reduceGetTicket(state.ticketInfo, action),
             {ticketBugs: reduceTicketBugs(state.ticketInfo.ticketBugs, action)}
@@ -123,30 +137,24 @@ function reduceTicketView(state = initialTicketsViewState, action) {
     };
 }
 
-function reduceGetTickets(state, action) {
+function reduceGetList(state, action, ACTION) {
     switch (action.type) {
-        case GET_TICKETS: {
-            const tickets = copyMerge(state);
-            tickets.loading = true;
-            tickets.error = null;
-            tickets.data = null;
-            return tickets;
-        }
-
-        case GET_TICKETS+SUCC: {
-            const tickets = copyMerge(state);
-            tickets.data = action.payload.data.results;
-            tickets.loading = false;
-            tickets.error = null;
-            return tickets;
-        }
-
-        case GET_TICKETS+FAIL: {
-            const tickets = copyMerge(state);
-            tickets.loading = false;
-            tickets.error = action.error.message;
-            return tickets;
-        }
+        case ACTION:
+            return copyMerge(state, {
+                loading: true,
+                data: null,
+                error: null
+            });
+        case ACTION+SUCC:
+            return copyMerge(state, {
+                loading: false,
+                data: action.payload.data.results
+            });
+        case ACTION+FAIL:
+            return copyMerge(state, {
+                loading: false,
+                error: action.error.message
+            });
         default:
             return state;
     }
@@ -217,55 +225,16 @@ function reduceUserView(state = initialProfileViewState, action) {
 }
 
 function reduceLanguageList(state = initialLanguageListState, action) {
-    switch (action.type) {
-        case GET_LANGUAGES:
-            return copyMerge(state, {loading: true, error:null});
-        case GET_LANGUAGES+SUCC:
-            return copyMerge(state, {loading: false, data: action.payload.data.results});
-        case GET_LANGUAGES+FAIL:
-            return copyMerge(state, {loading: false, data: null, error: action.error.message});
-        default:
-            return state;
-    }
+    return reduceGetList(state, action, GET_LANGUAGES);
 }
 
 function reduceBugView(state = initialBugsViewState, action) {
     return {
-        bugs: reduceGetBugs(state.bugs, action),
+        bugs: reduceGetList(state.bugs, action, GET_BUGS),
         bugInfo: Object.assign(
             reduceGetBug(state.bugInfo, action),
             {bugTickets: reduceBugTickets(state.bugInfo.bugTickets, action)}
         )
-    }
-}
-
-function reduceGetBugs(state, action) {
-    switch (action.type) {
-        case GET_BUGS: {
-            return copyMerge(state, {
-                data: null,
-                loading: true,
-                error: null
-            });
-        }
-
-        case GET_BUGS+SUCC: {
-            return copyMerge(state, {
-                data: action.payload.data.results,
-                loading: false,
-                error: null,
-            });
-        }
-
-        case GET_BUGS+FAIL: {
-            return copyMerge(state, {
-                data: null,
-                loading: false,
-                error: action.error.message
-            });
-        }
-        default:
-            return state;
     }
 }
 
@@ -316,4 +285,12 @@ function reduceBugTickets(state, action) {
         default:
             return state;
     }
+}
+
+function reduceSeverities(state = initialSeveritiesState, action) {
+    return reduceGetList(state, action, GET_SEVERITIES);
+}
+
+function reduceModules(state = initialModulesState, action) {
+    return reduceGetList(state, action, GET_MODULES);
 }

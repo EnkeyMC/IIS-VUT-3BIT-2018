@@ -25,7 +25,7 @@ export class Form extends React.Component {
         this._fieldsToRegister = [];
     }
 
-    componentDidMount() {console.log("Form mounted");
+    componentDidMount() {
         this._isMounted = true;
 
         let newFields = {};
@@ -117,12 +117,14 @@ export class Form extends React.Component {
 
     onChange(event) {
         const name = event.target.name;
+        const target = event.target;
+
         event.persist();
         this.setState(() => { return {
             fields: copyMerge(this.state.fields, {
                 [name]: copyMerge(
                     this.state.fields[name],
-                    {value: event.target.value}
+                    {value: target.type === 'checkbox' ? target.checked : target.value}
                 )
             })
         }});
@@ -163,7 +165,7 @@ export class Form extends React.Component {
 
     render () {
         return (
-            <BsForm onSubmit={this.onSubmit}>
+            <BsForm onSubmit={this.onSubmit} className={this.props.className}>
                 <FormContext.Provider value={{
                     onChange: this.onChange,
                     registerInput: this.registerInput,
@@ -202,7 +204,7 @@ Form = connect(
 
 
 export class Input extends React.Component {
-    componentDidMount() {console.log("Input mounted");
+    componentDidMount() {
         this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : "");
         if (this.props.onMount)
             this.props.onMount(this.props);
@@ -286,3 +288,47 @@ export class Select extends React.Component {
 }
 
 Select = withForm(Select);
+
+export class Checkbox extends React.Component {
+    componentDidMount() {
+        this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : false);
+        if (this.props.onMount)
+            this.props.onMount(this.props);
+    }
+
+    render() {
+        const {label: labelProps, formGroup: formGroupProps, hint, form, required, defaultValue, ...inputProps} = this.props;
+        if (!form.state.fields[this.props.name])
+            return null;
+
+        const error = form.state.fields[this.props.name].error;
+
+        return (
+            <FormGroup check {...formGroupProps} className="mb-2">
+                {
+                    labelProps ?
+                        <Label
+                            check
+                            {...labelProps}
+                            for={this.props.id}
+                        >
+                            <BsInput
+                                type="checkbox"
+                                {...(error ? {invalid: true} : {})}
+                                onChange={form.onChange}
+                                checked={form.state.fields[this.props.name].value}
+                                {...inputProps}
+                            />
+                            {' '}{labelProps.text}{required ? <span className="text-danger">&nbsp;*</span> : null}
+                        </Label>
+                        :
+                        null
+                }
+                <FormFeedback>{error}</FormFeedback>
+                { hint ? <FormText>{hint}</FormText> : null }
+            </FormGroup>
+        );
+    }
+}
+
+Checkbox = withForm(Checkbox);

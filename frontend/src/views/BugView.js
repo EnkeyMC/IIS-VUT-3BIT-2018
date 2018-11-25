@@ -6,6 +6,8 @@ import {Route, Switch, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {getBugs} from "../actions";
 import Observable from "../utils/Observable";
+import {RestrictedRoute, ROLE_PROGRAMMER} from "../components/RoleRestriction";
+import BugCreate from "../components/BugCreate";
 
 export default class BugView extends React.Component {
     constructor(props) {
@@ -32,6 +34,7 @@ export default class BugView extends React.Component {
             <DefaultLayout>
                 <BugList bugs={this.props.bugs} />
                 <Switch>
+                    <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/create'} component={BugCreate} />
                     <Route path={this.props.match.path+'/:id(\\d+)?'} render={(props) => <BugInfo defaultId={defaultId} {...props} />} />
                 </Switch>
             </DefaultLayout>

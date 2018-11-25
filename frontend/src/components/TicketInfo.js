@@ -294,7 +294,7 @@ const BugsContainer = connect(
 function Bug(props) {
     return (
         <Card body outline tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs"
-              style={{borderLeft: '5px solid '+props.bug.severity.color}}
+              style={props.bug.severity ? {borderLeft: '5px solid '+props.bug.severity.color} : null}
         >
             <CardTitle>#{props.bug.id} - {props.bug.title}</CardTitle>
             <CardText>
