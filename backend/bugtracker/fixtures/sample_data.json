@@ -125,7 +125,7 @@
 },
 {
     "model": "bugtracker.severity",
-    "pk": 1,
+    "pk": 4,
     "fields": {
         "name": "Cosmetic",
         "description": "Bug is only cosmetic, does not affect program functions.",
@@ -134,7 +134,7 @@
 },
 {
     "model": "bugtracker.severity",
-    "pk": 2,
+    "pk": 3,
     "fields": {
         "name": "Minor",
         "description": "Insignificant problem of the program functioning.",
@@ -143,7 +143,7 @@
 },
 {
     "model": "bugtracker.severity",
-    "pk": 3,
+    "pk": 2,
     "fields": {
         "name": "Major",
         "description": "Error in the main functionality of the program.",
@@ -152,7 +152,7 @@
 },
 {
     "model": "bugtracker.severity",
-    "pk": 4,
+    "pk": 1,
     "fields": {
         "name": "Critical",
         "description": "Error that can affect security, cause crashes or data loss",
