@@ -12,7 +12,7 @@ import {
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem
+    DropdownItem, Input
 } from 'reactstrap';
 
 import {NavLink as RouterNavLink, Link} from "react-router-dom";
@@ -121,8 +121,8 @@ class SearchBar extends Component {
     // }
     render() {
         return (
-            <div className="search-bar">
-                <input className="mr-5 mt-2" />
+            <div className="search-bar mr-4">
+                <Input />
             </div>
         );
     }

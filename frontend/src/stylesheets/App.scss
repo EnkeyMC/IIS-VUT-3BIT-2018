@@ -252,3 +252,65 @@ code {
 .state-color-duplicate {
   color: darkgrey !important;
 }
+
+/*** Multi search select ***/
+.multi-search-select {
+  height: calc(200px + 2.25rem + 9px);
+  padding: 0;
+
+  .multi-search-select-header {
+    background-color: #ced4da;
+    padding: 2px;
+    border-bottom: 1px solid #ced4da;
+
+    .input-group-text {
+      background-color: transparent;
+      display: inline-block;
+      position: absolute;
+      z-index: 50;
+      border: none;
+      margin-top: 1px;
+      padding-right: 0;
+    }
+
+    input[name="search"] {
+      position: relative;
+      padding-left: 37px;
+    }
+  }
+
+  .select-items {
+    height: 200px;
+    padding: 2px;
+
+    .select-item {
+      margin-bottom: 2px;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-color: #ced4da;
+      transition: border-color 0.3s;
+
+      &:hover {
+        border-color: #7c7c7c;
+      }
+
+      &.checked {
+        border-color: #80bdff;
+      }
+
+      > div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+.y-scroll {
+  overflow-y: auto;
+}
+
+.highlight {
+  background-color: darkorange !important;
+}

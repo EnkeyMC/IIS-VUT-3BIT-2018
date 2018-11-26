@@ -2,11 +2,12 @@ import CardContainer from "./CardContainer";
 import {Button, CardBody, CardHeader, Container} from "reactstrap";
 import React from "react";
 import {Checkbox, Form, Input, Select} from "./Form";
-import {getBugs, getModules, getSeverities} from "../actions";
+import {getBugs, getModules, getSeverities, getTickets} from "../actions";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
 import {StateRenderer} from "../utils";
+import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
 
 
 export default function BugCreate() {
@@ -36,6 +37,7 @@ class BugCreateForm extends React.Component {
     componentDidMount() {
         this.props.getSeverities();
         this.props.getModules();
+        this.props.getTickets();
     }
 
     handleSubmitSuccess() {
@@ -50,7 +52,12 @@ class BugCreateForm extends React.Component {
     render() {
         return (
             <Form id="create-bug" url={"/api/bugs/"} onSubmitSuccess={this.handleSubmitSuccess}>
-                <StateRenderer state={this.props} renderCondition={this.props.severities !== null && this.props.modules !== null}>
+                <StateRenderer state={this.props}
+                               renderCondition={
+                                   this.props.severities !== null
+                                   && this.props.modules !== null
+                                   && this.props.tickets !== null}
+                >
                     {props => {
                         return  (<>
                             <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
@@ -69,7 +76,21 @@ class BugCreateForm extends React.Component {
                                     props.modules.map(module => <option value={module.id} key={module.id}>{module.name}</option>)
                                 }
                             </Select>
-                            <Input type="hidden" name="tickets" defaultValue={[]} />
+                            <MultiSearchSelect label={{text: "Assign tickets"}} name="tickets">
+                                {
+                                    () => props.tickets.map(
+                                        ticket => <SelectItem
+                                            key={ticket.id}
+                                            value={ticket.id}
+                                            label={"#"+ticket.id+" - "+ticket.title}
+                                        >
+                                            {label => {return (
+                                                <span className={"pl-2 state-"+ticket.status}>{label}</span>
+                                            )}}
+                                        </SelectItem>
+                                    )
+                                }
+                            </MultiSearchSelect>
                             <Button type="submit" color="primary" className="w-100 mt-4">Submit</Button>
                         </>);
                     }}
@@ -84,15 +105,17 @@ BugCreateForm = connect(
         return {
             severities: state.severities.data,
             modules: state.modules.data,
-            loading: state.severities.loading || state.modules.loading,
-            error: state.severities.error ? state.severities.error : state.modules.error
+            tickets: state.ticketView.tickets.data,
+            loading: state.severities.loading || state.modules.loading || state.ticketView.tickets.loading,
+            error: state.severities.error ? state.severities.error : (state.modules.error ? state.modules.error : state.ticketView.tickets.error)
         }
     },
     dispatch => {
         return {
             getBugs: () => dispatch(getBugs()),
             getSeverities: () => dispatch(getSeverities()),
-            getModules: () => dispatch(getModules())
+            getModules: () => dispatch(getModules()),
+            getTickets: () => dispatch(getTickets())
         }
     }
 ) (withAlert(withRouter(BugCreateForm)));

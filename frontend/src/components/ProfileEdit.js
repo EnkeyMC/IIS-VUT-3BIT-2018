@@ -8,6 +8,7 @@ import {getLanguages, getUser, verifyUser} from "../actions";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
+import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
 
 export default function ProfileEdit() {
     return (
@@ -61,11 +62,9 @@ class ProfileEditForm extends React.Component {
                             <Input label={{text: "Last name"}} name="last_name" id="last_name" defaultValue={props.user.last_name} />
                             <Input type="email" label={{text: "E-mail"}} name="email" id="email" defaultValue={props.user.email} required />
                             <Input type="date" label={{text: "Birth date"}} name="profile.birth_date" id="birth_date" defaultValue={props.user.profile.birth_date} />
-                            <Select multiple label={{text: "Programming languages"}} name="profile.languages" id="languages" defaultValue={props.user.profile.languages}
-                                    hint={<span>Hold <kbd>Ctrl</kbd> to select multiple</span>}
-                            >
-                                {() => props.languages.map(item => <option value={item.name} key={item.id}>{item.name}</option>)}
-                            </Select>
+                            <MultiSearchSelect label={{text: "Programming languages"}} name="profile.languages" id="languages" defaultValue={props.user.profile.languages}>
+                                {() => props.languages.map(item => <SelectItem value={item.name} key={item.id} label={item.name} />)}
+                            </MultiSearchSelect>
                             <Row form>
                                 <Col md="4">
                                     <Button

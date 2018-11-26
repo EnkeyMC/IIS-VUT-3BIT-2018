@@ -33,7 +33,10 @@ const Bug = withRouter((props) => {
         <NavLink to={props.match.path+'/'+bug.id}
                  activeClassName="selected"
                  className="list-group-item list-group-item-action flex-column align-items-start"
-                 style={bug.severity ? {borderLeft: '5px solid '+bug.severity.color} : null}
+                 style={bug.severity ?
+                     {borderLeft: '5px solid '+bug.severity.color}
+                     :
+                     {borderLeft: '5px solid transparent'}}
         >
             <div className="d-flex w-100 justify-content-between">
                 <h6 className="pb-1 ticket-list-title">

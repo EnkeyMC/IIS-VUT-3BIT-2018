@@ -11,6 +11,7 @@ import {Form, Input} from "./Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
 import {getTickets} from "../actions";
+import MultiSearchSelect from "./MultiSearchSelect";
 
 export default function TicketCreate() {
     return (

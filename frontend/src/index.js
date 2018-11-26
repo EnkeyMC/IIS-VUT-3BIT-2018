@@ -3,8 +3,8 @@ import './utils/polyfills';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ConnectedRouter } from 'connected-react-router'
-import './stylesheets/App.scss';
 import 'bootstrap/dist/css/bootstrap.css';
+import './stylesheets/App.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from 'redux';

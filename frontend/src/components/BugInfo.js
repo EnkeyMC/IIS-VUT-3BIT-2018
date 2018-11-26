@@ -131,7 +131,7 @@ export default class BugInfo extends Component {
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
-                                    <Col>
+                                    <Col className="mt-md-4 pb-3">
                                         <Detail bug={bug} />
                                     </Col>
                                 </Row>
@@ -228,7 +228,7 @@ function Ticket(props) {
 function Detail(props) {
     const bug = props.bug;
     return (
-        <Container className="no-margin mt-md-4 pb-3">
+        <>
             <Media heading>Details</Media>
             <Row>
                 <Col md="6" xs="12">
@@ -268,7 +268,7 @@ function Detail(props) {
                     </Row>
                 </Col>
             </Row>
-        </Container>
+        </>
     );
 }
 

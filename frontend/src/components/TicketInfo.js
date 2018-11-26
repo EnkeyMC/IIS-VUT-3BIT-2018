@@ -137,7 +137,7 @@ export default class TicketInfo extends Component {
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
-                                    <Col>
+                                    <Col className="mt-md-4 pb-3">
                                         <Detail ticket={ticket} />
                                     </Col>
                                 </Row>
@@ -189,7 +189,7 @@ TicketInfo = connect(
 const Detail = withRouter((props) => {
     const toPath = pathToRegexp.compile(props.match.path);
     return (
-        <Container className="no-margin mt-md-4 pb-3">
+        <>
             <h4>Details</h4>
             <Row>
                 <Col md="6" xs="12">
@@ -232,7 +232,7 @@ const Detail = withRouter((props) => {
                     </Row>
                 </Col>
             </Row>
-        </Container>
+        </>
     );
 });
 
@@ -294,7 +294,11 @@ const BugsContainer = connect(
 function Bug(props) {
     return (
         <Card body outline tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs"
-              style={props.bug.severity ? {borderLeft: '5px solid '+props.bug.severity.color} : null}
+              style={props.bug.severity ?
+                  {borderLeft: '5px solid ' + props.bug.severity.color}
+                  :
+                  null
+              }
         >
             <CardTitle>#{props.bug.id} - {props.bug.title}</CardTitle>
             <CardText>

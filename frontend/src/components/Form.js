@@ -16,6 +16,7 @@ export class Form extends React.Component {
         this.registerInput = this.registerInput.bind(this);
         this.setState = this.setState.bind(this);
         this.onMultiSelectChange = this.onMultiSelectChange.bind(this);
+        this.setValue = this.setValue.bind(this);
 
         this.state = {
             fields: {}
@@ -120,10 +121,10 @@ export class Form extends React.Component {
         const target = event.target;
 
         event.persist();
-        this.setState(() => { return {
-            fields: copyMerge(this.state.fields, {
+        this.setState(state => { return {
+            fields: copyMerge(state.fields, {
                 [name]: copyMerge(
-                    this.state.fields[name],
+                    state.fields[name],
                     {value: target.type === 'checkbox' ? target.checked : target.value}
                 )
             })
@@ -142,13 +143,26 @@ export class Form extends React.Component {
 
         event.persist();
         this.setState(state => { return {
-            fields: copyMerge(this.state.fields, {
+            fields: copyMerge(state.fields, {
                 [name]: copyMerge(
-                    this.state.fields[name],
+                    state.fields[name],
                     {value: value}
                 )
             })
         }});
+    }
+
+    setValue(name, value) {
+        this.setState(state => {
+            return {
+                fields: copyMerge(state.fields, {
+                    [name]: copyMerge(
+                        state.fields[name],
+                        {value: value}
+                    )
+                })
+            }
+        });
     }
 
     registerInput(name, defaultValue) {
@@ -170,7 +184,8 @@ export class Form extends React.Component {
                     onChange: this.onChange,
                     registerInput: this.registerInput,
                     state: this.state,
-                    onMultiSelectChange: this.onMultiSelectChange}}
+                    onMultiSelectChange: this.onMultiSelectChange,
+                    setValue: this.setValue}}
                 >
                     {this.props.children}
                 </FormContext.Provider>
@@ -179,7 +194,7 @@ export class Form extends React.Component {
     }
 }
 
-const withForm = WrappedComponent => {
+export const withForm = WrappedComponent => {
     class withForm extends React.Component {
         render() {
             return (

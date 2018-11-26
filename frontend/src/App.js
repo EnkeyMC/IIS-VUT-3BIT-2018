@@ -27,8 +27,13 @@ import {
     faClone,
     faPlus,
     faPeopleCarry,
-    faExclamationCircle
+    faExclamationCircle,
+    faSearch,
 } from '@fortawesome/free-solid-svg-icons';
+import {
+    faSquare,
+    faCheckSquare
+} from '@fortawesome/free-regular-svg-icons';
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
 import {RestrictedRoute, ROLE_USER} from "./components/RoleRestriction";
@@ -38,7 +43,8 @@ import {verifyUser} from "./actions";
 library.add(
     faBoxes, faBox, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
-    faEdit, faBug, faClone, faPlus, faExclamationCircle, faPeopleCarry
+    faEdit, faBug, faClone, faPlus, faExclamationCircle, faPeopleCarry,
+    faSearch, faCheckSquare, faSquare
 );
 
 const alertConfig = {
