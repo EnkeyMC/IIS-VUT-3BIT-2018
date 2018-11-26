@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import {getModules} from "../actions";
-import {StateRenderer} from "../utils";
+import {Spinner, StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 
 export default class Modules extends Component {
@@ -15,7 +15,13 @@ export default class Modules extends Component {
 
     render() {
         return (
-            <StateRenderer state={this.props} renderCondition={this.props.modules !== null}>
+            <StateRenderer state={this.props} renderCondition={this.props.modules !== null}
+            renderLoading={() =>
+                <div className="content-height flex-mid">
+                    <Spinner size="5x" />
+                </div>
+            }
+            >
                 {props => {
                     return  (<>
                         <Container className="mt-5">
