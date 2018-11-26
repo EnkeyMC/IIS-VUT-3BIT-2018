@@ -151,6 +151,6 @@ REST_FRAMEWORK = {
 
 REST_KNOX = {
     'USER_SERIALIZER': 'authentication.serializers.UserLoginSerializer',
-    'TOKEN_TTL': timedelta(minutes=20),
+    'TOKEN_TTL': timedelta(minutes=10),
     'AUTO_REFRESH': True,
 }
