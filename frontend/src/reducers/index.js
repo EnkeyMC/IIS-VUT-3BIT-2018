@@ -10,7 +10,14 @@ import {
     GET_LANGUAGES,
     GET_BUGS,
     GET_BUG,
-    SET_BUG_ERROR, GET_BUG_TICKET, CLEAR_BUG_TICKETS, GET_TICKET_BUG, CLEAR_TICKET_BUGS, GET_SEVERITIES, GET_MODULES
+    SET_BUG_ERROR,
+    GET_BUG_TICKET,
+    CLEAR_BUG_TICKETS,
+    GET_TICKET_BUG,
+    CLEAR_TICKET_BUGS,
+    GET_SEVERITIES,
+    GET_MODULES,
+    SET_BUG, SET_TICKET
 } from '../actions'
 import { copyMerge } from '../utils';
 import {combineReducers} from "redux";
@@ -177,6 +184,8 @@ function reduceGetTicket(state, action) {
             return copyMerge(state, {loading: false, error: action.error.message});
         case SET_TICKET_ERROR:
             return copyMerge(state, {error: action.error});
+        case SET_TICKET:
+            return copyMerge(state, {data: action.data});
         default:
             return state;
     }
@@ -255,6 +264,8 @@ function reduceGetBug(state, action) {
             return copyMerge(state, {loading: false, error: action.error.message});
         case SET_BUG_ERROR:
             return copyMerge(state, {error: action.error});
+        case SET_BUG:
+            return copyMerge(state, {data: action.data});
         default:
             return state;
     }

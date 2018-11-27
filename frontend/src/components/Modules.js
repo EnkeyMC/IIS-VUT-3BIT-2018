@@ -67,7 +67,7 @@ function ModuleCard(props) {
 
 const NewModuleBtn = withRouter((props) => {
     return (
-        <Card className="new-module pointer">
+        <Card className="card-new-btn pointer">
             <CardBody className="flex-mid">
                 <FontAwesomeIcon icon="plus" size="4x" color="rgba(0, 0, 0, 0.1)" className="mt-4 mb-4"/>
             </CardBody>

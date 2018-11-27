@@ -40,9 +40,9 @@ class BugCreateForm extends React.Component {
         this.props.getTickets();
     }
 
-    handleSubmitSuccess() {
+    handleSubmitSuccess(id, data) {
         this.props.alert.success("Bug successfully created.");
-        const newPath = this.props.location.pathname.replace('/create', '');
+        const newPath = this.props.location.pathname.replace('/create', '/'+data.id);
 
         this.props.getBugs();
 

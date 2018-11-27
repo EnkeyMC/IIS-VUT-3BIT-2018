@@ -38,11 +38,11 @@ const axiosMiddlewareConfig = {
             {
                 error: (store, response) => {
                     if (response.response.status === 401) {
-                        if (store.getState().global.token !== null) {
+                        if (!response.config.reduxSourceAction.noRetry) {
                             store.dispatch(setToken(null));
                             store.dispatch(setUser(null));
                             // Retry the action
-                            store.dispatch(response.config.reduxSourceAction);
+                            store.dispatch({...response.config.reduxSourceAction, noRetry: true});
                         }
                     }
 

@@ -53,7 +53,7 @@ class TicketCreateForm extends React.Component {
         else
             this.props.getTickets();
 
-        this.props.history.push(newPath);
+        this.props.history.push(newPath + '/' + data.id);
     }
 
     render() {
