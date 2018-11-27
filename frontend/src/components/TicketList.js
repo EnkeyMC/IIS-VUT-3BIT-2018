@@ -92,7 +92,7 @@ class Filter extends Component {
                     {this.state.txt}
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-link">
-                    <NavLink to="/tickets">
+                    <NavLink to="/tickets/all">
                         <DropdownItem className="pointer" onClick={this.handleName}>all</DropdownItem>
                     </NavLink>
                     <NavLink to="/tickets/new">
