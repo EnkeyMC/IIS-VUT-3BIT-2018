@@ -70,3 +70,9 @@ export function StateRenderer(props) {
         return props.children(props.state);
     return props.children;
 }
+
+export function appendToPath(path, append) {
+    if (!path.endsWith('/'))
+        path += '/';
+    return path + append;
+}

@@ -6,7 +6,7 @@ import {
 import {connect} from "react-redux";
 import {
     cancelActionRequests,
-    clearTicketBugs,
+    clearTicketBugs, GET_TICKET,
     GET_TICKET_BUG, getBugs,
     getTicket,
     getTicketBug, setTicket,
@@ -39,6 +39,10 @@ export default class TicketInfo extends Component {
         this.defaultTicketIdObservable.setOnChanged(newValue => {
             if (newValue !== null && !this.props.match.params.id && !this.props.tickets.loading)
                 this.props.getTicket(newValue);
+            else if (newValue === null) {
+                this.props.cancelActions(GET_TICKET);
+                this.props.setTicketError("Nothing to show");
+            }
         });
 
         this.ticketObservable = new Observable(this.props.ticket);

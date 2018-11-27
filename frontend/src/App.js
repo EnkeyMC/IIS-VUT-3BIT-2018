@@ -90,7 +90,8 @@ export default class App extends Component {
               <Provider template={AlertTemplate} {...alertConfig} >
                   <Switch>
                       <Redirect exact from="/" to="/tickets/all" />
-                      <Route path="/tickets/:status(all|new|assigned|closed|my)?" component={TicketView} />
+                      <Redirect exact from="/tickets" to="/tickets/all"/>
+                      <Route path="/tickets/:status(all|new|assigned|closed|my)" component={TicketView} />
                       <Route path="/login" component={LoginView} />
                       <Route path="/register" component={RegisterView} />
                       <Route path="/profile" component={ProfileView}/>

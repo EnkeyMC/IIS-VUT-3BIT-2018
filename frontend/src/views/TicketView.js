@@ -40,12 +40,22 @@ export default class TicketView extends React.Component {
         if (data && data.length > 0)
             defaultId = data[0].id;
 
+        const routeParams = {
+            path: this.props.match.path+'/:id(\\d+)?',
+            render: (props) => <TicketInfo defaultId={defaultId} {...props} />
+        };
+
         return (
             <DefaultLayout>
                 <TicketList tickets={this.props.tickets} />
                 <Switch>
                     <RestrictedRoute minRole={ROLE_USER} path={this.props.match.path+'/create'} component={TicketCreate} />
-                    <Route path={this.props.match.path+'/:id(\\d+)?'} render={(props) => <TicketInfo defaultId={defaultId} {...props} />} />
+                    {
+                        this.props.match.params.status === 'my' ?
+                            <RestrictedRoute minRole={ROLE_USER} {...routeParams} />
+                            :
+                            <Route {...routeParams} />
+                    }
                 </Switch>
             </DefaultLayout>
         )

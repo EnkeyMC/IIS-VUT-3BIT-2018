@@ -5,9 +5,10 @@ import {
     Input, Button, UncontrolledTooltip, Label, UncontrolledDropdown,
     DropdownMenu, DropdownToggle, DropdownItem
 } from 'reactstrap';
-import {StateRenderer} from "../utils";
+import {appendToPath, StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 import {RestrictedView, ROLE_USER} from "./RoleRestriction";
+import pathToRegexp from "path-to-regexp";
 
 export default class TicketList extends Component {
     render() {
@@ -39,8 +40,9 @@ export default class TicketList extends Component {
 }
 
 const Ticket = withRouter((props) => {
+    const toPath = pathToRegexp.compile(props.match.path);
     return (
-        <NavLink to={props.match.path+'/'+props.ticket.id} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.ticket.status}>
+        <NavLink to={appendToPath(toPath({status: props.match.params.status}), props.ticket.id)} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.ticket.status}>
             <div className="d-flex w-100 justify-content-between">
                 <h6 className="pb-1 ticket-list-title">#{props.ticket.id} - {props.ticket.title}</h6>
             </div>
@@ -54,7 +56,7 @@ function OrderSelect() {
     return (
         <div className="w-100 p-2 select">
             <div>
-                <h3 className="d-inline-block">Ticket List</h3>
+                <h3 className="d-inline-block">Tickets</h3>
                 <Filter />
                 <NewTicketBtn />
             </div>
@@ -73,7 +75,8 @@ class Filter extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { txt: 'all' };
+        const status = this.props.match.params.status;
+        this.state = { txt: status ? status : 'all' };
 
         this.handleName = this.handleName.bind(this);
     }
@@ -115,9 +118,10 @@ class Filter extends Component {
 Filter = withRouter(Filter);
 
 const NewTicketBtn = withRouter((props) => {
+    const toPath = pathToRegexp.compile(props.match.path);
     return (
         <div className="float-right">
-            <Button tag={Link} to={props.match.path+'/create'} className="bg-red btn-red" id="createTicketBtn"><FontAwesomeIcon icon="plus" /></Button>
+            <Button tag={Link} to={toPath({status: props.match.params.status})+'/create'} className="bg-red btn-red" id="createTicketBtn"><FontAwesomeIcon icon="plus" /></Button>
             <UncontrolledTooltip placement="bottom" target="createTicketBtn">
                 Create New Ticket
             </UncontrolledTooltip>

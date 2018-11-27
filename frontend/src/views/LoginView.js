@@ -49,6 +49,13 @@ class LoginForm extends React.Component {
         this.props.alert.success("You have been successfully logged in.");
     }
 
+    componentDidMount() {
+        const state = this.props.location.state;
+        if (state && state.error) {
+            this.props.alert.error(state.error);
+        }
+    }
+
     render () {
         if (this.props.user) {
             const state = this.props.location.state;

@@ -21,14 +21,13 @@ export const RestrictedRoute = connect(
             user: state.global.user
         }
     }
-)(withRouter(withAlert(({component: Component, minRole, user, location, alert, ...rest}) => {
+)(withRouter(withAlert(({minRole, user, location, alert, ...rest}) => {
     if (!user && minRole === ROLE_USER) {
-        alert.error("You need to login to access this page");
-        return <Redirect to={{pathname: "/login", state: {from: location}}} />
+        return <Redirect to={{pathname: "/login", state: {from: location, error: "You need to login to access this page"}}} />
     } else if (!user || roleNameToLvl[user.user_type] < minRole) {
         return <Redirect to={{pathname: "/no-permission", state: {from: location}}} />
     }
-    return <Route {...rest} component={(props) => <Component {...rest} {...props} />} />;
+    return <Route {...rest} />;
 })));
 
 export const RestrictedView = connect(
