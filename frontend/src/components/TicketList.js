@@ -71,7 +71,7 @@ function OrderSelect() {
 
 class Filter extends Component {
     constructor(props) {
-        super(props);console.log(this.props.match.params);
+        super(props);
 
         this.state = { txt: 'all' };
 
@@ -89,7 +89,7 @@ class Filter extends Component {
                     {this.state.txt}
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-link">
-                    <NavLink to="/tickets/all">
+                    <NavLink to="/tickets">
                         <DropdownItem className="pointer" onClick={this.handleName}>all</DropdownItem>
                     </NavLink>
                     <NavLink to="/tickets/new">

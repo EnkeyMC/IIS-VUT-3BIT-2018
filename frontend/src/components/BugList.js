@@ -106,9 +106,10 @@ class Filter extends Component {
                 </DropdownToggle>
                 <DropdownMenu>
                     <DropdownItem tag="span" className="pointer" onClick={this.handleName}>all</DropdownItem>
-                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>opened</DropdownItem>
-                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>closed</DropdownItem>
-                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>assigned</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>minor</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>major</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>critical</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>cosmetic</DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
         );

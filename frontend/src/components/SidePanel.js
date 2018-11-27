@@ -16,7 +16,7 @@ export default class SidePanel extends Component {
                     <FontAwesomeIcon icon="clone" />
                 </PanelLink>
                 <PanelLink to="/patches" label="Patches" margin="mt-2">
-                    <FontAwesomeIcon icon="band-aid"/>
+                    <FontAwesomeIcon icon="band-aid" transform={{ rotate: -45 }}/>
                 </PanelLink>
             </nav>
         );

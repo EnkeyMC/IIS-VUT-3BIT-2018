@@ -41,7 +41,7 @@ export default class Header extends Component {
                 <Navbar color="light" light expand="md" className="border-bottom position-fixed w-100 header-height">
                     <NavbarBrand tag={Link} to="/">
                         <img className="mr-2 align-middle" src={Logo} alt="" width="30px" height="40px" />
-                        <span className="h2 align-middle">ZeroBugs</span>
+                        <span className="h2 align-middle app-name">ZeroBugs</span>
                     </NavbarBrand>
                     <NavbarToggler onClick={this.handleToggleNavbar} />
                     <Collapse isOpen={this.state.isOpen} navbar>

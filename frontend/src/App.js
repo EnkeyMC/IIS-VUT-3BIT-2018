@@ -34,7 +34,6 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
-import {RestrictedRoute, ROLE_USER} from "./components/RoleRestriction";
 import {connect} from "react-redux";
 import {verifyUser} from "./actions";
 import PatchesView from "./views/PatchesView";

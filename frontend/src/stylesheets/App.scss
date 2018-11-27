@@ -1,4 +1,5 @@
 @import "mixins";
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:600');
 
 html, body {
   height: 100%;
@@ -12,6 +13,10 @@ body {
   sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.app-name {
+  font-family: 'Source Code Pro', monospace;
 }
 
 code {
