@@ -1,6 +1,7 @@
 export const GET_TICKETS = 'GET_TICKETS_REQ';
 export const GET_TICKET = 'GET_TICKET_REQ';
 export const SET_TICKET_ERROR = 'SET_TICKET_ERROR';
+export const SET_TICKET = 'SET_TICKET';
 export const GET_USER = 'GET_USER_REQ';
 export const SUBMIT_FORM = 'SUBMIT_FORM_REQ';
 export const SET_TOKEN = 'SET_TOKEN';
@@ -11,6 +12,7 @@ export const GET_LANGUAGES = 'GET_LANGUAGES_REQ';
 export const GET_BUGS = 'GET_BUGS_REQ';
 export const GET_BUG = 'GET_BUG_REQ';
 export const SET_BUG_ERROR = 'SET_BUG_ERROR';
+export const SET_BUG = 'SET_BUG';
 export const GET_BUG_TICKET = 'GET_BUG_TICKET_REQ';
 export const CLEAR_BUG_TICKETS = 'CLEAR_BUG_TICKETS';
 export const GET_TICKET_BUG = 'GET_TICKET_BUG_REQ';
@@ -77,6 +79,13 @@ export function setTicketError(msg) {
     return {
         type: SET_TICKET_ERROR,
         error: msg
+    }
+}
+
+export function setTicket(data) {
+    return {
+        type: SET_TICKET,
+        data: data
     }
 }
 
@@ -168,6 +177,13 @@ export function setBugError(msg) {
     return {
         type: SET_BUG_ERROR,
         error: msg
+    }
+}
+
+export function setBug(data) {
+    return {
+        type: SET_BUG,
+        data: data
     }
 }
 

@@ -2,15 +2,27 @@ import React, {Component} from 'react';
 import {
     Col, Container, Row,
     Media,
-    Card, CardTitle, CardText, Badge
+    Card, CardTitle, CardText, Badge, Modal, ModalHeader, ModalBody, Button, CardBody
 } from "reactstrap";
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
-import {cancelActionRequests, clearBugTickets, GET_BUG_TICKET, getBug, getBugTicket, setBugError} from "../actions";
+import {
+    cancelActionRequests,
+    clearBugTickets,
+    GET_BUG_TICKET,
+    getBug,
+    getBugTicket,
+    getTickets, setBug,
+    setBugError
+} from "../actions";
 import Observable from "../utils/Observable";
-import {Spinner} from "../utils";
+import {Spinner, StateRenderer} from "../utils";
 import Error from "./Error";
 import {Numbering} from "./Numbering";
+import {Form} from "./Form";
+import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
 
 export default class BugInfo extends Component {
     constructor(props) {
@@ -36,6 +48,13 @@ export default class BugInfo extends Component {
                 this.requestTickets();
             }
         });
+
+        this.state = {
+            assignTicketsModalOpen: false
+        };
+
+        this.toggleAssignTicketsModal = this.toggleAssignTicketsModal.bind(this);
+        this.closeAssignTicketsModal = this.closeAssignTicketsModal.bind(this);
     }
 
     componentDidMount() {
@@ -63,6 +82,18 @@ export default class BugInfo extends Component {
         this.props.cancelActions(GET_BUG_TICKET);
         this.props.clearBugTickets();
         this.props.bug.tickets.forEach(id => this.props.getBugTicket(id));
+    }
+
+    toggleAssignTicketsModal() {
+        this.setState({
+            assignTicketsModalOpen: !this.state.assignTicketsModalOpen
+        });
+    }
+
+    closeAssignTicketsModal() {
+        this.setState({
+            assignTicketsModalOpen: false
+        });
     }
 
     render() {
@@ -145,13 +176,19 @@ export default class BugInfo extends Component {
                                 <Row className="mt-1">
                                     <Col>
                                         <h4>Bug occurrence:</h4>
-                                        <TicketsContainer/>
+                                        <TicketsContainer toggleModal={this.toggleAssignTicketsModal} />
                                     </Col>
                                 </Row>
                             </Container>
                         </Col>
                     </Row>
                 </Container>
+                <Modal isOpen={this.state.assignTicketsModalOpen} toggle={this.toggleAssignTicketsModal} centered>
+                    <ModalHeader toggle={this.toggleAssignTicketsModal}>Assign tickets</ModalHeader>
+                    <ModalBody>
+                        <AssignTicketsForm bug={this.props.bug} closeModal={this.closeAssignTicketsModal} />
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
@@ -209,6 +246,9 @@ const TicketsContainer = connect(
                     :
                     null
             }
+            <RestrictedView minRole={ROLE_PROGRAMMER}>
+                <AssignTicketBtn onClick={props.toggleModal} />
+            </RestrictedView>
         </div>
     );
 });
@@ -220,6 +260,16 @@ function Ticket(props) {
             <CardText>
                 <small className="text-muted float-left">{props.ticket.author}</small>
                 <small className="text-muted float-right">{props.ticket.created}</small>
+            </CardText>
+        </Card>
+    );
+}
+
+function AssignTicketBtn(props) {
+    return (
+        <Card body outline onClick={props.onClick} className="mb-2 bugs card-new-btn">
+            <CardText className="text-center">
+                <FontAwesomeIcon icon="plus" size="2x" color="rgba(0, 0, 0, 0.1)" className="mt-3 mb-3" />
             </CardText>
         </Card>
     );
@@ -280,3 +330,63 @@ function Description(props) {
         </Col>
     );
 }
+
+class AssignTicketsForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    handleFormSuccess(id, data) {
+        this.props.setBug(data);
+        this.props.closeModal();
+    }
+
+    componentDidMount() {
+        this.props.getTickets();
+    }
+
+    render() {
+        return (
+            <Form edit id="assign-tickets-form" url={"/api/bugs/"+this.props.bug.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+                <StateRenderer state={this.props} renderCondition={this.props.data !== null && this.props.bug}>
+                    {props => { return (<>
+                        <MultiSearchSelect name="tickets" defaultValue={props.bug.tickets}>
+                            {
+                                () => props.data.map(
+                                    ticket => <SelectItem
+                                        key={ticket.id}
+                                        value={ticket.id}
+                                        label={"#"+ticket.id+" - "+ticket.title}
+                                    >
+                                        {label => {return (
+                                            <span className={"pl-2 state-"+ticket.status}>{label}</span>
+                                        )}}
+                                    </SelectItem>
+                                )
+                            }
+                        </MultiSearchSelect>
+                        <Button type="submit" color="primary" className="w-100 mt-4">Assign</Button>
+                    </>)}}
+                </StateRenderer>
+            </Form>
+        );
+    }
+}
+
+AssignTicketsForm = connect(
+    (state) => {
+        return {
+            loading: state.ticketView.tickets.loading,
+            error: state.ticketView.tickets.error,
+            data: state.ticketView.tickets.data
+        }
+    },
+    dispatch => {
+        return {
+            getTickets: () => dispatch(getTickets()),
+            setBug: (data) => dispatch(setBug(data))
+        }
+    }
+) (AssignTicketsForm);
