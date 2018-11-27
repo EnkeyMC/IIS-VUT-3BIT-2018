@@ -49,7 +49,7 @@ class ProgrammerTicketDetailSerializer(TicketDetailSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = ('title', 'description', 'attachment', 'bugs')
+        read_only_fields = ('title', 'description', 'attachment')
 
 
 class SupervisorTicketDetailSerializer(TicketDetailSerializer):
