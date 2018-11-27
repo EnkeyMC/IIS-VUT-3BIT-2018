@@ -13,7 +13,7 @@ export default class TicketView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.pathObservable = new Observable(this.props.match.path);
+        this.pathObservable = new Observable(this.props.match.params.status);
         this.pathObservable.setOnChanged(() => {
             this.updateTickets();
         });
@@ -21,20 +21,17 @@ export default class TicketView extends React.Component {
     }
 
     componentDidUpdate() {
-        this.pathObservable.update(this.props.match.path);
+        this.pathObservable.update(this.props.match.params.status);
     }
 
     updateTickets() {
-        if (this.props.match.path.endsWith('/new'))
-            this.props.getTickets('new');
-        else if (this.props.match.path.endsWith('/closed'))
-            this.props.getTickets('closed');
-        else if (this.props.match.path.endsWith('/my'))
-            this.props.getUserTickets(this.props.username);
-        else if (this.props.match.path.endsWith('/assigned'))
-            this.props.getTickets('assigned');
-        else
+        const status = this.props.match.params.status;
+        if (!status || status === 'all')
             this.props.getTickets();
+        else if (status === 'my')
+            this.props.getUserTickets(this.props.username);
+        else
+            this.props.getTickets(status);
     }
 
     render () {

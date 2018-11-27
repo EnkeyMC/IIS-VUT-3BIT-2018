@@ -10,9 +10,7 @@ import ErrorView from "./views/ErrorView";
 import BugView from "./views/BugView";
 import ModuleView from "./views/ModuleView";
 import {
-    faBoxes,
-    faBox,
-    faBoxOpen,
+    faReceipt,
     faUser,
     faAngleUp,
     faAngleDown,
@@ -26,9 +24,9 @@ import {
     faBug,
     faClone,
     faPlus,
-    faPeopleCarry,
     faExclamationCircle,
     faSearch,
+    faBandAid
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faSquare,
@@ -39,16 +37,17 @@ import AlertTemplate from 'react-alert-template-basic';
 import {RestrictedRoute, ROLE_USER} from "./components/RoleRestriction";
 import {connect} from "react-redux";
 import {verifyUser} from "./actions";
+import PatchesView from "./views/PatchesView";
 
 library.add(
-    faBoxes, faBox, faBoxOpen, faUser, faAngleUp, faAngleDown, faEnvelope,
+    faReceipt, faUser, faAngleUp, faAngleDown, faEnvelope,
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
-    faEdit, faBug, faClone, faPlus, faExclamationCircle, faPeopleCarry,
-    faSearch, faCheckSquare, faSquare
+    faEdit, faBug, faClone, faPlus, faExclamationCircle, faSearch,
+    faCheckSquare, faSquare, faBandAid
 );
 
 const alertConfig = {
-    timeout: 4000,
+    timeout: 3000,
     offset: '50px',
     transition: 'scale',
     zIndex: 9999
@@ -92,17 +91,14 @@ export default class App extends Component {
               <Provider template={AlertTemplate} {...alertConfig} >
                   <Switch>
                       <Redirect exact from="/" to="/tickets/all" />
-                      <Route path="/tickets/all" component={TicketView} />
-                      <Route path="/tickets/new" component={TicketView} />
-                      <Route path="/tickets/assigned" component={TicketView} />
-                      <Route path="/tickets/closed" component={TicketView} />
-                      <RestrictedRoute path="/tickets/my" minRole={ROLE_USER} component={TicketView} />
+                      <Route path="/tickets/:status(all|new|assigned|closed|my)?" component={TicketView} />
                       <Route path="/login" component={LoginView} />
                       <Route path="/register" component={RegisterView} />
                       <Route path="/profile" component={ProfileView}/>
                       <Route path="/no-permission" component={ErrorView}/>
                       <Route path="/bugs" component={BugView}/>
                       <Route path="/modules" component={ModuleView} />
+                      <Route path="/patches" component={PatchesView}/>
                   </Switch>
               </Provider>
           </UserVerificator>

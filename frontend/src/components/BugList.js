@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import {Link, NavLink} from "react-router-dom";
-import {Input, Button, UncontrolledTooltip, Label} from 'reactstrap';
+import {
+    Input, Button, UncontrolledTooltip, Label, UncontrolledDropdown,
+    DropdownMenu, DropdownToggle, DropdownItem
+} from 'reactstrap';
 import {withRouter} from "react-router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {StateRenderer} from "../utils";
@@ -64,18 +67,52 @@ const Bug = withRouter((props) => {
 function OrderSelect() {
     return (
         <div className="w-100 p-2 select">
+            <div>
+                <h3 className="d-inline-block">Bug List</h3>
+                <Filter />
+                <RestrictedView minRole={ROLE_PROGRAMMER}>
+                    <NewBugBtn />
+                </RestrictedView>
+            </div>
             <small><Label for="order-select" className="text-muted d-block">Ordering</Label></small>
-            <Input type="select" name="select" id="order-select" className="d-inline-block">
+            <Input type="select" name="select" id="order-select">
                 <option>Most recent</option>
                 <option>Oldest</option>
                 <option>User A-Z</option>
                 <option>User Z-A</option>
             </Input>
-            <RestrictedView minRole={ROLE_PROGRAMMER}>
-                <NewBugBtn />
-            </RestrictedView>
         </div>
     );
+}
+
+class Filter extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { txt: 'all' };
+
+        this.handleName = this.handleName.bind(this);
+    }
+
+    handleName(event) {
+        this.setState({txt: event.target.innerHTML})
+    }
+
+    render() {
+        return (
+            <UncontrolledDropdown setActiveFromChild className="d-inline">
+                <DropdownToggle tag="a" className="nav-link pointer d-inline" caret>
+                    {this.state.txt}
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>all</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>opened</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>closed</DropdownItem>
+                    <DropdownItem tag="span" className="pointer" onClick={this.handleName}>assigned</DropdownItem>
+                </DropdownMenu>
+            </UncontrolledDropdown>
+        );
+    }
 }
 
 const NewBugBtn = withRouter((props) => {

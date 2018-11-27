@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import {Link, NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {Input, Button, UncontrolledTooltip, Label} from 'reactstrap';
+import {
+    Input, Button, UncontrolledTooltip, Label, UncontrolledDropdown,
+    DropdownMenu, DropdownToggle, DropdownItem
+} from 'reactstrap';
 import {StateRenderer} from "../utils";
 import {withRouter} from "react-router";
+import {RestrictedView, ROLE_USER} from "./RoleRestriction";
 
 export default class TicketList extends Component {
     render() {
@@ -11,7 +15,7 @@ export default class TicketList extends Component {
 
         return (
             <div className="ticket-list content-height position-fixed">
-                <Select/>
+                <OrderSelect/>
                 <div className="list-group">
                     <StateRenderer state={this.props.tickets}>
                         {
@@ -46,9 +50,14 @@ const Ticket = withRouter((props) => {
     );
 });
 
-function Select() {
+function OrderSelect() {
     return (
         <div className="w-100 p-2 select">
+            <div>
+                <h3 className="d-inline-block">Ticket List</h3>
+                <Filter />
+                <NewTicketBtn />
+            </div>
             <small><Label for="order-select" className="text-muted d-block">Ordering</Label></small>
             <Input type="select" name="select" id="order-select" className="d-inline-block">
                 <option>Most recent</option>
@@ -56,10 +65,54 @@ function Select() {
                 <option>User A-Z</option>
                 <option>User Z-A</option>
             </Input>
-            <NewTicketBtn/>
         </div>
     );
 }
+
+class Filter extends Component {
+    constructor(props) {
+        super(props);console.log(this.props.match.params);
+
+        this.state = { txt: 'all' };
+
+        this.handleName = this.handleName.bind(this);
+    }
+
+    handleName(event) {
+        this.setState({txt: event.target.innerHTML})
+    }
+
+    render() {
+        return (
+            <UncontrolledDropdown setActiveFromChild className="d-inline">
+                <DropdownToggle tag="a" className="nav-link pointer d-inline pr-0" caret>
+                    {this.state.txt}
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-link">
+                    <NavLink to="/tickets/all">
+                        <DropdownItem className="pointer" onClick={this.handleName}>all</DropdownItem>
+                    </NavLink>
+                    <NavLink to="/tickets/new">
+                        <DropdownItem className="pointer" onClick={this.handleName}>new</DropdownItem>
+                    </NavLink>
+                    <NavLink to="/tickets/assigned">
+                        <DropdownItem className="pointer" onClick={this.handleName}>assigned</DropdownItem>
+                    </NavLink>
+                    <NavLink to="/tickets/closed">
+                        <DropdownItem className="pointer" onClick={this.handleName}>closed</DropdownItem>
+                    </NavLink>
+                    <RestrictedView minRole={ROLE_USER}>
+                        <NavLink to="/tickets/my">
+                            <DropdownItem className="pointer" onClick={this.handleName}>my</DropdownItem>
+                        </NavLink>
+                    </RestrictedView>
+                </DropdownMenu>
+            </UncontrolledDropdown>
+        );
+    }
+}
+
+Filter = withRouter(Filter);
 
 const NewTicketBtn = withRouter((props) => {
     return (

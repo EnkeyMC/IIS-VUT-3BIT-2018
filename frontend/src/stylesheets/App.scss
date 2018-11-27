@@ -135,10 +135,6 @@ code {
   .select {
     margin-bottom: 0;
     border-bottom: 1px solid #dee2e6;
-
-    .form-control {
-      width: 200px;
-    }
   }
   .list-group-item {
     border: 1px solid #dee2e6;
@@ -172,6 +168,10 @@ code {
       box-shadow: 0 0 0 0.2rem #bf1111;
     }
   }
+}
+
+.dropdown-link > a:hover {
+  text-decoration: none;
 }
 
 /* Ticket info css */
