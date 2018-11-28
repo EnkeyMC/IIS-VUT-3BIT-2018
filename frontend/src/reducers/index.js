@@ -17,6 +17,8 @@ import {
     CLEAR_TICKET_BUGS,
     GET_SEVERITIES,
     GET_MODULES,
+    GET_MODULE_BUG,
+    CLEAR_MODULE_BUGS,
     SET_BUG, SET_TICKET
 } from '../actions'
 import { copyMerge } from '../utils';
@@ -91,7 +93,12 @@ const initialSeveritiesState = {
 const initialModulesState = {
     loading: false,
     error: null,
-    data: null
+    data: null,
+    moduleBugs: {
+        loading: 0,
+        error: null,
+        data: []
+    }
 };
 
 export const zeroBugsApp = (state, action) => {
@@ -140,7 +147,7 @@ function reduceTicketView(state = initialTicketsViewState, action) {
         tickets: reduceGetList(state.tickets, action, GET_TICKETS),
         ticketInfo: Object.assign(
             reduceGetTicket(state.ticketInfo, action),
-            {ticketBugs: reduceSignleToList(state.ticketInfo.ticketBugs, action, GET_TICKET_BUG)}
+            {ticketBugs: reduceSingleToList(state.ticketInfo.ticketBugs, action, GET_TICKET_BUG)}
         )
     };
 }
@@ -168,7 +175,7 @@ function reduceGetList(state, action, ACTION) {
     }
 }
 
-function reduceSignleToList(state, action, ACTION) {
+function reduceSingleToList(state, action, ACTION) {
     switch (action.type) {
         case ACTION:
             return copyMerge(state, {
@@ -243,7 +250,7 @@ function reduceBugView(state = initialBugsViewState, action) {
         bugs: reduceGetList(state.bugs, action, GET_BUGS),
         bugInfo: Object.assign(
             reduceGetBug(state.bugInfo, action),
-            {bugTickets: reduceSignleToList(state.bugInfo.bugTickets, action, GET_BUG_TICKET)}
+            {bugTickets: reduceSingleToList(state.bugInfo.bugTickets, action, GET_BUG_TICKET)}
         )
     }
 }
@@ -277,5 +284,8 @@ function reduceSeverities(state = initialSeveritiesState, action) {
 }
 
 function reduceModules(state = initialModulesState, action) {
-    return reduceGetList(state, action, GET_MODULES);
+    return copyMerge(
+        reduceGetList(state, action, GET_MODULES),
+        {moduleBugs: reduceSingleToList(state.moduleBugs, action, GET_MODULE_BUG)}
+    )
 }

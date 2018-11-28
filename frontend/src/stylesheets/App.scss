@@ -318,3 +318,10 @@ code {
 .highlight {
   background-color: darkorange !important;
 }
+
+/* Modal css */
+.module-bugs:focus {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
