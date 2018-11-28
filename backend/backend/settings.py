@@ -133,6 +133,8 @@ MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
 
+    'DATETIME_FORMAT': '%Y-%m-%d, %H:%M',
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',

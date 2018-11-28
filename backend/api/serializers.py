@@ -1,12 +1,36 @@
 from datetime import date
 
 from django.contrib.auth.models import User
+
 from rest_framework import serializers, utils
+from rest_framework.exceptions import PermissionDenied
 
 from bugtracker import models
 
 
-class TicketListSerializer(serializers.ModelSerializer):
+class StrictModelSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        writable_fields = [field.field_name for field in self._writable_fields]
+        read_only_fields = (field for field in self.fields.keys()
+                            if field not in writable_fields)
+        request_fields = set(self.initial_data.keys())
+
+        perm_denied_fields = request_fields.intersection(set(read_only_fields))
+        if perm_denied_fields:
+            raise PermissionDenied(dict.fromkeys(
+                perm_denied_fields,
+                'You do not have permission to modify this field.'))
+
+        unknown_fields = request_fields - set(self.fields.keys())
+        if unknown_fields:
+            raise serializers.ValidationError(dict.fromkeys(
+                unknown_fields, 'Unexpected field.'))
+
+        return attrs
+
+
+class TicketListSerializer(StrictModelSerializer):
     attachment = serializers.FileField(write_only=True, allow_null=True)
     author = serializers.ReadOnlyField(source='author.username')
     description = serializers.CharField(write_only=True)
@@ -15,19 +39,11 @@ class TicketListSerializer(serializers.ModelSerializer):
         model = models.Ticket
         exclude = ('expert', 'bugs')
         read_only_fields = ('status', 'duplicate')
-        extra_kwargs = {
-            'created': {'format': '%Y-%m-%d, %H:%M'},
-        }
 
 
-class TicketDetailSerializer(serializers.ModelSerializer):
+class TicketDetailSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
-    expert = serializers.SlugRelatedField(
-        slug_field='username', read_only=True
-    )
-    created = serializers.DateTimeField(
-        format='%Y-%m-%d, %H:%M', read_only=True
-    )
+    expert = serializers.ReadOnlyField(source='expert.username')
 
     class Meta:
         model = models.Ticket
@@ -44,12 +60,10 @@ class UserTicketDetailSerializer(TicketDetailSerializer):
 
 
 class ProgrammerTicketDetailSerializer(TicketDetailSerializer):
-    status = serializers.ChoiceField(choices=models.Ticket.STATUS_CHOICES)
-
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = ('title', 'description', 'attachment')
+        read_only_fields = ('title', 'description', 'attachment', 'status')
 
 
 class SupervisorTicketDetailSerializer(TicketDetailSerializer):
@@ -60,20 +74,19 @@ class SupervisorTicketDetailSerializer(TicketDetailSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = (
-            'title', 'description', 'attachment', 'status', 'duplicate', 'bugs'
-        )
+        read_only_fields = ('title', 'description', 'attachment', 'status')
 
 
-class UserListSerializer(serializers.ModelSerializer):
+class UserListSerializer(StrictModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name')
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(StrictModelSerializer):
     languages = serializers.SlugRelatedField(
-        slug_field='name', many=True, queryset=models.Language.objects.all())
+        slug_field='name', many=True, queryset=models.Language.objects.all()
+    )
 
     def validate_birth_date(self, birth_date):
         minimum_age = 15
@@ -88,7 +101,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('birth_date', 'languages')
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(StrictModelSerializer):
     profile = ProfileSerializer()
 
     class Meta:
@@ -97,7 +110,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
                   'last_login', 'date_joined', 'profile')
         extra_kwargs = {
             'email': {'read_only': True},
-            'last_login': {'read_only': True, 'format': '%Y-%m-%d, %H:%M'},
+            'last_login': {'read_only': True},
             'date_joined': {'read_only': True, 'format': '%Y-%m-%d'}
         }
 
@@ -116,13 +129,13 @@ class UserDetailSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class LanguageSerializer(serializers.ModelSerializer):
+class LanguageSerializer(StrictModelSerializer):
     class Meta:
         model = models.Language
         fields = ('id', 'name')
 
 
-class ModuleSerializer(serializers.ModelSerializer):
+class ModuleSerializer(StrictModelSerializer):
     expert = serializers.SlugRelatedField(
         slug_field='username', allow_null=True, queryset=User.objects.all())
     languages = serializers.SlugRelatedField(
@@ -134,42 +147,32 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SeveritySerializer(serializers.ModelSerializer):
+class SeveritySerializer(StrictModelSerializer):
     class Meta:
         model = models.Severity
         fields = '__all__'
 
 
-class BugGETSerializer(serializers.ModelSerializer):
+class BugPOSTSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     tickets = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Ticket.objects.all())
+    patch = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = models.Bug
+        fields = '__all__'
+
+
+class BugGETSerializer(BugPOSTSerializer):
     severity = SeveritySerializer()
 
     class Meta:
         model = models.Bug
         fields = '__all__'
-        extra_kwargs = {
-            'created': {'format': '%Y-%m-%d, %H:%M'},
-            'patch': {'read_only': True},
-        }
 
 
-class BugPOSTSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
-    tickets = serializers.PrimaryKeyRelatedField(
-            many=True, queryset=models.Ticket.objects.all())
-
-    class Meta:
-        model = models.Bug
-        fields = '__all__'
-        extra_kwargs = {
-            'created': {'format': '%Y-%m-%d, %H:%M'},
-            'patch': {'read_only': True},
-        }
-
-
-class PatchSerializer(serializers.ModelSerializer):
+class PatchSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     bugs = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Bug.objects.all())
@@ -177,7 +180,3 @@ class PatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Patch
         fields = '__all__'
-        extra_kwargs = {
-            'date_released': {'format': '%Y-%m-%d, %H:%M'},
-            'date_applied': {'format': '%Y-%m-%d, %H:%M'},
-        }
