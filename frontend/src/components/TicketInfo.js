@@ -88,13 +88,13 @@ export default class TicketInfo extends Component {
 
     toggleAssignBugsModal() {
         this.setState({
-            assignBugsModalOpen: !this.state.assignBugsModalOpen
+            moduleBugsModalOpen: !this.state.moduleBugsModalOpen
         });
     }
 
     closeAssignBugsModal() {
         this.setState({
-            assignBugsModalOpen: false
+            moduleBugsModalOpen: false
         });
     }
 
@@ -188,7 +188,7 @@ export default class TicketInfo extends Component {
                         </Col>
                     </Row>
                 </Container>
-                <Modal isOpen={this.state.assignBugsModalOpen} toggle={this.toggleAssignBugsModal} centered>
+                <Modal isOpen={this.state.moduleBugsModalOpen} toggle={this.toggleAssignBugsModal} centered>
                     <ModalHeader toggle={this.toggleAssignTicketsModal}>Assign tickets</ModalHeader>
                     <ModalBody>
                         <AssignBugsForm ticket={ticket} closeModal={this.closeAssignBugsModal} />
@@ -328,7 +328,7 @@ const BugsContainer = connect(
     );
 });
 
-function Bug(props) {
+export function Bug(props) {
     return (
         <Card body outline tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs"
               style={props.bug.severity ?

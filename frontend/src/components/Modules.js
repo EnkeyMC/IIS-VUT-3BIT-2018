@@ -9,28 +9,39 @@ import {getModules, getModuleBug, clearModuleBugs, GET_MODULE_BUG, cancelActionR
 import {Spinner, StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 import Error from "./Error";
+import {Bug} from "./TicketInfo";
+import {RestrictedView, ROLE_SUPERVISOR} from "./RoleRestriction";
 
 export default class Modules extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            assignBugsModalOpen: false
+            moduleBugsModalOpen: false,
+            moduleInModal: null
         };
 
-        this.toggleAssignBugsModal = this.toggleAssignBugsModal.bind(this);
-        this.closeAssignBugsModal = this.closeAssignBugsModal.bind(this);
+        this.toggleModuleBugsModal = this.toggleModuleBugsModal.bind(this);
+        this.closeModuleBugsModal = this.closeModuleBugsModal.bind(this);
+        this.openModuleBugsModal = this.openModuleBugsModal.bind(this);
     }
 
-    toggleAssignBugsModal() {
+    toggleModuleBugsModal() {
         this.setState({
-            assignBugsModalOpen: !this.state.assignBugsModalOpen
+            moduleBugsModalOpen: !this.state.moduleBugsModalOpen
         });
     }
 
-    closeAssignBugsModal() {
+    openModuleBugsModal(module) {
         this.setState({
-            assignBugsModalOpen: false
+            moduleBugsModalOpen: true,
+            moduleInModal: module
+        })
+    }
+
+    closeModuleBugsModal() {
+        this.setState({
+            moduleBugsModalOpen: false
         });
     }
 
@@ -53,20 +64,22 @@ export default class Modules extends Component {
                             <h1 className="mb-3">Modules</h1>
                             <CardColumns>
                                 {
-                                    props.modules.map(module => <ModuleCard toggleModal={this.toggleAssignBugsModal}
+                                    props.modules.map(module => <ModuleCard openModal={this.openModuleBugsModal}
                                                                             module={module}
                                                                             key={module.id}
                                     />)
                                 }
-                                <NewModuleBtn/>
+                                <RestrictedView minRole={ROLE_SUPERVISOR}>
+                                    <NewModuleBtn/>
+                                </RestrictedView>
                             </CardColumns>
                         </Container>
-                        <Modal isOpen={this.state.assignBugsModalOpen}
-                               toggle={this.toggleAssignBugsModal}
-                               className={this.props.className} centered>
-                            <ModalHeader toggle={this.toggleAssignTicketsModal}>Related bugs</ModalHeader>
+                        <Modal isOpen={this.state.moduleBugsModalOpen}
+                               toggle={this.toggleModuleBugsModal}
+                               className={this.props.className} >
+                            <ModalHeader toggle={this.toggleAssignTicketsModal}>Bugs in module</ModalHeader>
                             <ModalBody>
-                                <BugsContainer/>
+                                <BugsContainer module={this.state.moduleInModal}/>
                             </ModalBody>
                         </Modal>
                     </>);
@@ -86,10 +99,7 @@ Modules = connect (
     },
     dispatch => {
         return {
-            getModules: () => dispatch(getModules()),
-            getModuleBug: (id) => dispatch(getModuleBug(id)),
-            clearModuleBugs: () => dispatch(clearModuleBugs()),
-            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType))
+            getModules: () => dispatch(getModules())
         }
     }
 ) (Modules);
@@ -108,7 +118,7 @@ function ModuleCard(props) {
                 <div>
                     <span className="mr-2">Languages:</span>
                     {props.module.languages.map(item => <Badge color="primary" pill key={item} className="mr-1">{item}</Badge>)}
-                    <ViewBugsBtn onClick={props.toggleModal} />
+                    <ViewBugsBtn onClick={() => props.openModal(props.module)} />
                 </div>
                 <div>
                     <span className="mr-2">Expert:</span>
@@ -121,23 +131,27 @@ function ModuleCard(props) {
 
 function ViewBugsBtn(props) {
     return (
-        <Button className="float-right module-bugs" outline color="danger" onClick={props.onClick}>Bugs</Button>
+        <Button className="float-right module-bugs" outline onClick={props.onClick}>Bugs</Button>
     );
 }
 
 class BugsContainer extends Component {
-
-    componentDidMount() {
-        this.props.getModuleBug();
+    componentDidMount() {console.log("mounted");
+        if (this.props.module !== null)
+            this.requestBugs();
     }
 
     requestBugs() {
         this.props.cancelActions(GET_MODULE_BUG);
         this.props.clearModuleBugs();
-        this.props.moduleBugs(id => this.props.getModuleBug(id));
+        this.props.module.bugs.forEach(id => this.props.getModuleBug(id));
     }
 
     render() {
+        if (this.props.module === null) {
+            return null;
+        }
+
         if (this.props.error) {
             return this.props.error.map((err, idx) => {
                 return (
@@ -173,14 +187,15 @@ BugsContainer = connect(
             error: state.modules.moduleBugs.error,
             data: state.modules.moduleBugs.data
         }
+    },
+    dispatch => {
+        return {
+            getModuleBug: (id) => dispatch(getModuleBug(id)),
+            clearModuleBugs: () => dispatch(clearModuleBugs()),
+            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType))
+        }
     }
 )(BugsContainer);
-
-function Bug(props) {
-    return (
-        <div>dfs</div>
-    );
-}
 
 const NewModuleBtn = withRouter((props) => {
     return (
