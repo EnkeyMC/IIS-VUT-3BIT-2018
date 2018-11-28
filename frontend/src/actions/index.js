@@ -1,3 +1,5 @@
+import {CLEAR} from "../reducers";
+
 export const GET_TICKETS = 'GET_TICKETS_REQ';
 export const GET_TICKET = 'GET_TICKET_REQ';
 export const SET_TICKET_ERROR = 'SET_TICKET_ERROR';
@@ -14,9 +16,7 @@ export const GET_BUG = 'GET_BUG_REQ';
 export const SET_BUG_ERROR = 'SET_BUG_ERROR';
 export const SET_BUG = 'SET_BUG';
 export const GET_BUG_TICKET = 'GET_BUG_TICKET_REQ';
-export const CLEAR_BUG_TICKETS = 'CLEAR_BUG_TICKETS';
 export const GET_TICKET_BUG = 'GET_TICKET_BUG_REQ';
-export const CLEAR_TICKET_BUGS = 'CLEAR_TICKET_BUGS';
 export const GET_SEVERITIES = 'GET_SEVERITIES_REQ';
 export const GET_MODULES = 'GET_MODULES_REQ';
 
@@ -200,7 +200,7 @@ export function getBugTicket(id) {
 
 export function clearBugTickets() {
     return {
-        type: CLEAR_BUG_TICKETS
+        type: GET_BUG_TICKET+CLEAR
     }
 }
 
@@ -217,7 +217,7 @@ export function getTicketBug(id) {
 
 export function clearTicketBugs() {
     return {
-        type: CLEAR_TICKET_BUGS
+        type: GET_TICKET_BUG+CLEAR
     }
 }
 

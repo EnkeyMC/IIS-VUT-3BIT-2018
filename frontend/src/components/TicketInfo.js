@@ -220,6 +220,7 @@ TicketInfo = connect(
 )(TicketInfo);
 
 const Detail = withRouter((props) => {
+    const status = props.match.params.status;
     const toPath = pathToRegexp.compile(props.match.path);
     return (
         <>
@@ -250,7 +251,7 @@ const Detail = withRouter((props) => {
                         <Badge color="light" className={'state-bgr-'+props.ticket.status}>
                             {props.ticket.status}
                             {props.ticket.status === 'duplicate' ?
-                                <>&nbsp;<Link to={toPath({id: props.ticket.duplicate})} >#{props.ticket.duplicate}</Link></>
+                                <>&nbsp;<Link to={toPath({status: status, id: props.ticket.duplicate})} >#{props.ticket.duplicate}</Link></>
                                 :
                                 null
                             }

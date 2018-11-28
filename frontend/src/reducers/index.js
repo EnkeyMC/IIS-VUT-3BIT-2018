@@ -26,6 +26,7 @@ import { connectRouter } from 'connected-react-router';
 
 const SUCC = '_SUCCESS';
 const FAIL = '_FAIL';
+export const CLEAR = '_CLEAR';
 
 const initialGlobalState = {
     user: JSON.parse(localStorage.getItem('AUTH_USER')),
@@ -139,7 +140,7 @@ function reduceTicketView(state = initialTicketsViewState, action) {
         tickets: reduceGetList(state.tickets, action, GET_TICKETS),
         ticketInfo: Object.assign(
             reduceGetTicket(state.ticketInfo, action),
-            {ticketBugs: reduceTicketBugs(state.ticketInfo.ticketBugs, action)}
+            {ticketBugs: reduceSignleToList(state.ticketInfo.ticketBugs, action, GET_TICKET_BUG)}
         )
     };
 }
@@ -161,6 +162,33 @@ function reduceGetList(state, action, ACTION) {
             return copyMerge(state, {
                 loading: false,
                 error: action.error.message
+            });
+        default:
+            return state;
+    }
+}
+
+function reduceSignleToList(state, action, ACTION) {
+    switch (action.type) {
+        case ACTION:
+            return copyMerge(state, {
+                loading: state.loading + 1
+            });
+        case ACTION+SUCC:
+            return copyMerge(state, {
+                loading: state.loading - 1,
+                data: state.data.concat([action.payload.data])
+            });
+        case ACTION+FAIL:
+            return copyMerge(state, {
+                loading: state.loading - 1,
+                error: state.error === null ? [action.error.message] : state.error.concat([action.error.message])
+            });
+        case ACTION+CLEAR:
+            return copyMerge(state, {
+                loading: 0,
+                error: null,
+                data: []
             });
         default:
             return state;
@@ -191,33 +219,6 @@ function reduceGetTicket(state, action) {
     }
 }
 
-function reduceTicketBugs(state, action) {
-    switch (action.type) {
-        case GET_TICKET_BUG:
-            return copyMerge(state, {
-                loading: state.loading + 1
-            });
-        case GET_TICKET_BUG+SUCC:
-            return copyMerge(state, {
-                loading: state.loading - 1,
-                data: state.data.concat([action.payload.data])
-            });
-        case GET_TICKET_BUG+FAIL:
-            return copyMerge(state, {
-                loading: state.loading - 1,
-                error: state.error === null ? [action.error.message] : state.error.concat([action.error.message])
-            });
-        case CLEAR_TICKET_BUGS:
-            return copyMerge(state, {
-                loading: 0,
-                error: null,
-                data: []
-            });
-        default:
-            return state;
-    }
-}
-
 function reduceUserView(state = initialProfileViewState, action) {
     switch (action.type) {
         case GET_USER:
@@ -242,7 +243,7 @@ function reduceBugView(state = initialBugsViewState, action) {
         bugs: reduceGetList(state.bugs, action, GET_BUGS),
         bugInfo: Object.assign(
             reduceGetBug(state.bugInfo, action),
-            {bugTickets: reduceBugTickets(state.bugInfo.bugTickets, action)}
+            {bugTickets: reduceSignleToList(state.bugInfo.bugTickets, action, GET_BUG_TICKET)}
         )
     }
 }
@@ -266,33 +267,6 @@ function reduceGetBug(state, action) {
             return copyMerge(state, {error: action.error});
         case SET_BUG:
             return copyMerge(state, {data: action.data});
-        default:
-            return state;
-    }
-}
-
-function reduceBugTickets(state, action) {
-    switch (action.type) {
-        case GET_BUG_TICKET:
-            return copyMerge(state, {
-                loading: state.loading + 1
-            });
-        case GET_BUG_TICKET+SUCC:
-            return copyMerge(state, {
-                loading: state.loading - 1,
-                data: state.data.concat([action.payload.data])
-            });
-        case GET_BUG_TICKET+FAIL:
-            return copyMerge(state, {
-                loading: state.loading - 1,
-                error: state.error === null ? [action.error.message] : state.error.concat([action.error.message])
-            });
-        case CLEAR_BUG_TICKETS:
-            return copyMerge(state, {
-                loading: 0,
-                error: null,
-                data: []
-            });
         default:
             return state;
     }
