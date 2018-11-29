@@ -42,11 +42,14 @@ class PatchFilter(filters.FilterSet):
         field_name='date_applied', lookup_expr='isnull', exclude=True)
     date_released = filters.DateFromToRangeFilter()
     date_applied = filters.DateFromToRangeFilter()
+    module = filters.ModelChoiceFilter(
+        queryset=Module.objects.all(), field_name='bugs__module')
 
     class Meta:
         model = Patch
         fields = [
-            'status', 'username', 'applied', 'date_released', 'date_applied'
+            'status', 'username', 'applied',
+            'date_released', 'date_applied', 'module'
         ]
 
 
