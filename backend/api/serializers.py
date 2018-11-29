@@ -164,18 +164,33 @@ class BugPOSTSerializer(StrictModelSerializer):
         fields = '__all__'
 
 
+class ModuleInsideBugSerializer(StrictModelSerializer):
+    class Meta:
+        model = models.Module
+        fields = ('id', 'name')
+
+
 class BugGETSerializer(BugPOSTSerializer):
     severity = SeveritySerializer()
+    module = ModuleInsideBugSerializer()
 
     class Meta:
         model = models.Bug
         fields = '__all__'
 
 
-class PatchSerializer(StrictModelSerializer):
+class PatchPOSTSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     bugs = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Bug.objects.all())
+
+    class Meta:
+        model = models.Patch
+        fields = '__all__'
+
+
+class PatchGETSerializer(PatchPOSTSerializer):
+    bugs = BugGETSerializer(many=True)
 
     class Meta:
         model = models.Patch

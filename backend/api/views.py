@@ -129,7 +129,6 @@ class BugViewSet(viewsets.ModelViewSet):
 
 
 class PatchViewset(viewsets.ModelViewSet):
-    serializer_class = serializers.PatchSerializer
     queryset = models.Patch.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsStaffOrReadOnly)
@@ -183,3 +182,8 @@ class PatchViewset(viewsets.ModelViewSet):
             else:
                 ticket.status = models.Ticket.STATUS_CLOSED
                 ticket.save(update_fields=['status'])
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return serializers.PatchGETSerializer
+        return serializers.PatchPOSTSerializer
