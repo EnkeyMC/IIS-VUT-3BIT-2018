@@ -17,7 +17,6 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 export default function SideList (props) {
     const ItemComponent = props.itemTag;
     const itemIdName = props.itemIdName ? props.itemIdName : 'id';
-    console.log(props);
     return (
         <div className="ticket-list content-height position-fixed">
             {props.children}
@@ -109,7 +108,7 @@ export class SideListFilterItem extends React.Component {
         this.props.filter.handleChange(this.props.value);
     }
 
-    render() {console.log(this.props);
+    render() {
         return (
             <NavLink to={this.props.linkTo}>
                 <DropdownItem className="pointer" onClick={this.handleClick}>{this.props.value}</DropdownItem>

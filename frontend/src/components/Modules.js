@@ -166,7 +166,7 @@ class BugsContainer extends Component {
 
         return (
             <div>
-                {this.props.data.map(bug => <Bug bug={bug} key={bug.id} />)}
+                {this.props.data.map(bug => <Bug bug={bug} key={bug.id} noRemove />)}
                 {
                     this.props.loading ?
                         <div className="flex-mid mt-4">

@@ -13,7 +13,7 @@ import {
     getBug,
     getBugTicket,
     getTickets, setBug,
-    setBugError
+    setBugError, submitForm
 } from "../actions";
 import Observable from "../utils/Observable";
 import {Spinner, StateRenderer} from "../utils";
@@ -56,6 +56,7 @@ export default class BugInfo extends Component {
 
         this.toggleAssignTicketsModal = this.toggleAssignTicketsModal.bind(this);
         this.closeAssignTicketsModal = this.closeAssignTicketsModal.bind(this);
+        this.removeTicket = this.removeTicket.bind(this);
     }
 
     componentDidMount() {
@@ -95,6 +96,17 @@ export default class BugInfo extends Component {
         this.setState({
             assignTicketsModalOpen: false
         });
+    }
+
+    removeTicket(ticketId) {console.log("fds");
+        let data = new FormData();
+        this.props.bug.tickets.forEach(id => id !== ticketId ? data.append('tickets', id) : false);
+        this.props.submitForm('remove-ticket', '/api/bugs/'+this.props.bug.id+'/', data, true)
+            .then(action => {
+                if (action.payload) {
+                    this.props.setBug(action.payload.data);
+                }
+            });
     }
 
     render() {
@@ -177,7 +189,7 @@ export default class BugInfo extends Component {
                                 <Row className="mt-1">
                                     <Col>
                                         <h4>Bug occurrence:</h4>
-                                        <TicketsContainer toggleModal={this.toggleAssignTicketsModal} />
+                                        <TicketsContainer toggleModal={this.toggleAssignTicketsModal} removeTicket={this.removeTicket} />
                                     </Col>
                                 </Row>
                             </Container>
@@ -210,7 +222,9 @@ BugInfo = connect(
             setBugError: (msg) => dispatch(setBugError(msg)),
             getBugTicket: (id) => dispatch(getBugTicket(id)),
             clearBugTickets: () => dispatch(clearBugTickets()),
-            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType))
+            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType)),
+            setBug: (data) => dispatch(setBug(data)),
+            submitForm: (id, url, data, edit) => dispatch(submitForm(id, url, data, edit)),
         }
     }
 )(BugInfo);
@@ -238,7 +252,7 @@ const TicketsContainer = connect(
 
     return (
         <div>
-            {props.data.map(ticket => <Ticket ticket={ticket} key={ticket.id} />)}
+            {props.data.map(ticket => <Ticket ticket={ticket} key={ticket.id} removeTicket={props.removeTicket} />)}
             {
                 props.loading ?
                     <div className="flex-mid mt-4">
@@ -258,7 +272,7 @@ function Ticket(props) {
     return (
         <Card body outline tag={Link} to={'/tickets/all/'+props.ticket.id} className={"mb-2 bugs state-"+props.ticket.status}>
             <RestrictedView minRole={ROLE_PROGRAMMER}>
-                <CloseBtn/>
+                {props.noRemove ? null : <CloseBtn onClick={(e) => {props.removeTicket(props.ticket.id); e.preventDefault()}}/>}
             </RestrictedView>
             <CardTitle>#{props.ticket.id} - {props.ticket.title}</CardTitle>
             <CardText>

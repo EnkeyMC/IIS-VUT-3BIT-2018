@@ -10,7 +10,7 @@ import {
     GET_TICKET_BUG, getBugs,
     getTicket,
     getTicketBug, setTicket,
-    setTicketError
+    setTicketError, submitForm
 } from '../actions';
 import {Link} from "react-router-dom";
 import Error from "./Error";
@@ -58,6 +58,7 @@ export default class TicketInfo extends Component {
 
         this.toggleAssignBugsModal = this.toggleAssignBugsModal.bind(this);
         this.closeAssignBugsModal = this.closeAssignBugsModal.bind(this);
+        this.removeBug = this.removeBug.bind(this);
     }
 
     componentDidMount() {
@@ -97,6 +98,17 @@ export default class TicketInfo extends Component {
         this.setState({
             moduleBugsModalOpen: false
         });
+    }
+
+    removeBug(bugId) {
+        let data = new FormData();
+        this.props.ticket.bugs.forEach(id => id !== bugId ? data.append('bugs', id) : false);
+        this.props.submitForm('remove-bug', '/api/tickets/'+this.props.ticket.id+'/', data, true)
+            .then(action => {
+                if (action.payload) {
+                    this.props.setTicket(action.payload.data);
+                }
+            });
     }
 
     render() {
@@ -182,7 +194,7 @@ export default class TicketInfo extends Component {
                                 <Row className="mt-1">
                                     <Col>
                                         <h4>Related bugs:</h4>
-                                        <BugsContainer toggleModal={this.toggleAssignBugsModal}/>
+                                        <BugsContainer toggleModal={this.toggleAssignBugsModal} removeBug={this.removeBug}/>
                                     </Col>
                                 </Row>
                             </Container>
@@ -215,7 +227,9 @@ TicketInfo = connect(
             setTicketError: (msg) => dispatch(setTicketError(msg)),
             getTicketBug: (id) => dispatch(getTicketBug(id)),
             clearTicketBugs: () => dispatch(clearTicketBugs()),
-            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType))
+            cancelActions: (actionType) => dispatch(cancelActionRequests(actionType)),
+            submitForm: (id, url, data, edit) => dispatch(submitForm(id, url, data, edit)),
+            setTicket: (data) => dispatch(setTicket(data)),
         }
     }
 )(TicketInfo);
@@ -313,7 +327,7 @@ const BugsContainer = connect(
 
     return (
         <div>
-            {props.data.map(bug => <Bug bug={bug} key={bug.id} />)}
+            {props.data.map(bug => <Bug bug={bug} key={bug.id} removeBug={props.removeBug} />)}
             {
                 props.loading ?
                     <div className="flex-mid mt-4">
@@ -339,7 +353,7 @@ export function Bug(props) {
               }
         >
             <RestrictedView minRole={ROLE_PROGRAMMER}>
-                <CloseBtn/>
+                {props.noRemove ? null : <CloseBtn onClick={(e) => {props.removeBug(props.bug.id); e.preventDefault()}} />}
             </RestrictedView>
             <CardTitle>#{props.bug.id} - {props.bug.title}</CardTitle>
             <CardText>
