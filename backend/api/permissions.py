@@ -31,3 +31,12 @@ class IsStaffOrReadOnly(permissions.BasePermission):
 
         staff = (Profile.PROGRAMMER, Profile.SUPERVISOR)
         return request.user.profile.user_type in staff
+
+
+class IsSupervisorOrReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return request.user.profile.user_type in Profile.SUPERVISOR
