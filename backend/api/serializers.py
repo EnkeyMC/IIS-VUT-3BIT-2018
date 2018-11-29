@@ -3,7 +3,8 @@ from datetime import date
 from django.contrib.auth.models import User
 
 from rest_framework import serializers, utils
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.fields import empty
 
 from bugtracker import models
 
@@ -18,7 +19,7 @@ class StrictModelSerializer(serializers.ModelSerializer):
 
         perm_denied_fields = request_fields.intersection(set(read_only_fields))
         if perm_denied_fields:
-            raise PermissionDenied(dict.fromkeys(
+            raise PermissionDenied(detail=dict.fromkeys(
                 perm_denied_fields,
                 'You do not have permission to modify this field.'))
 
@@ -26,7 +27,7 @@ class StrictModelSerializer(serializers.ModelSerializer):
         known_fields.add('csrfmiddlewaretoken')
         unknown_fields = request_fields - known_fields
         if unknown_fields:
-            raise serializers.ValidationError(dict.fromkeys(
+            raise serializers.ValidationError(detail=dict.fromkeys(
                 unknown_fields, 'Unexpected field.'))
 
         return attrs
@@ -93,7 +94,7 @@ class ProfileSerializer(StrictModelSerializer):
     def validate_birth_date(self, birth_date):
         minimum_age = 15
         if birth_date.year + minimum_age > date.today().year:
-            raise serializers.ValidationError((
+            raise serializers.ValidationError(detail=(
                 'The minimum age requirement for '
                 'this site is {} years old.').format(minimum_age))
         return birth_date
@@ -104,17 +105,15 @@ class ProfileSerializer(StrictModelSerializer):
 
 
 class UserDetailSerializer(StrictModelSerializer):
-    profile = ProfileSerializer()
+    profile = ProfileSerializer(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    last_login = serializers.DateTimeField(read_only=True)
+    date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
 
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'last_login', 'date_joined', 'profile')
-        extra_kwargs = {
-            'email': {'read_only': True},
-            'last_login': {'read_only': True},
-            'date_joined': {'read_only': True, 'format': '%Y-%m-%d'}
-        }
 
     def update(self, instance, validated_data):
         if validated_data.get('profile', False):
@@ -129,6 +128,28 @@ class UserDetailSerializer(StrictModelSerializer):
                     setattr(instance.profile, attr, value)
 
         return super().update(instance, validated_data)
+
+    def run_validation(self, data=empty):
+        profile = data.pop('profile', None)
+        value = super().run_validation(data=data)
+        if profile:
+            serializer = ProfileSerializer(data=profile)
+            try:
+                serializer.is_valid(raise_exception=True)
+            except ValidationError as exc:
+                raise ValidationError(detail={'profile': exc.detail})
+            except PermissionDenied as exc:
+                raise PermissionDenied(detail={'profile': exc.detail})
+            value.update({'profile': serializer.validated_data})
+
+        return value
+
+
+class SupervisorUserDetailSerializer(UserDetailSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
+                  'last_login', 'date_joined', 'profile', 'is_active')
 
 
 class LanguageSerializer(StrictModelSerializer):

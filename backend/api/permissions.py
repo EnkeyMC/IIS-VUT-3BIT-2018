@@ -10,17 +10,18 @@ class IsOwnerOrStaffOrReadOnly(permissions.BasePermission):
             return True
 
         staff = (Profile.PROGRAMMER, Profile.SUPERVISOR)
-        return (obj.author == request.user or
-                request.user.profile.user_type in staff)
+        return (obj.author == request.user
+                or request.user.profile.user_type in staff)
 
 
-class IsSelfOrReadOnly(permissions.BasePermission):
+class IsSelfOrSupervisorOrReadOnly(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj == request.user
+        return (obj == request.user
+                or request.user.profile.user_type == Profile.SUPERVISOR)
 
 
 class IsStaffOrReadOnly(permissions.BasePermission):
