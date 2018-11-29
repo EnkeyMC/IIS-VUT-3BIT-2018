@@ -8,7 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from bugtracker import models
 from .permissions import (IsOwnerOrStaffOrReadOnly,
                           IsSelfOrReadOnly,
-                          IsStaffOrReadOnly)
+                          IsStaffOrReadOnly,
+                          IsSupervisorOrReadOnly)
 from . import serializers
 from . import filters as bugtracker_filters
 
@@ -56,7 +57,7 @@ class LanguageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LanguageSerializer
     queryset = models.Language.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsStaffOrReadOnly)
+                          IsSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.LanguageFilter
     search_fields = ('name',)
@@ -90,7 +91,7 @@ class ModuleViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ModuleSerializer
     queryset = models.Module.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsStaffOrReadOnly)
+                          IsSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.ModuleFilter
     search_fields = ('name',)
@@ -102,7 +103,7 @@ class SeverityViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SeveritySerializer
     queryset = models.Severity.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsStaffOrReadOnly)
+                          IsSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter)
     search_fields = ('name',)
     ordering_fields = ('level', 'name')
@@ -177,11 +178,10 @@ class PatchViewset(viewsets.ModelViewSet):
                         ticket.status = models.Ticket.STATUS_ASSIGNED
                     else:
                         ticket.status = models.Ticket.STATUS_NEW
-                    ticket.save(update_fields=['status'])
                     break
             else:
                 ticket.status = models.Ticket.STATUS_CLOSED
-                ticket.save(update_fields=['status'])
+            ticket.save(update_fields=['status'])
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
