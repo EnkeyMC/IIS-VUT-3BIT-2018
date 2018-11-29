@@ -324,8 +324,10 @@ function Detail(props) {
                 <Col md="6" xs="12">
                     <Row className="no-margin">
                         <span className="text-muted">
-                            Reward: TODO?
+                            Module:
                         </span>
+                        &nbsp;
+                        {bug.module ? bug.module.name : null}
                     </Row>
                     <Row className="no-margin">
                         <span className="text-muted">
