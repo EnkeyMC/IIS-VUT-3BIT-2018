@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, FormFeedback, FormGroup, FormText, Input as BsInput, InputGroupText, Label} from "reactstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {withForm} from "./Form";
+import PropTypes from "prop-types";
 
 const Context = React.createContext();
 
@@ -19,6 +20,8 @@ export default class MultiSearchSelect extends React.Component {
 
     componentDidMount() {
         this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : []);
+        if (this.props.onMount)
+            this.props.onMount(this.props);
     }
 
     onSearchChange(event) {
@@ -34,11 +37,11 @@ export default class MultiSearchSelect extends React.Component {
         } else {
             values = values.concat([value]);
         }
-        this.props.form.setValue(this.props.name, values);
+        this.props.form.onChange(this.props.name, values);
     }
 
     render() {
-        const {label: labelProps, formGroup: formGroupProps, hint, form, required} = this.props;
+        const {label, hint, form, required} = this.props;
 
         if (!form.state.fields[this.props.name])
             return null;
@@ -46,13 +49,11 @@ export default class MultiSearchSelect extends React.Component {
         const error = form.state.fields[this.props.name].error;
 
         return (
-            <FormGroup {...formGroupProps}>
+            <FormGroup>
             {
-                labelProps ?
-                    <Label
-                        {...labelProps}
-                        for={this.props.id}>
-                        {labelProps.text}{required ? <span className="text-danger">&nbsp;*</span> : null}
+                label ?
+                    <Label for={this.props.id}>
+                        {label}{required ? <span className="text-danger">&nbsp;*</span> : null}
                     </Label>
                     :
                     null
@@ -80,6 +81,17 @@ export default class MultiSearchSelect extends React.Component {
         );
     }
 }
+
+MultiSearchSelect.propTypes = {
+    label: PropTypes.string,
+    hint: PropTypes.string,
+    form: PropTypes.object.isRequired,
+    required: PropTypes.bool,
+    onMount: PropTypes.func,
+    defaultValue: PropTypes.any,
+    id: PropTypes.string,
+    name: PropTypes.string
+};
 
 MultiSearchSelect = withForm(MultiSearchSelect);
 
@@ -126,3 +138,8 @@ export function SelectItem(props) {
         </Context.Consumer>
     );
 }
+
+SelectItem.propTypes = {
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired
+};

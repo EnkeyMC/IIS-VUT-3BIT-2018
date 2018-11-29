@@ -6,13 +6,14 @@ import {
     Button, Container, Row
 } from 'reactstrap';
 import {Link} from "react-router-dom";
-import {Form, Input} from "../components/Form";
+import {Form} from "../components/form/Form";
 import {copyMerge} from "../utils";
 import {withRouter} from "react-router";
 import connect from "react-redux/es/connect/connect";
 import {setToken, setUser} from "../actions";
 import {withAlert} from "react-alert";
 import DefaultLayout from "./layouts/DefaultLayout";
+import {Input} from "../components/form/Input";
 
 export default class RegisterView extends React.Component {
     render() {
@@ -81,10 +82,10 @@ class RegisterForm extends React.Component {
     render() {
         return (
             <Form id="register" url="/auth/register/" beforeSubmit={this.handleBeforeSubmit} onSubmitSuccess={this.handleSuccess}>
-                <Input label={{text: "Username"}} name="username" id="username" />
-                <Input label={{text: "Email"}} type="email" name="email" id="email" />
-                <Input label={{text: "Password"}} name="password" id="password" type="password" />
-                <Input label={{text: "Verify password"}} hint="Verify password by entering the same password from the above field." name="passwordVerify" id="password-verify" type="password" />
+                <Input label="Username" name="username" id="username" />
+                <Input label="Email" type="email" name="email" id="email" />
+                <Input label="Password" name="password" id="password" type="password" />
+                <Input label="Verify password" hint="Verify password by entering the same password from the above field." name="passwordVerify" id="password-verify" type="password" />
                 <Button className="mt-3 w-100" color="primary">Register</Button>
                 <p className="mt-4">Already have an account? <Link to="/login">Login here!</Link></p>
             </Form>

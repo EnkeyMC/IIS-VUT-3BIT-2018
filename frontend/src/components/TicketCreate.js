@@ -7,11 +7,13 @@ import {
 } from "reactstrap";
 import CardContainer from "./CardContainer";
 import {withRouter} from "react-router";
-import {Form, Input} from "./Form";
+import {Form} from "./form/Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
 import {getTickets} from "../actions";
-import MultiSearchSelect from "./MultiSearchSelect";
+import MultiSearchSelect from "./form/MultiSearchSelect";
+import {Input} from "./form/Input";
+import {FileDrop} from "./form/FileDrop";
 
 export default function TicketCreate() {
     return (
@@ -58,14 +60,15 @@ class TicketCreateForm extends React.Component {
 
     render() {
         return (
-            <Form id="create-ticket" url={"/api/tickets/"} onSubmitSuccess={this.handleSubmitSuccess}>
+            <Form id="create-ticket" url="/api/tickets/" onSubmitSuccess={this.handleSubmitSuccess}>
                 <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
-                <Input label={{text: "Title"}} name="title" id="title" required />
-                <Input type="textarea" rows="10" label={{text: "Description"}} name="description" id="description" required
+                <Input label="Title" name="title" id="title" required />
+                <Input type="textarea" rows="10" label="Description" name="description" id="description" required
                        hint="Please describe the problem in detail with steps to reproduce it, as well as the environment you run the software in."
                 />
-                <Input type="hidden" name="attachment" />
-                <p>TODO: file upload</p>
+                <FileDrop label="Attachment" name="attachment" id="attachment" accept="text/*, image/*"
+                          hint="Attach image or text file that can help us resolve your issue. Max file size is 1 MB."
+                />
                 <Button type="submit" color="primary" className="w-100 mt-4">Submit</Button>
             </Form>
         );

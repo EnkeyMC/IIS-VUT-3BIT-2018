@@ -16,12 +16,6 @@ import {createCancellationMiddleware} from './utils/cancellationMiddleware';
 
 export const client = axios.create();
 
-// client.post('http://api.platby.rainbowshaggy.xyz/api/oauth/token', {}, {
-//     headers: {
-//         'X-Requested-With': 'XMLHttpRequest'
-//     }
-// }).then((response) => console.log('response', response)).catch((err) => console.log(err));
-
 const axiosMiddlewareConfig = {
     interceptors: {
         request: [
@@ -36,7 +30,7 @@ const axiosMiddlewareConfig = {
         response: [
             {
                 error: (store, response) => {
-                    if (response.response.status === 401) {
+                    if (response.response && response.response.status === 401) {
                         if (!response.config.reduxSourceAction.noRetry) {
                             store.dispatch(setToken(null));
                             store.dispatch(setUser(null));

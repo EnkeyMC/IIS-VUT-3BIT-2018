@@ -1,14 +1,16 @@
 import React from 'react';
 import CardContainer from "./CardContainer";
 import {Button, CardBody, CardHeader, Col, Row} from "reactstrap";
-import {Form, Input, Select} from "./Form";
+import {Form} from "./form/Form";
 import {StateRenderer} from "../utils";
 import connect from "react-redux/es/connect/connect";
 import {getLanguages, getUser, verifyUser} from "../actions";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
-import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
+import MultiSearchSelect, {SelectItem} from "./form/MultiSearchSelect";
+import {Input} from "./form/Input";
+import {Select} from "./form/Select";
 
 export default function ProfileEdit() {
     return (
@@ -57,12 +59,12 @@ class ProfileEditForm extends React.Component {
                 <StateRenderer state={this.props} renderCondition={this.props.user !== null && this.props.languages !== null}>
                     {props => {return (
                         <>
-                            <Input label={{text: "Username"}} name="username" id="username" defaultValue={props.user.username} required />
-                            <Input label={{text: "First name"}} name="first_name" id="first_name" defaultValue={props.user.first_name} />
-                            <Input label={{text: "Last name"}} name="last_name" id="last_name" defaultValue={props.user.last_name} />
-                            <Input type="email" label={{text: "E-mail"}} name="email" id="email" defaultValue={props.user.email} required />
-                            <Input type="date" label={{text: "Birth date"}} name="profile.birth_date" id="birth_date" defaultValue={props.user.profile.birth_date} />
-                            <MultiSearchSelect label={{text: "Programming languages"}} name="profile.languages" id="languages" defaultValue={props.user.profile.languages}>
+                            <Input label="Username" name="username" id="username" defaultValue={props.user.username} required />
+                            <Input label="First name" name="first_name" id="first_name" defaultValue={props.user.first_name} />
+                            <Input label="Last name" name="last_name" id="last_name" defaultValue={props.user.last_name} />
+                            <Input type="email" label="E-mail" name="email" id="email" defaultValue={props.user.email} required />
+                            <Input type="date" label="Birth date" name="profile.birth_date" id="birth_date" defaultValue={props.user.profile.birth_date} />
+                            <MultiSearchSelect label="Programming languages" name="profile.languages" id="languages" defaultValue={props.user.profile.languages}>
                                 {() => props.languages.map(item => <SelectItem value={item.name} key={item.id} label={item.name} />)}
                             </MultiSearchSelect>
                             <Row form>

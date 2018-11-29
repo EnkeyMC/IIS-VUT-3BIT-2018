@@ -21,8 +21,8 @@ import {withRouter} from "react-router";
 import {Numbering} from "./Numbering";
 import CloseBtn from "./CloseBtn";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Form} from "./Form";
-import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
+import {Form} from "./form/Form";
+import MultiSearchSelect, {SelectItem} from "./form/MultiSearchSelect";
 import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
 
 
@@ -185,7 +185,7 @@ export default class TicketInfo extends Component {
                                     <Description>{ticket.description}</Description>
                                 </Row>
                                 <Row className="pt-3">
-                                    <UploadFiles/>
+                                    <Attachment file={ticket.attachment} ticketId={ticket.id} />
                                 </Row>
                             </Container>
                         </Col>
@@ -294,10 +294,23 @@ function Description(props) {
     );
 }
 
-function UploadFiles(props) {
+function Attachment(props) {
+    let fileView = <p className="text-muted">No files attached.</p>;
+    if (props.file) {
+        const extension = props.file.split('.').pop();
+        if (['png', 'jpg', 'bmp', 'jpeg'].includes(extension.toLowerCase())) {
+            fileView = <div className="attachment-img">
+                <img alt="attachment" src={props.file} />
+                <p><a href={props.file} target="_blank" rel="noopener noreferrer">View attachment</a></p>
+            </div>
+        } else {
+            fileView = <a href={props.file} target="_blank" rel="noopener noreferrer">View attachment</a>;
+        }
+    }
     return (
       <Col>
-          <h4>Uploaded files</h4>
+          <h4>Attachment</h4>
+          {fileView}
       </Col>
     );
 }
