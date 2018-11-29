@@ -7,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from bugtracker import models
 from .permissions import (IsOwnerOrStaffOrReadOnly,
-                          IsSelfOrReadOnly,
+                          IsSelfOrSupervisorOrReadOnly,
                           IsStaffOrReadOnly,
                           IsSupervisorOrReadOnly)
 from . import serializers
@@ -72,7 +72,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.exclude(is_superuser=True)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsSelfOrReadOnly)
+                          IsSelfOrSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     ordering_fields = ('id', 'username', 'first_name', 'last_name')
     ordering = ('id',)
@@ -84,6 +84,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return serializers.UserDetailSerializer
         if self.action == 'list':
             return serializers.UserListSerializer
+        if not self.request.user.is_authenticated:
+            return serializers.UserDetailSerializer
+        elif self.request.user.profile.user_type == models.Profile.SUPERVISOR:
+            return serializers.SupervisorUserDetailSerializer
         return serializers.UserDetailSerializer
 
 
