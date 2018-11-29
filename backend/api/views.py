@@ -39,6 +39,18 @@ class TicketViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def perform_update(self, serializer):
+        ticket = self.get_object()
+        duplicate = serializer.validated_data.get('duplicate', ticket.duplicate)
+        expert = serializer.validated_data.get('expert', ticket.expert)
+
+        if duplicate:
+            serializer.save(status=models.Ticket.STATUS_DUPLICATE)
+        elif expert:
+            serializer.save(status=models.Ticket.STATUS_ASSIGNED)
+        else:
+            serializer.save(status=models.Ticket.STATUS_NEW)
+
 
 class LanguageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LanguageSerializer
@@ -128,3 +140,48 @@ class PatchViewset(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+        tickets_involved = []
+        for fixed_bug in serializer.validated_data['bugs']:
+            tickets_involved.extend(fixed_bug.tickets.all())
+        self.update_ticket_status(tickets_involved)
+
+    def perform_update(self, serializer):
+        tickets_before_update = set()
+        for bug in self.get_object().bugs.all():
+            for ticket in bug.tickets.all():
+                tickets_before_update.add(ticket.id)
+
+        serializer.save()
+
+        tickets_after_update = set()
+        for bug in self.get_object().bugs.all():
+            for ticket in bug.tickets.all():
+                tickets_after_update.add(ticket.id)
+
+        diff = tickets_before_update.symmetric_difference(tickets_after_update)
+        self.update_ticket_status(models.Ticket.objects.filter(pk__in=diff))
+
+    def perform_destroy(self, instance):
+        tickets_involved = []
+        for fixed_bug in instance.bugs.all():
+            tickets_involved.extend(fixed_bug.tickets.all())
+
+        instance.delete()
+        self.update_ticket_status(tickets_involved)
+
+    def update_ticket_status(self, tickets):
+        for ticket in tickets:
+            for bug in ticket.bugs.all():
+                if not bug.patch:
+                    if ticket.duplicate:
+                        ticket.status = models.Ticket.STATUS_DUPLICATE
+                    elif ticket.expert:
+                        ticket.status = models.Ticket.STATUS_ASSIGNED
+                    else:
+                        ticket.status = models.Ticket.STATUS_NEW
+                    ticket.save(update_fields=['status'])
+                    break
+            else:
+                ticket.status = models.Ticket.STATUS_CLOSED
+                ticket.save(update_fields=['status'])
