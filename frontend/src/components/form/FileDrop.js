@@ -61,7 +61,7 @@ export class FileDrop extends React.Component {
                 >
                     {
                         field.value ?
-                            <p>{field.value.name}</p>
+                            <p><span className="black-text">Selected file: {field.value.name}</span></p>
                             :
                             <p>Upload file by dragging & dropping or click here.</p>
                     }

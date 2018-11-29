@@ -38,6 +38,10 @@ code {
   padding: 0 !important;
 }
 
+.black-text {
+  color: #000;
+}
+
 .pt-header {
   padding-top: 70px;
 }
@@ -206,7 +210,18 @@ code {
 
 .dropzone {
   text-align: center;
-  border: 2px dashed #7c7c7c;
+  border: 2px dashed #bebebe;
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.dropzone-success {
+  border: 2px dashed lawngreen;
+}
+
+.dropzone-reject {
+  border: 2px dashed red;
 }
 
 .attachment-preview {
