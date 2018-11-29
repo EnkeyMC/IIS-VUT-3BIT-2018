@@ -300,7 +300,7 @@ function Attachment(props) {
         const extension = props.file.split('.').pop();
         if (['png', 'jpg', 'bmp', 'jpeg'].includes(extension.toLowerCase())) {
             fileView = <div className="attachment-img">
-                <img alt="attachment" src={props.file} />
+                <img alt="attachment" src={props.file} className="attachment-preview"/>
                 <p><a href={props.file} target="_blank" rel="noopener noreferrer">View attachment</a></p>
             </div>
         } else {

@@ -204,6 +204,16 @@ code {
   }
 }
 
+.dropzone {
+  text-align: center;
+  border: 2px dashed #7c7c7c;
+}
+
+.attachment-preview {
+  max-width: 100%;
+  max-height: 1000px;
+}
+
 /* Profile css */
 .icons {
   width: 25px;

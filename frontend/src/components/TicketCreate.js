@@ -11,7 +11,6 @@ import {Form} from "./form/Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
 import {getTickets} from "../actions";
-import MultiSearchSelect from "./form/MultiSearchSelect";
 import {Input} from "./form/Input";
 import {FileDrop} from "./form/FileDrop";
 
@@ -68,6 +67,7 @@ class TicketCreateForm extends React.Component {
                 />
                 <FileDrop label="Attachment" name="attachment" id="attachment" accept="text/*, image/*"
                           hint="Attach image or text file that can help us resolve your issue. Max file size is 1 MB."
+                          className="dropzone pt-4 pb-4"
                 />
                 <Button type="submit" color="primary" className="w-100 mt-4">Submit</Button>
             </Form>
