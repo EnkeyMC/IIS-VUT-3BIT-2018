@@ -22,7 +22,9 @@ class StrictModelSerializer(serializers.ModelSerializer):
                 perm_denied_fields,
                 'You do not have permission to modify this field.'))
 
-        unknown_fields = request_fields - set(self.fields.keys())
+        known_fields = set(self.fields.keys())
+        known_fields.add('csrfmiddlewaretoken')
+        unknown_fields = request_fields - known_fields
         if unknown_fields:
             raise serializers.ValidationError(dict.fromkeys(
                 unknown_fields, 'Unexpected field.'))
