@@ -93,14 +93,14 @@ class SearchCategory extends Component {
     }
 
     handleName(event) {
-        this.setState({txt: event.target.innerHTML})
+        this.setState({value: event.target.innerHTML})
     }
 
     render() {
         return (
             <UncontrolledDropdown setActiveFromChild>
                 <DropdownToggle tag="a" className="nav-link pointer" caret>
-                    {this.state.txt}
+                    {this.state.value}
                 </DropdownToggle>
                 <DropdownMenu>
                     <DropdownItem tag="span" className="pointer" onClick={this.handleName}>Tickets</DropdownItem>

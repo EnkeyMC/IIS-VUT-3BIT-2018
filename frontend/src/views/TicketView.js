@@ -1,5 +1,4 @@
 import React from "react";
-import TicketList from "../components/TicketList";
 import TicketInfo from "../components/TicketInfo";
 import {Route, Switch, withRouter} from "react-router";
 import {connect} from "react-redux";
@@ -7,7 +6,11 @@ import {getTickets, getUserTickets} from "../actions";
 import Observable from "../utils/Observable";
 import DefaultLayout from "./layouts/DefaultLayout";
 import TicketCreate from "../components/TicketCreate";
-import {RestrictedRoute, ROLE_USER} from "../components/RoleRestriction";
+import {RestrictedRoute, RestrictedView, ROLE_USER} from "../components/RoleRestriction";
+import SideList, {NewItemBtn, SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
+import pathToRegexp from "path-to-regexp";
+import {NavLink} from "react-router-dom";
+import {appendToPath} from "../utils";
 
 export default class TicketView extends React.Component {
     constructor(props) {
@@ -45,9 +48,32 @@ export default class TicketView extends React.Component {
             render: (props) => <TicketInfo defaultId={defaultId} {...props} />
         };
 
+        const toPath = pathToRegexp.compile(this.props.match.path);
+
         return (
             <DefaultLayout>
-                <TicketList tickets={this.props.tickets} />
+                <SideList list={this.props.tickets} noItems="No tickets found" itemTag={Ticket}>
+                    <SideListHeader
+                        title="Tickets"
+                        filter={
+                            <SideListFilter value={this.props.match.params.status} defaultValue="all">
+                                <SideListFilterItem linkTo="/tickets/all" value="all" />
+                                <SideListFilterItem linkTo="/tickets/new" value="new" />
+                                <SideListFilterItem linkTo="/tickets/assigned" value="assigned" />
+                                <SideListFilterItem linkTo="/tickets/closed" value="closed" />
+                                <RestrictedView minRole={ROLE_USER}>
+                                    <SideListFilterItem linkTo="/tickets/my" value="my" />
+                                </RestrictedView>
+                            </SideListFilter>
+                        }
+
+                        newBtn={
+                            <NewItemBtn linkTo={toPath({status: this.props.match.params.status})+'/create'}>
+                                Create New Ticket
+                            </NewItemBtn>
+                        }
+                    />
+                </SideList>
                 <Switch>
                     <RestrictedRoute minRole={ROLE_USER} path={this.props.match.path+'/create'} component={TicketCreate} />
                     {
@@ -76,3 +102,16 @@ TicketView = connect(
         }
     }
 )(withRouter(TicketView));
+
+const Ticket = withRouter((props) => {
+    const toPath = pathToRegexp.compile(props.match.path);
+    return (
+        <NavLink to={appendToPath(toPath({status: props.match.params.status}), props.item.id)} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.item.status}>
+            <div className="d-flex w-100 justify-content-between">
+                <h6 className="pb-1 ticket-list-title">#{props.item.id} - {props.item.title}</h6>
+            </div>
+            <small className="float-left">{props.item.author}</small>
+            <small className="float-right">{props.item.created}</small>
+        </NavLink>
+    );
+});

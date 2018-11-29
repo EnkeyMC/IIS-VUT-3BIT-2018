@@ -122,7 +122,7 @@ function ModuleCard(props) {
                 </div>
                 <div>
                     <span className="mr-2">Expert:</span>
-                    {props.module.expert}
+                    <Link to={"/profile/view/"+props.module.expert}>{props.module.expert}</Link>
                 </div>
             </CardBody>
         </Card>

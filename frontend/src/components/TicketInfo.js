@@ -190,7 +190,7 @@ export default class TicketInfo extends Component {
                     </Row>
                 </Container>
                 <Modal isOpen={this.state.moduleBugsModalOpen} toggle={this.toggleAssignBugsModal} centered>
-                    <ModalHeader toggle={this.toggleAssignTicketsModal}>Assign tickets</ModalHeader>
+                    <ModalHeader toggle={this.toggleAssignBugsModal}>Assign bugs</ModalHeader>
                     <ModalBody>
                         <AssignBugsForm ticket={ticket} closeModal={this.closeAssignBugsModal} />
                     </ModalBody>
