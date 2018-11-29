@@ -174,9 +174,7 @@ class PatchViewset(viewsets.ModelViewSet):
         for ticket in tickets:
             for bug in ticket.bugs.all():
                 if not bug.patch:
-                    if ticket.duplicate:
-                        ticket.status = models.Ticket.STATUS_DUPLICATE
-                    elif ticket.expert:
+                    if ticket.expert:
                         ticket.status = models.Ticket.STATUS_ASSIGNED
                     else:
                         ticket.status = models.Ticket.STATUS_NEW
