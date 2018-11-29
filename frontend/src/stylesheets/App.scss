@@ -50,6 +50,13 @@ code {
   height: calc(100vh - 70px);
 }
 
+.close-btn {
+  font-size: 1.1rem;
+  &:focus {
+    outline: none;
+  }
+}
+
 /* Header css */
 .header-height {
   min-height: 70px;

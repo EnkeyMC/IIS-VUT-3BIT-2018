@@ -9,6 +9,7 @@ import ProfileView from "./views/ProfileView";
 import ErrorView from "./views/ErrorView";
 import BugView from "./views/BugView";
 import ModuleView from "./views/ModuleView";
+import UsersView from "./views/UsersView";
 import {
     faReceipt,
     faUser,
@@ -26,7 +27,8 @@ import {
     faPlus,
     faExclamationCircle,
     faSearch,
-    faBandAid
+    faBandAid,
+    faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faSquare,
@@ -37,12 +39,13 @@ import AlertTemplate from 'react-alert-template-basic';
 import {connect} from "react-redux";
 import {verifyUser} from "./actions";
 import PatchesView from "./views/PatchesView";
+import {RestrictedRoute, ROLE_SUPERVISOR} from "./components/RoleRestriction";
 
 library.add(
     faReceipt, faUser, faAngleUp, faAngleDown, faEnvelope,
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
     faEdit, faBug, faClone, faPlus, faExclamationCircle, faSearch,
-    faCheckSquare, faSquare, faBandAid
+    faCheckSquare, faSquare, faBandAid, faUsers
 );
 
 const alertConfig = {
@@ -99,6 +102,7 @@ export default class App extends Component {
                       <Route path="/bugs" component={BugView}/>
                       <Route path="/modules" component={ModuleView} />
                       <Route path="/patches" component={PatchesView}/>
+                      <RestrictedRoute minRole={ROLE_SUPERVISOR} path="/users" component={UsersView} />
                   </Switch>
               </Provider>
           </UserVerificator>

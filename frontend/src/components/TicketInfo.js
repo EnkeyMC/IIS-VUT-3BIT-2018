@@ -19,6 +19,7 @@ import Observable from "../utils/Observable";
 import pathToRegexp from 'path-to-regexp';
 import {withRouter} from "react-router";
 import {Numbering} from "./Numbering";
+import CloseBtn from "./CloseBtn";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Form} from "./Form";
 import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
@@ -330,13 +331,16 @@ const BugsContainer = connect(
 
 export function Bug(props) {
     return (
-        <Card body outline tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs"
+        <Card body outline tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs position-relative"
               style={props.bug.severity ?
                   {borderLeft: '5px solid ' + props.bug.severity.color}
                   :
                   null
               }
         >
+            <RestrictedView minRole={ROLE_PROGRAMMER}>
+                <CloseBtn/>
+            </RestrictedView>
             <CardTitle>#{props.bug.id} - {props.bug.title}</CardTitle>
             <CardText>
                 <small className="text-muted float-left">{props.bug.author}</small>

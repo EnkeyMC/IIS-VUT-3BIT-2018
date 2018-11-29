@@ -23,6 +23,7 @@ import {Form} from "./Form";
 import MultiSearchSelect, {SelectItem} from "./MultiSearchSelect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
+import CloseBtn from "./CloseBtn";
 
 export default class BugInfo extends Component {
     constructor(props) {
@@ -256,6 +257,9 @@ const TicketsContainer = connect(
 function Ticket(props) {
     return (
         <Card body outline tag={Link} to={'/tickets/all/'+props.ticket.id} className={"mb-2 bugs state-"+props.ticket.status}>
+            <RestrictedView minRole={ROLE_PROGRAMMER}>
+                <CloseBtn/>
+            </RestrictedView>
             <CardTitle>#{props.ticket.id} - {props.ticket.title}</CardTitle>
             <CardText>
                 <small className="text-muted float-left">{props.ticket.author}</small>

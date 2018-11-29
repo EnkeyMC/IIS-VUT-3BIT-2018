@@ -77,7 +77,7 @@ export default class Modules extends Component {
                         <Modal isOpen={this.state.moduleBugsModalOpen}
                                toggle={this.toggleModuleBugsModal}
                                className={this.props.className} >
-                            <ModalHeader toggle={this.toggleAssignTicketsModal}>Bugs in module</ModalHeader>
+                            <ModalHeader toggle={this.toggleModuleBugsModal}>Bugs in module</ModalHeader>
                             <ModalBody>
                                 <BugsContainer module={this.state.moduleInModal}/>
                             </ModalBody>
