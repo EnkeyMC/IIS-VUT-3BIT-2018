@@ -58,7 +58,8 @@ class BugFilter(filters.FilterSet):
     date = filters.DateFromToRangeFilter(field_name='created')
     has_patch = filters.BooleanFilter(
         field_name='patch', lookup_expr='isnull', exclude=True)
+    module = filters.ModelChoiceFilter(queryset=Module.objects.all())
 
     class Meta:
         model = Bug
-        fields = ['username', 'date', 'has_patch']
+        fields = ['username', 'date', 'has_patch', 'module']
