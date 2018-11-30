@@ -9,7 +9,7 @@ import {
     clearTicketBugs, GET_TICKET,
     GET_TICKET_BUG, getBugs,
     getTicket,
-    getTicketBug, setTicket,
+    getTicketBug, getTickets, getUsers, setTicket,
     setTicketError, submitForm
 } from '../actions';
 import {Link} from "react-router-dom";
@@ -22,8 +22,10 @@ import {Numbering} from "./Numbering";
 import CloseBtn from "./CloseBtn";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Form} from "./form/Form";
-import MultiSearchSelect, {SelectItem} from "./form/MultiSearchSelect";
+import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
+import {SelectItem} from "./form/SearchSelect";
+import SearchSelect from "./form/SearchSelect";
 
 
 export default class TicketInfo extends Component {
@@ -53,9 +55,12 @@ export default class TicketInfo extends Component {
         });
 
         this.state = {
-            assignBugsModalOpen: false
+            assignBugsModalOpen: false,
+            assignProgrammerModalOpen: false
         };
 
+        this.closeAssignProgrammerModal = this.closeAssignProgrammerModal.bind(this);
+        this.toggleAssginProgrammerModal = this.toggleAssginProgrammerModal.bind(this);
         this.toggleAssignBugsModal = this.toggleAssignBugsModal.bind(this);
         this.closeAssignBugsModal = this.closeAssignBugsModal.bind(this);
         this.removeBug = this.removeBug.bind(this);
@@ -90,13 +95,25 @@ export default class TicketInfo extends Component {
 
     toggleAssignBugsModal() {
         this.setState({
-            moduleBugsModalOpen: !this.state.moduleBugsModalOpen
+            assignBugsModalOpen: !this.state.assignBugsModalOpen
         });
     }
 
     closeAssignBugsModal() {
         this.setState({
-            moduleBugsModalOpen: false
+            assignBugsModalOpen: false
+        });
+    }
+
+    toggleAssginProgrammerModal() {
+        this.setState({
+            assignProgrammerModalOpen: !this.state.assignProgrammerModalOpen
+        });
+    }
+
+    closeAssignProgrammerModal() {
+        this.setState({
+            assignProgrammerModalOpen: false
         });
     }
 
@@ -178,7 +195,9 @@ export default class TicketInfo extends Component {
                                 </Row>
                                 <Row className="pt-3 border-bottom">
                                     <Col className="mt-md-4 pb-3">
-                                        <Detail ticket={ticket} />
+                                        <Detail ticket={ticket}
+                                            toggleModal={this.toggleAssginProgrammerModal}
+                                        />
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
@@ -201,10 +220,18 @@ export default class TicketInfo extends Component {
                         </Col>
                     </Row>
                 </Container>
-                <Modal isOpen={this.state.moduleBugsModalOpen} toggle={this.toggleAssignBugsModal} centered>
+                <Modal isOpen={this.state.assignBugsModalOpen} toggle={this.toggleAssignBugsModal} centered>
                     <ModalHeader toggle={this.toggleAssignBugsModal}>Assign bugs</ModalHeader>
                     <ModalBody>
                         <AssignBugsForm ticket={ticket} closeModal={this.closeAssignBugsModal} />
+                    </ModalBody>
+                </Modal>
+                <Modal isOpen={this.state.assignProgrammerModalOpen}
+                    toggle={this.toggleAssginProgrammerModal}
+                >
+                    <ModalHeader toggle={this.toggleAssginProgrammerModal}>Assign programmer</ModalHeader>
+                    <ModalBody>
+                        <AssignProgrammerForm ticket={ticket} closeModal={this.closeAssignProgrammerModal} />
                     </ModalBody>
                 </Modal>
             </div>
@@ -254,7 +281,11 @@ const Detail = withRouter((props) => {
                             Assigned programmer:
                         </span>
                         &nbsp;
-                        <Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link>
+                        {props.ticket.expert ?
+                            <Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link>
+                            :
+                            <Badge pill color="primary" className="pointer link" onClick={props.toggleModal}>+ Assign</Badge>
+                        }
                     </Row>
                 </Col>
                 <Col md="6" xs="12">
@@ -411,7 +442,7 @@ class AssignBugsForm extends React.Component {
                         <MultiSearchSelect name="bugs" defaultValue={props.ticket.bugs}>
                             {
                                 () => props.data.map(
-                                    bug => <SelectItem
+                                    bug => <MultiSelectItem
                                         key={bug.id}
                                         value={bug.id}
                                         label={"#"+bug.id+" - "+bug.title}
@@ -426,7 +457,7 @@ class AssignBugsForm extends React.Component {
                                                 {label}
                                             </span>
                                         )}}
-                                    </SelectItem>
+                                    </MultiSelectItem>
                                 )
                             }
                         </MultiSearchSelect>
@@ -453,3 +484,78 @@ AssignBugsForm = connect(
         }
     }
 ) (AssignBugsForm);
+
+
+class AssignProgrammerForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    handleFormSuccess(id, data) {
+        this.props.setTicket(data);
+
+        /*const status = this.props.match.params.status;
+        if (!status || status === 'all')
+            this.props.getTickets();
+        else if (status === 'my')
+            this.props.getTickets({username: this.props.username});
+        else
+            this.props.getTickets({status: status});*/
+
+        this.props.closeModal();
+    }
+
+    componentDidMount() {
+        this.props.getUsers();
+    }
+
+    render() {
+        return (
+            <Form edit id="assign-programmer-form" url={"/api/tickets/"+this.props.ticket.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+                <StateRenderer state={this.props} renderCondition={this.props.data !== null && this.props.users}>
+                    {props => { return (<>
+                        <SearchSelect name="expert">
+                            {
+                                () => props.data.map(
+                                    user => <SelectItem
+                                        key={user.id}
+                                        value={user.username}
+                                        label={
+                                            user.username +
+                                            (user.first_name || user.last_name ?
+                                                    " ("+[user.first_name, user.last_name]
+                                                        .filter(i => i).join(" ")+")"
+                                                    : ""
+                                            )
+                                        }
+                                    />
+                                )
+                            }
+                        </SearchSelect>
+                        <Button type="submit" color="primary" className="w-100 mt-4">Assign</Button>
+                    </>)}}
+                </StateRenderer>
+            </Form>
+        );
+    }
+}
+
+AssignProgrammerForm = connect(
+    (state) => {
+        return {
+            loading: state.users.loading,
+            error: state.users.error,
+            data: state.users.data
+        }
+    },
+    dispatch => {
+        return {
+            getUsers: () => dispatch(getUsers()),
+            setTicket: (data) => dispatch(setTicket(data)),
+            getTickets: (query) => dispatch(getTickets(query))
+        }
+    }
+) (withRouter(AssignProgrammerForm));
+

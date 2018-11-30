@@ -20,7 +20,7 @@ import {Spinner, StateRenderer} from "../utils";
 import Error from "./Error";
 import {Numbering} from "./Numbering";
 import {Form} from "./form/Form";
-import MultiSearchSelect, {SelectItem} from "./form/MultiSearchSelect";
+import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
 import CloseBtn from "./CloseBtn";
@@ -375,7 +375,7 @@ class AssignTicketsForm extends React.Component {
                         <MultiSearchSelect name="tickets" defaultValue={props.bug.tickets}>
                             {
                                 () => props.data.map(
-                                    ticket => <SelectItem
+                                    ticket => <MultiSelectItem
                                         key={ticket.id}
                                         value={ticket.id}
                                         label={"#"+ticket.id+" - "+ticket.title}
@@ -383,7 +383,7 @@ class AssignTicketsForm extends React.Component {
                                         {label => {return (
                                             <span className={"pl-2 state-"+ticket.status}>{label}</span>
                                         )}}
-                                    </SelectItem>
+                                    </MultiSelectItem>
                                 )
                             }
                         </MultiSearchSelect>

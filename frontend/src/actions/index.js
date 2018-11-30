@@ -40,26 +40,21 @@ export function verifyUser() {
     }
 }
 
-export function getTickets(status = null) {
+export function getTickets(query = null) {
     let url = '/api/tickets';
-    if (status)
-        url += '?status='+status;
+    if (query) {
+        url += '?';
+        for (const key in query) {
+            if (query.hasOwnProperty(key)) {
+                url += key+'='+query[key]+'&';
+            }
+        }
+    }
     return {
         type: GET_TICKETS,
         payload: {
             request: {
                 url: url
-            }
-        }
-    };
-}
-
-export function getUserTickets(username) {
-    return {
-        type: GET_TICKETS,
-        payload: {
-            request: {
-                url: '/api/tickets?username='+username
             }
         }
     };

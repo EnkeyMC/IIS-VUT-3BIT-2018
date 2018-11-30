@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 const Context = React.createContext();
 
-export default class MultiSearchSelect extends React.Component {
+export default class SearchSelect extends React.Component {
     constructor(props) {
         super(props);
 
@@ -19,7 +19,7 @@ export default class MultiSearchSelect extends React.Component {
     }
 
     componentDidMount() {
-        this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : []);
+        this.props.form.registerInput(this.props.name, this.props.defaultValue ? this.props.defaultValue : "");
         if (this.props.onMount)
             this.props.onMount(this.props);
     }
@@ -31,13 +31,7 @@ export default class MultiSearchSelect extends React.Component {
     }
 
     onItemClick(value) {
-        let values = this.props.form.state.fields[this.props.name].value;
-        if (values.find(val => val === value)) {
-            values = values.filter(val => val !== value);
-        } else {
-            values = values.concat([value]);
-        }
-        this.props.form.onChange(this.props.name, values);
+        this.props.form.onChange(this.props.name, value);
     }
 
     render() {
@@ -69,7 +63,7 @@ export default class MultiSearchSelect extends React.Component {
                         <Context.Provider value={{
                             search: this.state.search,
                             onItemClick: this.onItemClick,
-                            values: form.state.fields[this.props.name].value
+                            value: form.state.fields[this.props.name].value
                         }}>
                             {this.props.children()}
                         </Context.Provider>
@@ -82,7 +76,7 @@ export default class MultiSearchSelect extends React.Component {
     }
 }
 
-MultiSearchSelect.propTypes = {
+SearchSelect.propTypes = {
     label: PropTypes.string,
     hint: PropTypes.string,
     form: PropTypes.object.isRequired,
@@ -93,9 +87,9 @@ MultiSearchSelect.propTypes = {
     name: PropTypes.string
 };
 
-MultiSearchSelect = withForm(MultiSearchSelect);
+SearchSelect = withForm(SearchSelect);
 
-export function MultiSelectItem(props) {
+export function SelectItem(props) {
     return (
         <Context.Consumer>
             {select => {
@@ -110,19 +104,13 @@ export function MultiSelectItem(props) {
                         + '</span>' + props.label.substring(idx + select.search.length);
                 }
 
-                const checked = select.values.find(val => val === props.value);
+                const checked = select.value === props.value;
                 return (
                     <Card
                         className={"select-item " + (checked ? "checked" : "unchecked")}
                         onClick={() => select.onItemClick(props.value)}
                     >
                         <div className="d-block">
-                        <span className="mr-2 check">
-                            <FontAwesomeIcon
-                                icon={{prefix: 'far', iconName: checked ? "check-square" : "square"}}
-                                fixedWidth
-                            />
-                        </span>
                             {
                                 props.children ?
                                     <span className="label">
@@ -139,7 +127,7 @@ export function MultiSelectItem(props) {
     );
 }
 
-MultiSelectItem.propTypes = {
+SelectItem.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.any.isRequired
 };

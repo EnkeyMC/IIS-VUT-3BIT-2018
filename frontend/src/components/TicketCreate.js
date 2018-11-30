@@ -43,16 +43,13 @@ class TicketCreateForm extends React.Component {
         this.props.alert.success("Ticket successfully created.");
         const newPath = this.props.location.pathname.replace('/create', '');
 
-        if (newPath.endsWith('/new'))
-            this.props.getTickets('new');
-        else if (newPath.endsWith('/closed'))
-            this.props.getTickets('closed');
-        else if (newPath.endsWith('/my'))
-            this.props.getUserTickets(this.props.username);
-        else if (newPath.endsWith('/assigned'))
-            this.props.getTickets('assigned');
-        else
+        const status = this.props.match.params.status;
+        if (!status || status === 'all')
             this.props.getTickets();
+        else if (status === 'my')
+            this.props.getTickets({username: this.props.username});
+        else
+            this.props.getTickets({status: status});
 
         this.props.history.push(newPath + '/' + data.id);
     }
@@ -81,7 +78,7 @@ TicketCreateForm = connect(
     null,
     dispatch => {
         return {
-            getTickets: (state = null) => dispatch(getTickets(state))
+            getTickets: (query = null) => dispatch(getTickets(query))
         }
     }
 ) (withAlert(withRouter(TicketCreateForm)));

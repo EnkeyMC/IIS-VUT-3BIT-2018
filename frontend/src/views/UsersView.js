@@ -25,7 +25,7 @@ export default class UsersView extends React.Component {
 UsersView = connect (
     state => {
         return {
-            users: state.users.data
+            users: state.users
         }
     },
     dispatch => {

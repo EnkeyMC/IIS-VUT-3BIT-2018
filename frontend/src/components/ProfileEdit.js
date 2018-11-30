@@ -8,7 +8,7 @@ import {getLanguages, getUser, verifyUser} from "../actions";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
-import MultiSearchSelect, {SelectItem} from "./form/MultiSearchSelect";
+import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {Input} from "./form/Input";
 import {Select} from "./form/Select";
 
@@ -65,7 +65,7 @@ class ProfileEditForm extends React.Component {
                             <Input type="email" label="E-mail" name="email" id="email" defaultValue={props.user.email} required />
                             <Input type="date" label="Birth date" name="profile.birth_date" id="birth_date" defaultValue={props.user.profile.birth_date} />
                             <MultiSearchSelect label="Programming languages" name="profile.languages" id="languages" defaultValue={props.user.profile.languages}>
-                                {() => props.languages.map(item => <SelectItem value={item.name} key={item.id} label={item.name} />)}
+                                {() => props.languages.map(item => <MultiSelectItem value={item.name} key={item.id} label={item.name} />)}
                             </MultiSearchSelect>
                             <Row form>
                                 <Col md="4">

@@ -15,7 +15,7 @@ export class FileDrop extends React.Component {
 
 
     componentDidMount() {
-        this.props.form.registerInput(this.props.name, null);
+        this.props.form.registerInput(this.props.name, new File([], ""));
         if (this.props.onMount)
             this.props.onMount(this.props);
     }
@@ -29,7 +29,7 @@ export class FileDrop extends React.Component {
     }
 
     onCancel() {
-        this.props.form.registerInput(this.props.name, null);
+        this.props.form.registerInput(this.props.name, new File([], ""));
     }
 
     render() {
@@ -60,7 +60,7 @@ export class FileDrop extends React.Component {
                     {...inputProps}
                 >
                     {
-                        field.value ?
+                        field.value.name !== "" ?
                             <p><span className="black-text">Selected file: {field.value.name}</span></p>
                             :
                             <p>Upload file by dragging & dropping or click here.</p>

@@ -7,7 +7,7 @@ import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
 import {StateRenderer} from "../utils";
-import MultiSearchSelect, {SelectItem} from "./form/MultiSearchSelect";
+import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {Input} from "./form/Input";
 import {Select} from "./form/Select";
 import {Checkbox} from "./form/Checkbox";
@@ -82,7 +82,7 @@ class BugCreateForm extends React.Component {
                             <MultiSearchSelect label="Assign tickets" name="tickets">
                                 {
                                     () => props.tickets.map(
-                                        ticket => <SelectItem
+                                        ticket => <MultiSelectItem
                                             key={ticket.id}
                                             value={ticket.id}
                                             label={"#"+ticket.id+" - "+ticket.title}
@@ -90,7 +90,7 @@ class BugCreateForm extends React.Component {
                                             {label => {return (
                                                 <span className={"pl-2 state-"+ticket.status}>{label}</span>
                                             )}}
-                                        </SelectItem>
+                                        </MultiSelectItem>
                                     )
                                 }
                             </MultiSearchSelect>

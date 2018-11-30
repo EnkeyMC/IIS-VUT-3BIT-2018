@@ -2,7 +2,7 @@ import React from "react";
 import TicketInfo from "../components/TicketInfo";
 import {Route, Switch, withRouter} from "react-router";
 import {connect} from "react-redux";
-import {getTickets, getUserTickets} from "../actions";
+import {getTickets} from "../actions";
 import Observable from "../utils/Observable";
 import DefaultLayout from "./layouts/DefaultLayout";
 import TicketCreate from "../components/TicketCreate";
@@ -32,9 +32,9 @@ export default class TicketView extends React.Component {
         if (!status || status === 'all')
             this.props.getTickets();
         else if (status === 'my')
-            this.props.getUserTickets(this.props.username);
+            this.props.getTickets({username: this.props.username});
         else
-            this.props.getTickets(status);
+            this.props.getTickets({status: status});
     }
 
     render () {
@@ -97,8 +97,7 @@ TicketView = connect(
     },
     dispatch => {
         return {
-            getTickets: (status = null) => dispatch(getTickets(status)),
-            getUserTickets: (username) => dispatch(getUserTickets(username))
+            getTickets: (status = null) => dispatch(getTickets(status))
         }
     }
 )(withRouter(TicketView));
