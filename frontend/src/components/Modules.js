@@ -199,7 +199,7 @@ BugsContainer = connect(
 
 const NewModuleBtn = withRouter((props) => {
     return (
-        <Card className="card-new-btn pointer">
+        <Card tag={Link} to={props.match.path+'/create'} className="card-new-btn">
             <CardBody className="flex-mid">
                 <FontAwesomeIcon icon="plus" size="4x" color="rgba(0, 0, 0, 0.1)" className="mt-4 mb-4"/>
             </CardBody>

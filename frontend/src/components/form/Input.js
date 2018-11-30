@@ -55,7 +55,6 @@ export class Input extends React.Component {
 Input.propTypes = {
     label: PropTypes.string,
     hint: PropTypes.string,
-    form: PropTypes.object.isRequired,
     required: PropTypes.bool,
     onMount: PropTypes.func,
     defaultValue: PropTypes.any,

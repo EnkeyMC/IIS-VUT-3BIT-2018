@@ -184,3 +184,5 @@ Form = connect(
         }
     }
 )(withAlert(Form));
+
+export const RequiredFieldsNotice = () => <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>;

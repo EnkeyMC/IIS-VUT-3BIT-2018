@@ -50,7 +50,6 @@ export class Checkbox extends React.Component {
 Checkbox.propTypes = {
     label: PropTypes.string,
     hint: PropTypes.string,
-    form: PropTypes.object.isRequired,
     required: PropTypes.bool,
     onMount: PropTypes.func,
     defaultValue: PropTypes.any,

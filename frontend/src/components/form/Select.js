@@ -69,7 +69,6 @@ export class Select extends React.Component {
 Select.propTypes = {
     label: PropTypes.string,
     hint: PropTypes.string,
-    form: PropTypes.object.isRequired,
     required: PropTypes.bool,
     accept: PropTypes.string,
     onMount: PropTypes.func,

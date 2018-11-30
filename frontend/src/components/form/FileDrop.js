@@ -76,7 +76,6 @@ export class FileDrop extends React.Component {
 FileDrop.propTypes = {
     label: PropTypes.string,
     hint: PropTypes.string,
-    form: PropTypes.object.isRequired,
     required: PropTypes.bool,
     accept: PropTypes.string,
     onMount: PropTypes.func,

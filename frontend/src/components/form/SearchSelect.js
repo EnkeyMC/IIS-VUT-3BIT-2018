@@ -79,7 +79,6 @@ export default class SearchSelect extends React.Component {
 SearchSelect.propTypes = {
     label: PropTypes.string,
     hint: PropTypes.string,
-    form: PropTypes.object.isRequired,
     required: PropTypes.bool,
     onMount: PropTypes.func,
     defaultValue: PropTypes.any,

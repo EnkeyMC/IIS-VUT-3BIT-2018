@@ -10,7 +10,6 @@ import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {Input} from "./form/Input";
-import {Select} from "./form/Select";
 
 export default function ProfileEdit() {
     return (

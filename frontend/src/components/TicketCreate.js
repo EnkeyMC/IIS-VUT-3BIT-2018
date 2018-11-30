@@ -7,7 +7,7 @@ import {
 } from "reactstrap";
 import CardContainer from "./CardContainer";
 import {withRouter} from "react-router";
-import {Form} from "./form/Form";
+import {Form, RequiredFieldsNotice} from "./form/Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
 import {getTickets} from "../actions";
@@ -57,7 +57,7 @@ class TicketCreateForm extends React.Component {
     render() {
         return (
             <Form id="create-ticket" url="/api/tickets/" onSubmitSuccess={this.handleSubmitSuccess}>
-                <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
+                <RequiredFieldsNotice />
                 <Input label="Title" name="title" id="title" required />
                 <Input type="textarea" rows="10" label="Description" name="description" id="description" required
                        hint="Please describe the problem in detail with steps to reproduce it, as well as the environment you run the software in."
