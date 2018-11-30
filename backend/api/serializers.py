@@ -12,26 +12,31 @@ from bugtracker import models
 class StrictModelSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
-        nested_fields = [key for key in self.fields
-                         if hasattr(self.fields[key], 'fields')]
-        writable_fields = [field.field_name for field in self._writable_fields]
-        writable_fields += nested_fields
-        read_only_fields = (field for field in self.fields.keys()
-                            if field not in writable_fields)
-        request_fields = set(self.initial_data.keys())
+        if not hasattr(self, 'initial_data'):
+            return attrs
 
-        perm_denied_fields = request_fields.intersection(set(read_only_fields))
+        known_fields = set()
+        known_fields.add('csrfmiddlewaretoken')
+        readonly_fields = set()
+        request_fields = set(self.initial_data.keys())
+        for name, field in self.fields.items():
+            known_fields.add(name)
+            if field.read_only:
+                readonly_fields.add(name)
+
+            if not hasattr(field, 'fields'):
+                continue
+            for name_nested, field_nested in field.fields.items():
+                known_fields.add(name + '.' + name_nested)
+                if field_nested.read_only:
+                    readonly_fields.add(name + '.' + name_nested)
+
+        perm_denied_fields = request_fields.intersection(set(readonly_fields))
         if perm_denied_fields:
             raise PermissionDenied(detail=dict.fromkeys(
                 perm_denied_fields,
                 'You do not have permission to modify this field.'))
 
-        known_fields = set(self.fields.keys())
-        known_fields.add('csrfmiddlewaretoken')
-        for key in self.fields:
-            if hasattr(self.fields[key], 'fields'):
-                for nested_field in self.fields[key].fields.keys():
-                    known_fields.add(key + '.' + nested_field)
         unknown_fields = request_fields - known_fields
         if unknown_fields:
             raise serializers.ValidationError(detail=dict.fromkeys(
@@ -125,7 +130,7 @@ class SupervisorProfileSerializer(ProfileSerializer):
 
 
 class UserDetailSerializer(StrictModelSerializer):
-    profile = ProfileSerializer(read_only=True)
+    profile = ProfileSerializer()
     last_login = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
 
@@ -148,36 +153,14 @@ class UserDetailSerializer(StrictModelSerializer):
 
         return super().update(instance, validated_data)
 
-    def run_validation(self, data=empty, profile_serializer=ProfileSerializer):
-        value = super().run_validation(data=data)
-
-        profile = data.get('profile', {})
-        if not profile:
-            profile_data = dict(self.fields['profile'].get_value(data).lists())
-            for field, field_value in profile_data.items():
-                if field == 'languages':
-                    field_value = [] if field_value == [''] else field_value
-                else:
-                    field_value = field_value[0]
-                profile[field] = field_value
-
-        if profile:
-            serializer = profile_serializer(data=profile)
-            serializer.is_valid(raise_exception=True)
-            value.update({'profile': serializer.validated_data})
-
-        return value
-
 
 class SupervisorUserDetailSerializer(UserDetailSerializer):
+    profile = SupervisorProfileSerializer()
+
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'last_login', 'date_joined', 'profile', 'is_active')
-
-    def run_validation(self, data=empty):
-        return super().run_validation(
-                data=data, profile_serializer=SupervisorProfileSerializer)
 
 
 class LanguageSerializer(StrictModelSerializer):
