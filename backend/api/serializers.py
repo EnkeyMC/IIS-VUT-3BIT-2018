@@ -3,7 +3,7 @@ from datetime import date
 from django.contrib.auth.models import User
 
 from rest_framework import serializers, utils
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.fields import empty
 
 from bugtracker import models
@@ -12,7 +12,10 @@ from bugtracker import models
 class StrictModelSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
+        nested_fields = [key for key in self.fields
+                         if hasattr(self.fields[key], 'fields')]
         writable_fields = [field.field_name for field in self._writable_fields]
+        writable_fields += nested_fields
         read_only_fields = (field for field in self.fields.keys()
                             if field not in writable_fields)
         request_fields = set(self.initial_data.keys())
@@ -25,6 +28,10 @@ class StrictModelSerializer(serializers.ModelSerializer):
 
         known_fields = set(self.fields.keys())
         known_fields.add('csrfmiddlewaretoken')
+        for key in self.fields:
+            if hasattr(self.fields[key], 'fields'):
+                for nested_field in self.fields[key].fields.keys():
+                    known_fields.add(key + '.' + nested_field)
         unknown_fields = request_fields - known_fields
         if unknown_fields:
             raise serializers.ValidationError(detail=dict.fromkeys(
@@ -88,7 +95,11 @@ class UserListSerializer(StrictModelSerializer):
 
 class ProfileSerializer(StrictModelSerializer):
     languages = serializers.SlugRelatedField(
-        slug_field='name', many=True, queryset=models.Language.objects.all()
+        slug_field='name', queryset=models.Language.objects.all(),
+        many=True, required=False)
+    position = serializers.ChoiceField(
+        choices=models.Profile.USER_TYPES,
+        read_only=True, required=False, source='user_type'
     )
 
     def validate_birth_date(self, birth_date):
@@ -101,7 +112,16 @@ class ProfileSerializer(StrictModelSerializer):
 
     class Meta:
         model = models.Profile
-        fields = ('birth_date', 'languages')
+        fields = ('birth_date', 'languages', 'position')
+
+
+class SupervisorProfileSerializer(ProfileSerializer):
+    position = serializers.ChoiceField(
+        choices=models.Profile.USER_TYPES, required=False, source='user_type')
+
+    class Meta:
+        model = models.Profile
+        fields = ('birth_date', 'languages', 'position')
 
 
 class UserDetailSerializer(StrictModelSerializer):
@@ -129,17 +149,22 @@ class UserDetailSerializer(StrictModelSerializer):
 
         return super().update(instance, validated_data)
 
-    def run_validation(self, data=empty):
-        profile = data.pop('profile', None)
+    def run_validation(self, data=empty, profile_serializer=ProfileSerializer):
         value = super().run_validation(data=data)
+
+        profile = data.get('profile', {})
+        if not profile:
+            profile_data = dict(self.fields['profile'].get_value(data).lists())
+            for field, field_value in profile_data.items():
+                if field == 'languages':
+                    field_value = [] if field_value == [''] else field_value
+                else:
+                    field_value = field_value[0]
+                profile[field] = field_value
+
         if profile:
-            serializer = ProfileSerializer(data=profile)
-            try:
-                serializer.is_valid(raise_exception=True)
-            except ValidationError as exc:
-                raise ValidationError(detail={'profile': exc.detail})
-            except PermissionDenied as exc:
-                raise PermissionDenied(detail={'profile': exc.detail})
+            serializer = profile_serializer(data=profile)
+            serializer.is_valid(raise_exception=True)
             value.update({'profile': serializer.validated_data})
 
         return value
@@ -150,6 +175,10 @@ class SupervisorUserDetailSerializer(UserDetailSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'last_login', 'date_joined', 'profile', 'is_active')
+
+    def run_validation(self, data=empty):
+        return super().run_validation(
+                data=data, profile_serializer=SupervisorProfileSerializer)
 
 
 class LanguageSerializer(StrictModelSerializer):
