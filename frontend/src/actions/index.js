@@ -20,6 +20,7 @@ export const GET_TICKET_BUG = 'GET_TICKET_BUG_REQ';
 export const GET_SEVERITIES = 'GET_SEVERITIES_REQ';
 export const GET_MODULES = 'GET_MODULES_REQ';
 export const GET_MODULE_BUG = 'GET_MODULE_BUG_REQ';
+export const GET_USERS = 'GET_USERS_REQ';
 
 export const CANCEL_ACTION_REQUESTS = 'CANCEL_ACTION_REQUEST';
 export const CANCEL_DATA = {cancelled: true};
@@ -258,5 +259,16 @@ export function getModuleBug(id) {
 export function clearModuleBugs() {
     return {
         type: GET_MODULE_BUG+CLEAR
+    }
+}
+
+export function getUsers() {
+    return {
+        type: GET_USERS,
+        payload: {
+            request: {
+                url: '/api/users'
+            }
+        }
     }
 }

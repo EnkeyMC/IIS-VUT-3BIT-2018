@@ -100,6 +100,5 @@ const Bug = withRouter((props) => {
             <small className="float-left">{bug.author}</small>
             <small className="float-right">{bug.created}</small>
         </NavLink>
-
     );
 });

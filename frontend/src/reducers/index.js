@@ -19,6 +19,7 @@ import {
     GET_MODULES,
     GET_MODULE_BUG,
     CLEAR_MODULE_BUGS,
+    GET_USERS,
     SET_BUG, SET_TICKET
 } from '../actions'
 import { copyMerge } from '../utils';
@@ -101,6 +102,12 @@ const initialModulesState = {
     }
 };
 
+const initialUsersListState = {
+    loading: false,
+    error: null,
+    data: null
+};
+
 export const zeroBugsApp = (state, action) => {
     console.log("State before", state);
     console.log("Action", action);
@@ -121,6 +128,7 @@ const rootReducer = combineReducers({
     bugView: reduceBugView,
     severities: reduceSeverities,
     modules: reduceModules,
+    users: reduceUsersList
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -288,4 +296,8 @@ function reduceModules(state = initialModulesState, action) {
         reduceGetList(state, action, GET_MODULES),
         {moduleBugs: reduceSingleToList(state.moduleBugs, action, GET_MODULE_BUG)}
     )
+}
+
+function reduceUsersList(state = initialUsersListState, action) {
+    return reduceGetList(state, action, GET_USERS);
 }
