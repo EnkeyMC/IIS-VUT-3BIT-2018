@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers, utils
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.fields import empty
 
 from bugtracker import models
 
@@ -18,7 +17,6 @@ class StrictModelSerializer(serializers.ModelSerializer):
         known_fields = set()
         known_fields.add('csrfmiddlewaretoken')
         readonly_fields = set()
-        request_fields = set(self.initial_data.keys())
         for name, field in self.fields.items():
             known_fields.add(name)
             if field.read_only:
@@ -31,6 +29,13 @@ class StrictModelSerializer(serializers.ModelSerializer):
                 if field_nested.read_only:
                     readonly_fields.add(name + '.' + name_nested)
 
+        request_fields = set()
+        for name, value in self.initial_data.items():
+            request_fields.add(name)
+            if isinstance(value, dict):
+                for key in value.keys():
+                    request_fields.add(name + '.' + key)
+
         perm_denied_fields = request_fields.intersection(set(readonly_fields))
         if perm_denied_fields:
             raise PermissionDenied(detail=dict.fromkeys(
@@ -39,8 +44,16 @@ class StrictModelSerializer(serializers.ModelSerializer):
 
         unknown_fields = request_fields - known_fields
         if unknown_fields:
-            raise serializers.ValidationError(detail=dict.fromkeys(
-                unknown_fields, 'Unexpected field.'))
+            err_msg = 'Unexpected field.'
+            err = {field.split('.')[0]: {}
+                   for field in unknown_fields if '.' in field}
+            for field in unknown_fields:
+                if '.' in field:
+                    name, nested_name = field.split('.')
+                    err[name][nested_name] = [err_msg]
+                else:
+                    err[field] = err_msg
+            raise serializers.ValidationError(err)
 
         return attrs
 
@@ -133,6 +146,7 @@ class UserDetailSerializer(StrictModelSerializer):
     profile = ProfileSerializer()
     last_login = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
+    email = serializers.EmailField(allow_blank=False)
 
     class Meta:
         model = User
