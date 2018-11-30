@@ -126,7 +126,6 @@ class SupervisorProfileSerializer(ProfileSerializer):
 
 class UserDetailSerializer(StrictModelSerializer):
     profile = ProfileSerializer(read_only=True)
-    email = serializers.EmailField(read_only=True)
     last_login = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
 
