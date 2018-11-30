@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import {
     cancelActionRequests,
-    clearBugTickets,
+    clearBugTickets, GET_BUG,
     GET_BUG_TICKET,
     getBug,
     getBugTicket,
@@ -29,19 +29,17 @@ export default class BugInfo extends Component {
     constructor(props) {
         super(props);
 
-        this.bugIdObservable = new Observable(this.props.match.params.id);
-        this.bugIdObservable.setOnChanged(newValue => {
-            if (newValue) {
-                this.props.getBug(newValue);
+        this.bugIdObservable = new Observable(
+            this.getBugId(),
+            newValue => {
+                if (newValue) {
+                    this.props.getBug(newValue);
+                } else {
+                    this.props.cancelActions(GET_BUG);
+                    this.props.setBugError("Nothing to show");
+                }
             }
-        });
-
-        this.defaultBugIdObservable = new Observable(this.props.defaultId);
-        this.defaultBugIdObservable.setOnChanged(newValue => {
-            if (newValue !== null && !this.props.match.params.id && !this.props.bugs.loading) {
-                this.props.getBug(newValue);
-            }
-        });
+        );
 
         this.bugObservable = new Observable(this.props.bug);
         this.bugObservable.setOnChanged(newValue => {
@@ -61,13 +59,10 @@ export default class BugInfo extends Component {
 
     componentDidMount() {
         this.bugIdObservable.triggerOnChanged();
-        this.defaultBugIdObservable.triggerOnChanged();
-        this.props.setBugError("Nothing to show");
     }
 
     componentDidUpdate() {
-        this.bugIdObservable.update(this.props.match.params.id);
-        this.defaultBugIdObservable.update(this.props.defaultId);
+        this.bugIdObservable.update(this.getBugId());
         this.bugObservable.update(this.props.bug);
     }
 

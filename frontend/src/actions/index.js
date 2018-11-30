@@ -26,7 +26,7 @@ export const CANCEL_ACTION_REQUESTS = 'CANCEL_ACTION_REQUEST';
 export const CANCEL_DATA = {cancelled: true};
 
 export function cancelActionRequests(actionType) {
-    return { type: CANCEL_ACTION_REQUESTS, actionType };
+    return { type: CANCEL_ACTION_REQUESTS, actionType: actionType };
 }
 
 export function verifyUser() {

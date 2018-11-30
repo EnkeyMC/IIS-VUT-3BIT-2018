@@ -32,27 +32,25 @@ export default class TicketInfo extends Component {
     constructor(props) {
         super(props);
 
-        this.ticketIdObservable = new Observable(this.props.match.params.id);
-        this.ticketIdObservable.setOnChanged(newValue => {
-            if (newValue)
-                this.props.getTicket(newValue);
-        });
-
-        this.defaultTicketIdObservable = new Observable(this.props.defaultId);
-        this.defaultTicketIdObservable.setOnChanged(newValue => {
-            if (newValue !== null && !this.props.match.params.id && !this.props.tickets.loading)
-                this.props.getTicket(newValue);
-            else if (newValue === null) {
-                this.props.cancelActions(GET_TICKET);
-                this.props.setTicketError("Nothing to show");
+        this.ticketIdObservable = new Observable(
+            this.getTicketId(),
+            newValue => {
+                if (newValue)
+                    this.props.getTicket(newValue);
+                else {
+                    this.props.cancelActions(GET_TICKET);
+                    this.props.setTicketError("Nothing to show");
+                }
             }
-        });
+        );
 
-        this.ticketObservable = new Observable(this.props.ticket);
-        this.ticketObservable.setOnChanged(newValue => {
-            if (newValue)
-                this.requestBugs();
-        });
+        this.ticketObservable = new Observable(
+            this.props.ticket,
+            newValue => {
+                if (newValue)
+                    this.requestBugs();
+            }
+        );
 
         this.state = {
             assignBugsModalOpen: false,
@@ -68,13 +66,10 @@ export default class TicketInfo extends Component {
 
     componentDidMount() {
         this.ticketIdObservable.triggerOnChanged();
-        this.defaultTicketIdObservable.triggerOnChanged();
-        this.props.setTicketError("Nothing to show");
     }
 
     componentDidUpdate() {
-        this.ticketIdObservable.update(this.props.match.params.id);
-        this.defaultTicketIdObservable.update(this.props.defaultId);
+        this.ticketIdObservable.update(this.getTicketId());
         this.ticketObservable.update(this.props.ticket);
     }
 
@@ -496,13 +491,13 @@ class AssignProgrammerForm extends React.Component {
     handleFormSuccess(id, data) {
         this.props.setTicket(data);
 
-        /*const status = this.props.match.params.status;
+        const status = this.props.match.params.status;
         if (!status || status === 'all')
             this.props.getTickets();
         else if (status === 'my')
             this.props.getTickets({username: this.props.username});
         else
-            this.props.getTickets({status: status});*/
+            this.props.getTickets({status: status});
 
         this.props.closeModal();
     }

@@ -1,8 +1,11 @@
 export default class Observable {
-    constructor(defaultValue) {
+    constructor(defaultValue, onChangedCallback = null) {
         this._lastValue = defaultValue;
 
-        this.onChanged = () => {}
+        if (onChangedCallback)
+            this.onChanged = onChangedCallback;
+        else
+            this.onChanged = () => {}
     }
 
     update(newValue) {

@@ -1,35 +1,37 @@
 import {
-    GET_TICKETS,
+    GET_BUG,
+    GET_BUG_TICKET,
+    GET_BUGS,
+    GET_LANGUAGES,
+    GET_MODULE_BUG,
+    GET_MODULES,
+    GET_SEVERITIES,
     GET_TICKET,
+    GET_TICKET_BUG,
+    GET_TICKETS,
+    GET_USER,
+    GET_USERS,
+    LOGOUT,
+    SET_BUG,
+    SET_BUG_ERROR,
+    SET_TICKET,
+    SET_TICKET_ERROR,
     SET_TOKEN,
     SET_USER,
-    LOGOUT,
-    GET_USER,
-    VERIFY_USER,
-    SET_TICKET_ERROR,
-    GET_LANGUAGES,
-    GET_BUGS,
-    GET_BUG,
-    SET_BUG_ERROR,
-    GET_BUG_TICKET,
-    CLEAR_BUG_TICKETS,
-    GET_TICKET_BUG,
-    CLEAR_TICKET_BUGS,
-    GET_SEVERITIES,
-    GET_MODULES,
-    GET_MODULE_BUG,
-    CLEAR_MODULE_BUGS,
-    GET_USERS,
-    SET_BUG, SET_TICKET
+    VERIFY_USER
 } from '../actions'
-import { copyMerge } from '../utils';
+import {copyMerge} from '../utils';
 import {combineReducers} from "redux";
-import { createBrowserHistory } from 'history';
-import { connectRouter } from 'connected-react-router';
+import {createBrowserHistory} from 'history';
+import {connectRouter} from 'connected-react-router';
 
 const SUCC = '_SUCCESS';
 const FAIL = '_FAIL';
 export const CLEAR = '_CLEAR';
+
+function isCancelled(action) {
+    return action.error && action.error.data && action.error.data.cancelled;
+}
 
 const initialGlobalState = {
     user: JSON.parse(localStorage.getItem('AUTH_USER')),
@@ -109,12 +111,7 @@ const initialUsersListState = {
 };
 
 export const zeroBugsApp = (state, action) => {
-    console.log("State before", state);
-    console.log("Action", action);
-
-    const newState = rootReducer(state, action);
-    console.log("State after", newState);
-    return newState;
+    return rootReducer(state, action);
 };
 
 export const history = createBrowserHistory();
@@ -174,6 +171,8 @@ function reduceGetList(state, action, ACTION) {
                 data: action.payload.data.results
             });
         case ACTION+FAIL:
+            if (isCancelled(action))
+                return copyMerge(state, {loading: false});
             return copyMerge(state, {
                 loading: false,
                 error: action.error.message
@@ -195,6 +194,8 @@ function reduceSingleToList(state, action, ACTION) {
                 data: state.data.concat([action.payload.data])
             });
         case ACTION+FAIL:
+            if (isCancelled(action))
+                return copyMerge(state, {loading: state.loading - 1});
             return copyMerge(state, {
                 loading: state.loading - 1,
                 error: state.error === null ? [action.error.message] : state.error.concat([action.error.message])
@@ -222,6 +223,8 @@ function reduceGetTicket(state, action) {
             });
         }
         case GET_TICKET+FAIL:
+            if (isCancelled(action))
+                return copyMerge(state, {loading: false});
             if (action.error.response.status === 404)
                 return copyMerge(state, {loading: false, error: "Ticket not found"});
             return copyMerge(state, {loading: false, error: action.error.message});
@@ -275,6 +278,8 @@ function reduceGetBug(state, action) {
             });
         }
         case GET_BUG+FAIL:
+            if (isCancelled(action))
+                return copyMerge(state, {loading: false});
             if (action.error.response.status === 404)
                 return copyMerge(state, {loading: false, error: "Bug not found"});
             return copyMerge(state, {loading: false, error: action.error.message});

@@ -46,9 +46,18 @@ const axiosMiddlewareConfig = {
     }
 };
 
+const loggerMiddleware = store => next => action => {
+    console.group(action.type);
+    console.info("Action", action);
+    const result = next(action);
+    console.log("Next state", store.getState());
+    console.groupEnd();
+    return result;
+};
+
 const store = createStore(
     zeroBugsApp,
-    applyMiddleware(axiosMiddleware(client, axiosMiddlewareConfig), createCancellationMiddleware()),
+    applyMiddleware(createCancellationMiddleware(), axiosMiddleware(client, axiosMiddlewareConfig), loggerMiddleware),
 );
 
 store.subscribe(() => {
