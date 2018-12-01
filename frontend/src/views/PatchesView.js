@@ -1,15 +1,16 @@
 import React from "react";
 import DefaultLayout from "./layouts/DefaultLayout";
 import {NewItemBtn, SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
-import {RestrictedView, ROLE_PROGRAMMER, ROLE_USER} from "../components/RoleRestriction";
+import {RestrictedRoute, RestrictedView, ROLE_PROGRAMMER} from "../components/RoleRestriction";
 import SideList from "../components/SideList";
 import {NavLink} from "react-router-dom";
 import {appendToPath} from "../utils";
 import pathToRegexp from "path-to-regexp";
 import {connect} from "react-redux";
 import {getFilteredPatches} from "../actions/patches";
-import {withRouter} from "react-router";
+import {Switch, withRouter} from "react-router";
 import Observable from "../utils/Observable";
+import PatchCreate from "../components/PatchCreate";
 
 const PATCH_STATUSES = [
     "in progress",
@@ -71,6 +72,9 @@ export default class PatchesView extends React.Component {
                         }
                     />
                 </SideList>
+                <Switch>
+                    <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/create'} component={PatchCreate} />
+                </Switch>
             </DefaultLayout>
         )
     }

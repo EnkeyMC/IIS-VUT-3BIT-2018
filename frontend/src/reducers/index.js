@@ -11,6 +11,7 @@ import {createListReducer} from "./helpers";
 import {GET_USERS} from "../actions/users";
 import {GET_LANGUAGES} from "../actions/languages";
 import {GET_SEVERITIES} from "../actions/severities";
+import {reducePatch} from "./patches";
 
 export const history = createBrowserHistory();
 
@@ -25,6 +26,7 @@ export const zeroBugsApp = combineReducers({
     modules: reduceModules,
     users: createListReducer(GET_USERS),
     module: reduceModule,
-    patches: createListReducer(GET_PATCHES)
+    patches: createListReducer(GET_PATCHES),
+    patch: reducePatch
 });
 
