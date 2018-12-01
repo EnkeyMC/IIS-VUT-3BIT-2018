@@ -28,7 +28,8 @@ import {
     faExclamationCircle,
     faSearch,
     faBandAid,
-    faUsers
+    faUsers,
+    faSignInAlt
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faSquare,
@@ -45,7 +46,7 @@ library.add(
     faReceipt, faUser, faAngleUp, faAngleDown, faEnvelope,
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
     faEdit, faBug, faClone, faPlus, faExclamationCircle, faSearch,
-    faCheckSquare, faSquare, faBandAid, faUsers
+    faCheckSquare, faSquare, faBandAid, faUsers, faSignInAlt
 );
 
 const alertConfig = {
@@ -98,11 +99,12 @@ export default class App extends Component {
                       <Route path="/login" component={LoginView} />
                       <Route path="/register" component={RegisterView} />
                       <Route path="/profile" component={ProfileView}/>
-                      <Route path="/no-permission" component={ErrorView}/>
+                      <Route path="/no-permission" render={props => <ErrorView {...props} error="403"/>}/>
                       <Route path="/bugs" component={BugView}/>
                       <Route path="/modules" component={ModuleView} />
                       <Route path="/patches" component={PatchesView}/>
                       <RestrictedRoute minRole={ROLE_SUPERVISOR} path="/users" component={UsersView} />
+                      <Route render={props => <ErrorView {...props} error="404" />} />
                   </Switch>
               </Provider>
           </UserVerificator>
