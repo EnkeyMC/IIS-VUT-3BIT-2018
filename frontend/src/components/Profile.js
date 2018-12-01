@@ -124,18 +124,26 @@ export default class Profile extends Component {
                                                 <FontAwesomeIcon icon="birthday-cake" fixedWidth/> Birthday
                                             </ProfileKey>
                                             <ProfileValue>
-                                                {this.props.user.profile.birth_date}
+                                                {this.props.user.birth_date}
                                             </ProfileValue>
                                         </Row>
-                                        <Row>
+                                        <Row className="mb-3">
                                             <ProfileKey>
                                                 <FontAwesomeIcon icon="laptop-code" fixedWidth/> Programming
                                                 languages
                                             </ProfileKey>
                                             <ProfileValue>
-                                                {this.props.user.profile.languages.map(item => <Badge
+                                                {this.props.user.languages.map(item => <Badge
                                                     color="primary" pill className="mr-1"
                                                     key={item}>{item}</Badge>)}
+                                            </ProfileValue>
+                                        </Row>
+                                        <Row>
+                                            <ProfileKey>
+                                                <FontAwesomeIcon icon="user-tie" fixedWidth/> Role
+                                            </ProfileKey>
+                                            <ProfileValue>
+                                                {this.props.user.position}
                                             </ProfileValue>
                                         </Row>
                                     </Container>

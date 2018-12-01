@@ -62,8 +62,8 @@ class ProfileEditForm extends React.Component {
                             <Input label="First name" name="first_name" id="first_name" defaultValue={props.user.first_name} />
                             <Input label="Last name" name="last_name" id="last_name" defaultValue={props.user.last_name} />
                             <Input type="email" label="E-mail" name="email" id="email" defaultValue={props.user.email} required />
-                            <Input type="date" label="Birth date" name="profile.birth_date" id="birth_date" defaultValue={props.user.profile.birth_date} />
-                            <MultiSearchSelect label="Programming languages" name="profile.languages" id="languages" defaultValue={props.user.profile.languages}>
+                            <Input type="date" label="Birth date" name="birth_date" id="birth_date" defaultValue={props.user.birth_date} />
+                            <MultiSearchSelect label="Programming languages" name="languages" id="languages" defaultValue={props.user.languages}>
                                 {() => props.languages.map(item => <MultiSelectItem value={item.name} key={item.id} label={item.name} />)}
                             </MultiSearchSelect>
                             <Row form>
