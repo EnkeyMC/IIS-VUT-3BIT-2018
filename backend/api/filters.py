@@ -2,30 +2,30 @@ from django.contrib.auth.models import User
 
 from django_filters import rest_framework as filters
 
-from bugtracker.models import Ticket, Module, Language, Patch, Bug, Profile
+from bugtracker import models
 
 
 class TicketFilter(filters.FilterSet):
     username = filters.CharFilter(field_name='author__username')
     expert = filters.CharFilter(field_name='expert__username')
     duplicate = filters.BooleanFilter(lookup_expr='isnull', exclude=True)
-    status = filters.ChoiceFilter(choices=Ticket.STATUS_CHOICES)
+    status = filters.ChoiceFilter(choices=models.Ticket.STATUS_CHOICES)
     date = filters.DateFromToRangeFilter(field_name='created')
 
     class Meta:
-        model = Ticket
+        model = models.Ticket
         fields = ['status', 'duplicate', 'date', 'expert', 'username']
 
 
 class ModuleFilter(filters.FilterSet):
     expert = filters.CharFilter(field_name='expert__username')
     languages = filters.ModelMultipleChoiceFilter(
-        queryset=Language.objects.all(),
+        queryset=models.Language.objects.all(),
         field_name='languages__name', to_field_name='name',
     )
 
     class Meta:
-        model = Module
+        model = models.Module
         fields = ['expert', 'languages']
 
 
@@ -33,22 +33,22 @@ class LanguageFilter(filters.FilterSet):
     language = filters.CharFilter(field_name='name', lookup_expr='iexact')
 
     class Meta:
-        model = Language
+        model = models.Language
         fields = ['language']
 
 
 class PatchFilter(filters.FilterSet):
-    status = filters.ChoiceFilter(choices=Patch.STATUS_CHOICES)
+    status = filters.ChoiceFilter(choices=models.Patch.STATUS_CHOICES)
     username = filters.CharFilter(field_name='author__username')
     applied = filters.BooleanFilter(
         field_name='date_applied', lookup_expr='isnull', exclude=True)
     date_released = filters.DateFromToRangeFilter()
     date_applied = filters.DateFromToRangeFilter()
     module = filters.ModelChoiceFilter(
-        queryset=Module.objects.all(), field_name='bugs__module')
+        queryset=models.Module.objects.all(), field_name='bugs__module')
 
     class Meta:
-        model = Patch
+        model = models.Patch
         fields = [
             'status', 'username', 'applied',
             'date_released', 'date_applied', 'module'
@@ -60,16 +60,20 @@ class BugFilter(filters.FilterSet):
     date = filters.DateFromToRangeFilter(field_name='created')
     has_patch = filters.BooleanFilter(
         field_name='patch', lookup_expr='isnull', exclude=True)
-    module = filters.ModelChoiceFilter(queryset=Module.objects.all())
+    module = filters.ModelChoiceFilter(queryset=models.Module.objects.all())
+    severity = filters.ModelMultipleChoiceFilter(
+        queryset=models.Severity.objects.all())
 
     class Meta:
-        model = Bug
-        fields = ['username', 'date', 'has_patch', 'module']
+        model = models.Bug
+        fields = ['username', 'date', 'has_patch',
+                  'module', 'vulnerability', 'severity']
 
 
 class UserFilter(filters.FilterSet):
     position = filters.MultipleChoiceFilter(
-        choices=Profile.USER_TYPES, field_name='profile__position',
+        choices=models.Profile.USER_TYPES,
+        field_name='profile__position',
         label='Position'
     )
 
