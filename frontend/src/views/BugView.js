@@ -7,26 +7,39 @@ import {getSeverities} from "../actions/severities";
 import Observable from "../utils/Observable";
 import {RestrictedRoute, RestrictedView, ROLE_PROGRAMMER} from "../components/RoleRestriction";
 import BugCreate from "../components/BugCreate";
-import SideList, {NewItemBtn, SideListHeader} from "../components/SideList";
+import SideList, {NewItemBtn, SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
 import {NavLink} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {UncontrolledTooltip} from "reactstrap";
 import BugEdit from "../components/BugEdit";
-import {getBugs} from "../actions/bugs";
+import {F_ALL, F_VULNERABILITIES, getBugsFiltered} from "../actions/bugs";
+import {Spinner, StateRenderer} from "../utils";
+import * as qs from "query-string";
+
 
 export default class BugView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.pathObservable = new Observable(this.props.match.path);
-        this.pathObservable.setOnChanged(() => {
-            this.props.getBugs();
+        this.pathObservable = new Observable(this.props.location.search, () => {
+            this.updateBugs();
         });
         this.pathObservable.triggerOnChanged();
     }
 
+    componentDidMount() {
+        this.props.getSeverities();
+    }
+
     componentDidUpdate() {
-        this.pathObservable.update(this.props.match.path);
+        this.pathObservable.update(this.props.location.search);
+    }
+
+    updateBugs() {
+        const search = this.props.location.search;
+        const filter = qs.parse(search).filter;
+
+        this.props.getBugsFiltered(filter);
     }
 
     render () {
@@ -35,15 +48,52 @@ export default class BugView extends React.Component {
         if (data && data.length > 0)
             defaultId = data[0].id;
 
+        const pathname = this.props.match.path;
+        const search = this.props.location.search;
+        let filter = qs.parse(search).filter;
+
+        if (this.props.severities.data !== null && (filter !== F_ALL || filter !== F_VULNERABILITIES)) {
+            const severity = this.props.severities.data.filter(i => String(i.level) === String(filter));
+            if (severity.length !== 1) {
+                filter = undefined;
+            } else {
+                filter = severity[0].name;
+            }
+        }
         return (
             <DefaultLayout>
                 <SideList list={this.props.bugs} noItems="No bugs found" itemTag={Bug}>
                     <SideListHeader
                         title="Bug list"
-
+                        filter={
+                            <StateRenderer state={this.props.severities} renderCondition={this.props.severities.data !== null}
+                                renderLoading={() => {return (
+                                    <span className="text-muted ml-4">
+                                        <Spinner/>
+                                    </span>
+                                )}}
+                            >
+                                {props => {return (
+                                    <SideListFilter
+                                        value={{value: filter}}
+                                        defaultValue={{value: F_ALL}}
+                                    >
+                                        <SideListFilterItem
+                                            linkTo={{pathname: pathname, search: qs.stringify({filter: F_ALL})}}
+                                            value={F_ALL} />
+                                        {props.data.map(sev => <SideListFilterItem
+                                            linkTo={{pathname: pathname, search: qs.stringify({filter: sev.level})}}
+                                            value={sev.level} label={sev.name} key={sev.level} />)}
+                                        <SideListFilterItem
+                                            linkTo={{pathname: pathname, search: qs.stringify({filter: F_VULNERABILITIES})}}
+                                            value={F_VULNERABILITIES} />
+                                    </SideListFilter>
+                                )}}
+                            </StateRenderer>
+                        }
                         newBtn={
                             <RestrictedView minRole={ROLE_PROGRAMMER}>
-                                <NewItemBtn linkTo={this.props.match.path+'/create'}>
+                                <NewItemBtn linkTo={this.props.match.path+'/create'+search}>
                                     Create New Bug
                                 </NewItemBtn>
                             </RestrictedView>
@@ -63,12 +113,13 @@ export default class BugView extends React.Component {
 BugView = connect(
     state => {
         return {
-            bugs: state.bugView.bugs
+            bugs: state.bugView.bugs,
+            severities: state.severities
         }
     },
     dispatch => {
         return {
-            getBugs: () => dispatch(getBugs()),
+            getBugsFiltered: (filter) => dispatch(getBugsFiltered(filter)),
             getSeverities: () => dispatch(getSeverities())
         }
     }
@@ -76,8 +127,9 @@ BugView = connect(
 
 const Bug = withRouter((props) => {
     const bug = props.item;
+    const search = props.location.search;
     return (
-        <NavLink to={props.match.path+'/'+bug.id}
+        <NavLink to={{pathname: props.match.path+'/'+bug.id, search: search}}
                  activeClassName="selected"
                  className="list-group-item list-group-item-action flex-column align-items-start"
                  style={bug.severity ?

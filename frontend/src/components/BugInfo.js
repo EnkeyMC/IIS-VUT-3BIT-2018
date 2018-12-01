@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     Col, Container, Row,
     Media,
-    Card, CardTitle, CardText, Badge, Modal, ModalHeader, ModalBody, Button, CardBody
+    Card, CardTitle, CardText, Badge, Modal, ModalHeader, ModalBody, Button
 } from "reactstrap";
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
@@ -144,6 +144,7 @@ export default class BugInfo extends Component {
         const path = toPath({
             id: this.getBugId()
         });
+        const search = this.props.location.search;
 
         return (
             <div className="ticket-info content-height">
@@ -175,7 +176,7 @@ export default class BugInfo extends Component {
                                 <Row className="pt-3">
                                     <Col>
                                         <RestrictedView minRole={ROLE_PROGRAMMER}>
-                                            <Link to={path+'/edit'} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>
+                                            <Link to={path+'/edit'+search} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>
                                         </RestrictedView>
                                     </Col>
                                 </Row>

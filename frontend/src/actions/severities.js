@@ -5,7 +5,7 @@ export function getSeverities() {
         type: GET_SEVERITIES,
         payload: {
             request: {
-                url: '/api/severities/'
+                url: '/api/severities/?order=-level'
             }
         }
     }

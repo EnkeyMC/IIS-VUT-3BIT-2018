@@ -7,11 +7,12 @@ import React from "react";
 export const Numbering = withRouter((props) => {
     const status = props.match.params.status;
     const toPath = pathToRegexp.compile(props.match.path);
+    const search = props.location.search;
     return (
         <div className="font-size">
             <span>{props.thisIdx} of {props.size}</span>
-            <Link to={toPath({status: status, id: props.prevId})} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
-            <Link to={toPath({status: status, id: props.nextId})} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
+            <Link to={toPath({status: status, id: props.prevId})+search} className={"ml-3 mr-3 " + (props.prevId ? "" : "disabled")}><FontAwesomeIcon icon ="angle-up"/></Link>
+            <Link to={toPath({status: status, id: props.nextId})+search} className={props.nextId ? "" : "disabled"}><FontAwesomeIcon icon="angle-down"/></Link>
         </div>
     );
 });

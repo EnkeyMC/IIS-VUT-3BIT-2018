@@ -62,7 +62,7 @@ class LoginForm extends React.Component {
         if (this.props.user) {
             const state = this.props.location.state;
             if (state)
-                return <Redirect to={state.from.pathname} />;
+                return <Redirect to={state.from.pathname+state.from.search} />;
             else
                 return <Redirect to="/"/>;
         }

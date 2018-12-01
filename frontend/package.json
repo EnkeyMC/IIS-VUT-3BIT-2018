@@ -16,6 +16,7 @@
     "node-sass": "^4.9.3",
     "path-to-regexp": "^2.4.0",
     "prop-types": "^15.6.2",
+    "query-string": "^6.2.0",
     "react": "^16.5.2",
     "react-alert": "^4.0.4",
     "react-alert-template-basic": "^1.0.0",

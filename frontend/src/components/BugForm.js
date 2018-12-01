@@ -11,8 +11,9 @@ import {Select} from "./form/Select";
 import {Checkbox} from "./form/Checkbox";
 import {Button} from "reactstrap";
 import {getTickets} from "../actions/tickets";
-import {getBugs} from "../actions/bugs";
+import {getBugsFiltered} from "../actions/bugs";
 import {getSeverities} from "../actions/severities";
+import * as qs from "query-string";
 
 export default class BugForm extends React.Component {
     constructor(props) {
@@ -29,15 +30,16 @@ export default class BugForm extends React.Component {
 
     handleSubmitSuccess(id, data) {
         let newPath;
+        const location = this.props.location;
         if (this.props.bug) {
             this.props.alert.success("Changes successfully saved.");
-            newPath = this.props.location.pathname.replace('/edit', '');
+            newPath = location.pathname.replace('/edit', '') + location.search;
         } else {
             this.props.alert.success("Bug successfully created.");
-            newPath = this.props.location.pathname.replace('/create', '/'+data.id);
+            newPath = location.pathname.replace('/create', '/'+data.id) + location.search;
         }
 
-        this.props.getBugs();
+        this.props.getBugsFiltered(qs.parse(location.search).filter);
 
         this.props.history.push(newPath);
     }
@@ -54,9 +56,9 @@ export default class BugForm extends React.Component {
             bug = {
                 title: "",
                 description: "",
-                severity: "",
+                severity: {level: ""},
                 vulnerability: false,
-                module: "",
+                module: {id: ""},
                 tickets: []
             };
         } else {
@@ -80,14 +82,14 @@ export default class BugForm extends React.Component {
                             <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
                             <Input label="Title" name="title" id="title" required defaultValue={bug.title} />
                             <Input type="textarea" rows="10" label="Description" name="description" id="description" required defaultValue={bug.description} />
-                            <Select label="Severity" name="severity" id="severity" defaultValue={bug.severity}>
+                            <Select label="Severity" name="severity" id="severity" defaultValue={bug.severity.level}>
                                 <option value="" disabled>--- Select severity ---</option>
                                 {
                                     props.severities.map(severity => <option value={severity.level} key={severity.level}>{severity.name}</option>)
                                 }
                             </Select>
                             <Checkbox label="Vulnerability" name="vulnerability" id="vulnerability" defaultValue={bug.vulnerability} />
-                            <Select label="Module" name="module" id="module" defaultValue={bug.module}>
+                            <Select label="Module" name="module" id="module" defaultValue={bug.module.id}>
                                 <option value="" disabled>--- Select module ---</option>
                                 {
                                     props.modules.map(module => <option value={module.id} key={module.id}>{module.name}</option>)
@@ -129,7 +131,7 @@ BugForm = connect(
     },
     dispatch => {
         return {
-            getBugs: () => dispatch(getBugs()),
+            getBugsFiltered: (filter) => dispatch(getBugsFiltered(filter)),
             getSeverities: () => dispatch(getSeverities()),
             getModules: () => dispatch(getModules()),
             getTickets: () => dispatch(getTickets())

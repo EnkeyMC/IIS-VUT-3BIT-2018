@@ -5,6 +5,14 @@ export const FAIL = '_FAIL';
 export const REQ = '_REQ';
 export const CLEAR = '_CLEAR';
 
+function getValue(val) {
+    if (val === true)
+        return "true";
+    if (val === false)
+        return "false";
+    return encodeURIComponent(val);
+}
+
 export function buildQuery(query = null) {
     if (!query)
         return '';
@@ -15,10 +23,10 @@ export function buildQuery(query = null) {
             if (Array.isArray(query[key])) {
                 for (const i in query[key]) {
                     if (query[key].hasOwnProperty(i))
-                        q += key+'='+encodeURIComponent(query[key][i])+'&';
+                        q += key+'='+getValue(query[key][i])+'&';
                 }
             } else {
-                q += key+'='+encodeURIComponent(query[key])+'&';
+                q += key+'='+getValue(query[key])+'&';
             }
         }
     }

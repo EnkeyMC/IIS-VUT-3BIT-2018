@@ -44,8 +44,10 @@ export default class TicketView extends React.Component {
         if (data && data.length > 0)
             defaultId = data[0].id;
 
+        const status = this.props.match.params.status;
+
         const toPath = pathToRegexp.compile(this.props.match.path);
-        const path = toPath({status: this.props.match.params.status});
+        const path = toPath({status: status});
 
         const routeParams = {
             path: this.props.match.path+'/:id(\\d+)?',
@@ -58,7 +60,10 @@ export default class TicketView extends React.Component {
                     <SideListHeader
                         title="Tickets"
                         filter={
-                            <SideListFilter value={this.props.match.params.status} defaultValue="all">
+                            <SideListFilter
+                                value={{value: status}}
+                                defaultValue={{value: "all"}}
+                            >
                                 <SideListFilterItem linkTo="/tickets/all" value="all" />
                                 <SideListFilterItem linkTo="/tickets/new" value="new" />
                                 <SideListFilterItem linkTo="/tickets/assigned" value="assigned" />

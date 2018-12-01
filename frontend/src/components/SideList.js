@@ -71,21 +71,29 @@ export class SideListFilter extends React.Component {
         super(props);
 
         this.state = {
-            value: props.value ? props.value : props.defaultValue
+            value: props.value.value ? props.value : props.defaultValue,
         };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
+
+
     handleChange(value) {
         this.setState({value: value})
+    }
+
+    getLabel() {
+        if (this.state.value.label)
+            return this.state.value.label;
+        return this.state.value.value;
     }
 
     render() {
         return (
             <UncontrolledDropdown setActiveFromChild className="d-inline">
                 <DropdownToggle tag="a" className="nav-link pointer d-inline pr-0" caret>
-                    {this.state.value}
+                    {this.getLabel()}
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-link">
                     <FilterContext.Provider value={{handleChange: this.handleChange}}>
@@ -105,13 +113,19 @@ export class SideListFilterItem extends React.Component {
     }
 
     handleClick() {
-        this.props.filter.handleChange(this.props.value);
+        this.props.filter.handleChange({value: this.props.value, label: this.getLabel()});
+    }
+
+    getLabel() {
+        if (this.props.label)
+            return this.props.label;
+        return this.props.value;
     }
 
     render() {
         return (
             <NavLink to={this.props.linkTo}>
-                <DropdownItem className="pointer" onClick={this.handleClick}>{this.props.value}</DropdownItem>
+                <DropdownItem className="pointer" onClick={this.handleClick}>{this.getLabel()}</DropdownItem>
             </NavLink>
         );
     }
