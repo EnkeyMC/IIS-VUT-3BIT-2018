@@ -6,6 +6,7 @@ export const GET_TICKET = 'GET_TICKET_REQ';
 export const SET_TICKET_ERROR = 'SET_TICKET_ERROR';
 export const SET_TICKET = 'SET_TICKET';
 export const GET_TICKET_BUG = 'GET_TICKET_BUG_REQ';
+export const GET_TICKETS_FOR_SELECT = 'GET_TICKETS_FOR_SELECT_REQ';
 
 export function getTickets(query = null) {
     let url = '/api/tickets' + buildQuery(query);
@@ -59,5 +60,16 @@ export function getTicketBug(id) {
 export function clearTicketBugs() {
     return {
         type: GET_TICKET_BUG + CLEAR
+    }
+}
+
+export function getTicketsForSelect() {
+    return {
+        type: GET_TICKETS_FOR_SELECT,
+        payload: {
+            request: {
+                url: '/api/tickets'
+            }
+        }
     }
 }

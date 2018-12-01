@@ -1,25 +1,22 @@
 import {FAIL, SUCC} from "../actions";
 import {copyMerge} from "../utils";
-import {isCancelled} from "./helpers";
+import {initialSingleToListState, initialState, isCancelled} from "./helpers";
 import {reduceGetList, reduceSingleToList} from "./helpers";
-import {GET_TICKET, GET_TICKET_BUG, GET_TICKETS, SET_TICKET, SET_TICKET_ERROR} from "../actions/tickets";
+import {
+    GET_TICKET,
+    GET_TICKET_BUG,
+    GET_TICKETS,
+    GET_TICKETS_FOR_SELECT,
+    SET_TICKET,
+    SET_TICKET_ERROR
+} from "../actions/tickets";
 
 const initialTicketsViewState = {
-    tickets: {
-        loading: false,
-        error: null,
-        data: null
-    },
-    ticketInfo: {
-        loading: false,
-        error: null,
-        data: null,
-        ticketBugs: {
-            loading: 0,
-            error: null,
-            data: []
-        }
-    }
+    tickets: initialState,
+    ticketInfo: Object.assign(initialState, {
+        ticketBugs: initialSingleToListState,
+        ticketsForSelect: initialState  // For forms
+    })
 };
 
 export function reduceTicketView(state = initialTicketsViewState, action) {
@@ -27,7 +24,10 @@ export function reduceTicketView(state = initialTicketsViewState, action) {
         tickets: reduceGetList(state.tickets, action, GET_TICKETS),
         ticketInfo: Object.assign(
             reduceGetTicket(state.ticketInfo, action),
-            {ticketBugs: reduceSingleToList(state.ticketInfo.ticketBugs, action, GET_TICKET_BUG)}
+            {
+                ticketBugs: reduceSingleToList(state.ticketInfo.ticketBugs, action, GET_TICKET_BUG),
+                ticketsForSelect: reduceGetList(state.ticketInfo.ticketsForSelect, action, GET_TICKETS_FOR_SELECT)
+            }
         )
     };
 }

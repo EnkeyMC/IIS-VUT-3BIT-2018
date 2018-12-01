@@ -27,7 +27,7 @@ import {
     GET_TICKET_BUG,
     getTicket,
     getTicketBug,
-    getTickets,
+    getTickets, getTicketsForSelect,
     setTicket,
     setTicketError
 } from "../actions/tickets";
@@ -61,14 +61,17 @@ export default class TicketInfo extends Component {
 
         this.state = {
             assignBugsModalOpen: false,
-            assignProgrammerModalOpen: false
+            assignProgrammerModalOpen: false,
+            duplicateModalOpen: false,
         };
 
         this.closeAssignProgrammerModal = this.closeAssignProgrammerModal.bind(this);
-        this.toggleAssginProgrammerModal = this.toggleAssginProgrammerModal.bind(this);
+        this.toggleAssignProgrammerModal = this.toggleAssignProgrammerModal.bind(this);
         this.toggleAssignBugsModal = this.toggleAssignBugsModal.bind(this);
         this.closeAssignBugsModal = this.closeAssignBugsModal.bind(this);
         this.removeBug = this.removeBug.bind(this);
+        this.toggleDuplicateModal = this.toggleDuplicateModal.bind(this);
+        this.closeDuplicateModal = this.closeDuplicateModal.bind(this);
     }
 
     componentDidMount() {
@@ -107,7 +110,7 @@ export default class TicketInfo extends Component {
         });
     }
 
-    toggleAssginProgrammerModal() {
+    toggleAssignProgrammerModal() {
         this.setState({
             assignProgrammerModalOpen: !this.state.assignProgrammerModalOpen
         });
@@ -116,6 +119,18 @@ export default class TicketInfo extends Component {
     closeAssignProgrammerModal() {
         this.setState({
             assignProgrammerModalOpen: false
+        });
+    }
+
+    toggleDuplicateModal() {
+        this.setState({
+            duplicateModalOpen: !this.state.duplicateModalOpen
+        });
+    }
+
+    closeDuplicateModal() {
+        this.setState({
+            duplicateModalOpen: false
         });
     }
 
@@ -206,12 +221,15 @@ export default class TicketInfo extends Component {
                                         <RestrictedView reqUser={ticket.author} minRole={ROLE_PROGRAMMER}>
                                             <Link to={path+'/edit'} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>
                                         </RestrictedView>
+                                        <RestrictedView minRole={ROLE_PROGRAMMER}>
+                                            <span className="btn btn-link mr-3" onClick={this.toggleDuplicateModal}><FontAwesomeIcon icon="marker"/>&nbsp;Mark as duplicate</span>
+                                        </RestrictedView>
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
                                     <Col className="mt-md-4 pb-3">
                                         <Detail ticket={ticket}
-                                            toggleModal={this.toggleAssginProgrammerModal}
+                                            toggleModal={this.toggleAssignProgrammerModal}
                                         />
                                     </Col>
                                 </Row>
@@ -242,11 +260,19 @@ export default class TicketInfo extends Component {
                     </ModalBody>
                 </Modal>
                 <Modal isOpen={this.state.assignProgrammerModalOpen}
-                    toggle={this.toggleAssginProgrammerModal}
+                    toggle={this.toggleAssignProgrammerModal}
                 >
-                    <ModalHeader toggle={this.toggleAssginProgrammerModal}>Assign programmer</ModalHeader>
+                    <ModalHeader toggle={this.toggleAssignProgrammerModal}>Assign programmer</ModalHeader>
                     <ModalBody>
                         <AssignProgrammerForm ticket={ticket} closeModal={this.closeAssignProgrammerModal} />
+                    </ModalBody>
+                </Modal>
+                <Modal isOpen={this.state.duplicateModalOpen}
+                       toggle={this.toggleDuplicateModal}
+                >
+                    <ModalHeader toggle={this.toggleDuplicateModal}>Select duplicate</ModalHeader>
+                    <ModalBody>
+                        <DuplicateForm ticket={ticket} closeModal={this.closeDuplicateModal} />
                     </ModalBody>
                 </Modal>
             </div>
@@ -531,7 +557,7 @@ class AssignProgrammerForm extends React.Component {
     render() {
         return (
             <Form edit id="assign-programmer-form" url={"/api/tickets/"+this.props.ticket.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
-                <StateRenderer state={this.props} renderCondition={this.props.data !== null && this.props.users}>
+                <StateRenderer state={this.props} renderCondition={this.props.data !== null}>
                     {props => { return (<>
                         <SearchSelect name="expert">
                             {
@@ -576,3 +602,75 @@ AssignProgrammerForm = connect(
     }
 ) (withRouter(AssignProgrammerForm));
 
+
+class DuplicateForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleFormSuccess = this.handleFormSuccess.bind(this);
+    }
+
+    handleFormSuccess(id, data) {
+        this.props.setTicket(data);
+
+        const status = this.props.match.params.status;
+        if (!status || status === 'all')
+            this.props.getTickets();
+        else if (status === 'my')
+            this.props.getTickets({username: this.props.username});
+        else
+            this.props.getTickets({status: status});
+
+        this.props.closeModal();
+    }
+
+    componentDidMount() {
+        this.props.getTicketsForSelect();
+    }
+
+    render() {
+        return (
+            <Form edit id="mark-as-duplicate-form" url={"/api/tickets/"+this.props.ticket.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+                <StateRenderer state={this.props} renderCondition={this.props.data !== null}>
+                    {props => { return (<>
+                        <SearchSelect name="duplicate">
+                            {
+                                () => props.data.map(
+                                    ticket => <SelectItem
+                                        key={ticket.id}
+                                        value={ticket.id}
+                                        label={'#'+ticket.id + ' ' +ticket.title}
+                                    >
+                                        {
+                                            label => {return (
+                                                <span className={"pl-2 state-"+ticket.status}>{label}</span>
+                                            )}
+                                        }
+                                    </SelectItem>
+                                )
+                            }
+                        </SearchSelect>
+                        <Button type="submit" color="primary" className="w-100 mt-4">Submit</Button>
+                    </>)}}
+                </StateRenderer>
+            </Form>
+        );
+    }
+}
+
+DuplicateForm = connect(
+    (state) => {
+        return {
+            loading: state.ticketView.ticketInfo.ticketsForSelect.loading,
+            error: state.ticketView.ticketInfo.ticketsForSelect.error,
+            data: state.ticketView.ticketInfo.ticketsForSelect.data
+        }
+    },
+    dispatch => {
+        return {
+            getTicketsForSelect: () => dispatch(getTicketsForSelect()),
+            setTicket: (data) => dispatch(setTicket(data)),
+            getTickets: (query) => dispatch(getTickets(query))
+        }
+    }
+) (withRouter(DuplicateForm));
