@@ -24,7 +24,7 @@ export const RestrictedRoute = connect(
 )(withRouter(withAlert(({minRole, user, location, alert, ...rest}) => {
     if (!user && minRole === ROLE_USER) {
         return <Redirect to={{pathname: "/login", state: {from: location, error: "You need to login to access this page"}}} />
-    } else if (!user || roleNameToLvl[user.user_type] < minRole) {
+    } else if (!user || roleNameToLvl[user.position] < minRole) {
         return <Redirect to={{pathname: "/no-permission", state: {from: location}}} />
     }
     return <Route {...rest} />;
@@ -37,7 +37,7 @@ export const RestrictedView = connect(
         }
     }
 )(props => {
-    if (!props.user || roleNameToLvl[props.user.user_type] < props.minRole) {
+    if (!props.user || roleNameToLvl[props.user.position] < props.minRole) {
         return null;
     }
     return props.children;

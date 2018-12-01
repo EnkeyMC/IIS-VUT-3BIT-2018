@@ -104,15 +104,17 @@ Modules = connect (
     }
 ) (Modules);
 
-function ModuleCard(props) {
+const ModuleCard = withRouter((props) => {
     return (
         <Card>
             <CardBody>
                 <CardTitle>
                     {props.module.name}
-                    <Link to="/"><FontAwesomeIcon icon="edit" className="float-right"/></Link>
+                    <RestrictedView minRole={ROLE_SUPERVISOR}>
+                        <Link to={props.match.path+'/edit/'+props.module.id}><FontAwesomeIcon icon="edit" className="float-right"/></Link>
+                    </RestrictedView>
                 </CardTitle>
-                <CardText className="border-bottom pb-3">
+                <CardText className="border-bottom pb-3 text-justify">
                     {props.module.description}
                 </CardText>
                 <div>
@@ -127,7 +129,7 @@ function ModuleCard(props) {
             </CardBody>
         </Card>
     );
-}
+});
 
 function ViewBugsBtn(props) {
     return (
@@ -136,7 +138,7 @@ function ViewBugsBtn(props) {
 }
 
 class BugsContainer extends Component {
-    componentDidMount() {console.log("mounted");
+    componentDidMount() {
         if (this.props.module !== null)
             this.requestBugs();
     }

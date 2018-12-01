@@ -2,7 +2,7 @@ import {
     GET_BUG,
     GET_BUG_TICKET,
     GET_BUGS,
-    GET_LANGUAGES,
+    GET_LANGUAGES, GET_MODULE,
     GET_MODULE_BUG,
     GET_MODULES,
     GET_SEVERITIES,
@@ -110,6 +110,12 @@ const initialUsersListState = {
     data: null
 };
 
+const initialModuleState = {
+    loading: false,
+    error: null,
+    data: null
+};
+
 export const zeroBugsApp = (state, action) => {
     return rootReducer(state, action);
 };
@@ -125,7 +131,8 @@ const rootReducer = combineReducers({
     bugView: reduceBugView,
     severities: reduceSeverities,
     modules: reduceModules,
-    users: reduceUsersList
+    users: reduceUsersList,
+    module: reduceModule,
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -305,4 +312,26 @@ function reduceModules(state = initialModulesState, action) {
 
 function reduceUsersList(state = initialUsersListState, action) {
     return reduceGetList(state, action, GET_USERS);
+}
+
+function reduceModule(state = initialModuleState, action) {
+    switch (action.type) {
+        case GET_MODULE:
+            return copyMerge(state, {loading: true, error: null, data: null});
+        case GET_MODULE+SUCC: {
+            return copyMerge(state, {
+                loading: false,
+                error: null,
+                data: copyMerge(state.data, action.payload.data)
+            });
+        }
+        case GET_MODULE+FAIL:
+            if (isCancelled(action))
+                return copyMerge(state, {loading: false});
+            if (action.error.response.status === 404)
+                return copyMerge(state, {loading: false, error: "Module not found"});
+            return copyMerge(state, {loading: false, error: action.error.message});
+        default:
+            return state;
+    }
 }
