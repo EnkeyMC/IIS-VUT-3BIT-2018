@@ -70,7 +70,7 @@ class BugFilter(filters.FilterSet):
 class UserFilter(filters.FilterSet):
     position = filters.MultipleChoiceFilter(
         choices=Profile.USER_TYPES, field_name='profile__position',
-        label='position'
+        label='Position'
     )
 
     class Meta:
