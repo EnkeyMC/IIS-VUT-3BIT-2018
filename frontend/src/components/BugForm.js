@@ -82,14 +82,14 @@ export default class BugForm extends React.Component {
                             <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
                             <Input label="Title" name="title" id="title" required defaultValue={bug.title} />
                             <Input type="textarea" rows="10" label="Description" name="description" id="description" required defaultValue={bug.description} />
-                            <Select label="Severity" name="severity" id="severity" defaultValue={bug.severity.level}>
+                            <Select label="Severity" name="severity" id="severity" defaultValue={bug.severity ? bug.severity.level : ""}>
                                 <option value="" disabled>--- Select severity ---</option>
                                 {
                                     props.severities.map(severity => <option value={severity.level} key={severity.level}>{severity.name}</option>)
                                 }
                             </Select>
                             <Checkbox label="Vulnerability" name="vulnerability" id="vulnerability" defaultValue={bug.vulnerability} />
-                            <Select label="Module" name="module" id="module" defaultValue={bug.module.id}>
+                            <Select label="Module" name="module" id="module" defaultValue={bug.module ? bug.module.id : ""}>
                                 <option value="" disabled>--- Select module ---</option>
                                 {
                                     props.modules.map(module => <option value={module.id} key={module.id}>{module.name}</option>)
