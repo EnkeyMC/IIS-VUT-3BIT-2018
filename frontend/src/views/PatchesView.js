@@ -93,7 +93,7 @@ PatchesView = connect(
 const Patch = withRouter((props) => {
     const toPath = pathToRegexp.compile(props.match.path);
     return (
-        <NavLink to={appendToPath(toPath({status: props.match.params.status}), props.item.id)} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.item.status}>
+        <NavLink to={appendToPath(toPath({status: props.match.params.status}), props.item.id)} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + PatchesView.statusEncode(props.item.status)}>
             <div className="d-flex w-100 justify-content-between">
                 <h6 className="pb-1 ticket-list-title">#{props.item.id}</h6>
             </div>
