@@ -18,6 +18,7 @@ import {
 import {NavLink as RouterNavLink, Link} from "react-router-dom";
 import {logout} from "../actions";
 import {withAlert} from "react-alert";
+import {withRouter} from "react-router";
 
 export default class Header extends Component {
 
@@ -128,11 +129,11 @@ class SearchBar extends Component {
     }
 }
 
-function LogIn() {
+const LogIn = withRouter((props) => {
     return (
-            <NavLink tag={RouterNavLink} to="/login" className="text-dark">Log In</NavLink>
+            <NavLink tag={RouterNavLink} to={{pathname: "/login", state: {from: props.location}}} className="text-dark">Log In</NavLink>
     );
-}
+});
 
 const UserName = connect(
     null,

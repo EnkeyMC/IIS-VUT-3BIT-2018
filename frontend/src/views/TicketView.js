@@ -11,6 +11,7 @@ import SideList, {NewItemBtn, SideListFilter, SideListFilterItem, SideListHeader
 import pathToRegexp from "path-to-regexp";
 import {NavLink} from "react-router-dom";
 import {appendToPath} from "../utils";
+import TicketEdit from "../components/TicketEdit";
 
 export default class TicketView extends React.Component {
     constructor(props) {
@@ -43,12 +44,13 @@ export default class TicketView extends React.Component {
         if (data && data.length > 0)
             defaultId = data[0].id;
 
+        const toPath = pathToRegexp.compile(this.props.match.path);
+        const path = toPath({status: this.props.match.params.status});
+
         const routeParams = {
             path: this.props.match.path+'/:id(\\d+)?',
             render: (props) => <TicketInfo defaultId={defaultId} {...props} />
         };
-
-        const toPath = pathToRegexp.compile(this.props.match.path);
 
         return (
             <DefaultLayout>
@@ -68,7 +70,7 @@ export default class TicketView extends React.Component {
                         }
 
                         newBtn={
-                            <NewItemBtn linkTo={toPath({status: this.props.match.params.status})+'/create'}>
+                            <NewItemBtn linkTo={path+'/create'}>
                                 Create New Ticket
                             </NewItemBtn>
                         }
@@ -76,6 +78,7 @@ export default class TicketView extends React.Component {
                 </SideList>
                 <Switch>
                     <RestrictedRoute minRole={ROLE_USER} path={this.props.match.path+'/create'} component={TicketCreate} />
+                    <Route path={this.props.match.path+'/:id/edit'} component={TicketEdit} />
                     {
                         this.props.match.params.status === 'my' ?
                             <RestrictedRoute minRole={ROLE_USER} {...routeParams} />

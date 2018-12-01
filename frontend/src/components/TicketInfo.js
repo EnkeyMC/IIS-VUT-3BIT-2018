@@ -23,7 +23,7 @@ import CloseBtn from "./CloseBtn";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Form} from "./form/Form";
 import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
-import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
+import {RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestriction";
 import {SelectItem} from "./form/SearchSelect";
 import SearchSelect from "./form/SearchSelect";
 
@@ -161,6 +161,12 @@ export default class TicketInfo extends Component {
         ++idx;
         nextTicketId = this.props.tickets.data[idx] ? this.props.tickets.data[idx].id : undefined;
 
+        const toPath = pathToRegexp.compile(this.props.match.path);
+        const path = toPath({
+            status: this.props.match.params.status,
+            id: this.getTicketId()
+        });
+
         return (
             <div className="ticket-info content-height">
                 <Container>
@@ -186,6 +192,13 @@ export default class TicketInfo extends Component {
                                 <Row>
                                     <Col>
                                         <h1>#{ticket.id} - {ticket.title}</h1>
+                                    </Col>
+                                </Row>
+                                <Row className="pt-3">
+                                    <Col>
+                                        <RestrictedView reqUser={ticket.author} minRole={ROLE_PROGRAMMER}>
+                                            <Link to={path+'/edit'} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>
+                                        </RestrictedView>
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
@@ -279,7 +292,9 @@ const Detail = withRouter((props) => {
                         {props.ticket.expert ?
                             <Link to={"/profile/view/"+props.ticket.expert} >{props.ticket.expert}</Link>
                             :
-                            <Badge pill color="primary" className="pointer link" onClick={props.toggleModal}>+ Assign</Badge>
+                            <RestrictedView minRole={ROLE_SUPERVISOR}>
+                                <Badge pill color="primary" className="pointer link" onClick={props.toggleModal}>+ Assign</Badge>
+                            </RestrictedView>
                         }
                     </Row>
                 </Col>
