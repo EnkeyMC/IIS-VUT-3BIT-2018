@@ -53,22 +53,26 @@ class Severity(models.Model):
 
 
 class Patch(models.Model):
+    STATUS_PROGRESS = 'in progress'
+    STATUS_AWAIT = 'awaiting approval'
     STATUS_APPROVED = 'approved'
-    STATUS_HOTFIX = 'hotfix'
-    STATUS_COMPLETE = 'complete'
+    STATUS_RELEASED = 'released'
     STATUS_CHOICES = (
+        (STATUS_PROGRESS, 'in progress'),
+        (STATUS_AWAIT, 'awaiting approval'),
         (STATUS_APPROVED, 'approved'),
-        (STATUS_HOTFIX, 'hotfix'),
-        (STATUS_COMPLETE, 'complete'),
+        (STATUS_RELEASED, 'released')
     )
 
+    name = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-    date_released = models.DateTimeField(auto_now_add=True)
-    date_applied = models.DateTimeField(null=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=STATUS_PROGRESS)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_released = models.DateTimeField(null=True)
 
     def __str__(self):
-        return '#' + str(self.id)
+        return 'Patch: ' + self.name
 
 
 class Bug(models.Model):

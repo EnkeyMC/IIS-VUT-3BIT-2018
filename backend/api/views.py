@@ -140,8 +140,9 @@ class PatchViewset(viewsets.ModelViewSet):
                           IsStaffOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.PatchFilter
-    ordering_fields = ('id', 'date_released', 'date_applied')
-    ordering = ('-date_released',)
+    search_fields = ('name',)
+    ordering_fields = ('id', 'date_released', 'date_created')
+    ordering = ('-date_created',)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

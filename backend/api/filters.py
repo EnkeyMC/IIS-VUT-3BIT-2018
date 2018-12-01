@@ -40,18 +40,15 @@ class LanguageFilter(filters.FilterSet):
 class PatchFilter(filters.FilterSet):
     status = filters.ChoiceFilter(choices=models.Patch.STATUS_CHOICES)
     username = filters.CharFilter(field_name='author__username')
-    applied = filters.BooleanFilter(
-        field_name='date_applied', lookup_expr='isnull', exclude=True)
+    date_created = filters.DateFromToRangeFilter()
     date_released = filters.DateFromToRangeFilter()
-    date_applied = filters.DateFromToRangeFilter()
     module = filters.ModelChoiceFilter(
         queryset=models.Module.objects.all(), field_name='bugs__module')
 
     class Meta:
         model = models.Patch
         fields = [
-            'status', 'username', 'applied',
-            'date_released', 'date_applied', 'module'
+            'status', 'username', 'date_created', 'date_released', 'module'
         ]
 
 

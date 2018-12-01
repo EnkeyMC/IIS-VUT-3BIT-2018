@@ -163,60 +163,66 @@
     "model": "bugtracker.patch",
     "pk": 1,
     "fields": {
+        "name": "Patch 1",
         "author": 4,
-        "status": "applied",
-        "date_released": "2017-11-16T12:13:58.395Z",
-        "date_applied": "2017-12-13T15:11:00.965Z"
+        "status": "released",
+        "date_created": "2017-11-16T12:13:58.395Z",
+        "date_released": "2017-12-13T15:11:00.965Z"
     }
 },
 {
     "model": "bugtracker.patch",
     "pk": 2,
     "fields": {
+        "name": "Patch 2",
         "author": 4,
-        "status": "applied",
-        "date_released": "2016-04-30T14:32:12.324Z",
-        "date_applied": "2017-07-18T11:01:42.543Z"
+        "status": "released",
+        "date_created": "2016-04-30T14:32:12.324Z",
+        "date_released": "2017-07-18T11:01:42.543Z"
     }
 },
 {
     "model": "bugtracker.patch",
     "pk": 3,
     "fields": {
+        "name": "Patch 3",
         "author": 3,
-        "status": "applied",
-        "date_released": "2017-12-14T16:12:21.642Z",
-        "date_applied": "2017-12-22T10:53:11.658Z"
+        "status": "released",
+        "date_created": "2017-12-14T16:12:21.642Z",
+        "date_released": "2017-12-22T10:53:11.658Z"
     }
 },
 {
     "model": "bugtracker.patch",
     "pk": 4,
     "fields": {
+        "name": "Patch 4",
         "author": 4,
         "status": "approved",
-        "date_released": "2017-05-08T09:19:43.112Z",
-        "date_applied": null
+        "date_created": "2017-05-08T09:19:43.112Z",
+        "date_released": null
     }
 },
 {
     "model": "bugtracker.patch",
     "pk": 5,
     "fields": {
+        "name": "Patch 5",
         "author": 3,
-        "status": "hotfix",
-        "date_released": "2018-11-23T07:59:21.991Z",
-        "date_applied": null
+        "status": "awaiting approval",
+        "date_created": "2018-11-23T07:59:21.991Z",
+        "date_released": null
     }
 },
 {
     "model": "bugtracker.patch",
     "pk": 6,
     "fields": {
+        "name": "Patch 6",
         "author": 3,
-        "status": "hotfix",
-        "date_released": "2018-11-23T13:56:12.232Z",
-        "date_applied": null
+        "status": "in progress",
+        "date_created": "2018-11-23T13:56:12.232Z",
+        "date_released": null
     }
 },
 {
