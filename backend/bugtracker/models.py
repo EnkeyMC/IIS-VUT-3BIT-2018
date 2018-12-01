@@ -24,7 +24,7 @@ class Profile(models.Model):
     )
     languages = models.ManyToManyField(Language)
     birth_date = models.DateField(null=True)
-    user_type = models.CharField(
+    position = models.CharField(
         max_length=20, choices=USER_TYPES, default=USER
     )
 

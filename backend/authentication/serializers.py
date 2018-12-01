@@ -28,8 +28,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
-    user_type = serializers.ReadOnlyField(source='profile.user_type')
+    position = serializers.ReadOnlyField(source='profile.position')
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'user_type')
+        fields = ('id', 'username', 'position')

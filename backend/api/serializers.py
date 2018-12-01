@@ -117,7 +117,7 @@ class ProfileSerializer(StrictModelSerializer):
         many=True, required=False)
     position = serializers.ChoiceField(
         choices=models.Profile.USER_TYPES,
-        read_only=True, required=False, source='user_type'
+        read_only=True, required=False,
     )
 
     def validate_birth_date(self, birth_date):
@@ -135,7 +135,7 @@ class ProfileSerializer(StrictModelSerializer):
 
 class SupervisorProfileSerializer(ProfileSerializer):
     position = serializers.ChoiceField(
-        choices=models.Profile.USER_TYPES, required=False, source='user_type')
+        choices=models.Profile.USER_TYPES, required=False)
 
     class Meta:
         model = models.Profile

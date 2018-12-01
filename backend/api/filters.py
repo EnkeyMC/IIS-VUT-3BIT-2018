@@ -1,6 +1,8 @@
+from django.contrib.auth.models import User
+
 from django_filters import rest_framework as filters
 
-from bugtracker.models import Ticket, Module, Language, Patch, Bug
+from bugtracker.models import Ticket, Module, Language, Patch, Bug, Profile
 
 
 class TicketFilter(filters.FilterSet):
@@ -63,3 +65,14 @@ class BugFilter(filters.FilterSet):
     class Meta:
         model = Bug
         fields = ['username', 'date', 'has_patch', 'module']
+
+
+class UserFilter(filters.FilterSet):
+    position = filters.MultipleChoiceFilter(
+        choices=Profile.USER_TYPES, field_name='profile__position',
+        label='position'
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'position']

@@ -11,7 +11,7 @@ class IsOwnerOrStaffOrReadOnly(permissions.BasePermission):
 
         staff = (Profile.PROGRAMMER, Profile.SUPERVISOR)
         return (obj.author == request.user
-                or request.user.profile.user_type in staff)
+                or request.user.profile.position in staff)
 
 
 class IsSelfOrSupervisorOrReadOnly(permissions.BasePermission):
@@ -21,7 +21,7 @@ class IsSelfOrSupervisorOrReadOnly(permissions.BasePermission):
             return True
 
         return (obj == request.user
-                or request.user.profile.user_type == Profile.SUPERVISOR)
+                or request.user.profile.position == Profile.SUPERVISOR)
 
 
 class IsStaffOrReadOnly(permissions.BasePermission):
@@ -31,7 +31,7 @@ class IsStaffOrReadOnly(permissions.BasePermission):
             return True
 
         staff = (Profile.PROGRAMMER, Profile.SUPERVISOR)
-        return request.user.profile.user_type in staff
+        return request.user.profile.position in staff
 
 
 class IsSupervisorOrReadOnly(permissions.BasePermission):
@@ -40,4 +40,4 @@ class IsSupervisorOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return request.user.profile.user_type in Profile.SUPERVISOR
+        return request.user.profile.position in Profile.SUPERVISOR

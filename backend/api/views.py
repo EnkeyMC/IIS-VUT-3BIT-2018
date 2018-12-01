@@ -30,11 +30,11 @@ class TicketViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_authenticated:
             return serializers.TicketDetailSerializer
 
-        if self.request.user.profile.user_type == models.Profile.USER:
+        if self.request.user.profile.position == models.Profile.USER:
             return serializers.UserTicketDetailSerializer
-        if self.request.user.profile.user_type == models.Profile.PROGRAMMER:
+        if self.request.user.profile.position == models.Profile.PROGRAMMER:
             return serializers.ProgrammerTicketDetailSerializer
-        if self.request.user.profile.user_type == models.Profile.SUPERVISOR:
+        if self.request.user.profile.position == models.Profile.SUPERVISOR:
             return serializers.SupervisorTicketDetailSerializer
 
     def perform_create(self, serializer):
@@ -74,10 +74,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsSelfOrSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
+    filterset_class = bugtracker_filters.UserFilter
     ordering_fields = ('id', 'username', 'first_name', 'last_name')
     ordering = ('id',)
     search_fields = ('username', 'first_name', 'last_name')
-    filterset_fields = ('username',)
 
     def get_serializer_class(self):
         if self.request.query_params.get('username', False):
@@ -86,7 +86,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return serializers.UserListSerializer
         if not self.request.user.is_authenticated:
             return serializers.UserDetailSerializer
-        elif self.request.user.profile.user_type == models.Profile.SUPERVISOR:
+        elif self.request.user.profile.position == models.Profile.SUPERVISOR:
             return serializers.SupervisorUserDetailSerializer
         return serializers.UserDetailSerializer
 
