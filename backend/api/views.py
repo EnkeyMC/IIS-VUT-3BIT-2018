@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 
-from rest_framework import permissions, mixins, viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -16,7 +17,7 @@ from . import filters as bugtracker_filters
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = models.Ticket.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsOwnerOrStaffOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.TicketFilter
@@ -27,15 +28,15 @@ class TicketViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'create':
             return serializers.TicketListSerializer
-        if not self.request.user.is_authenticated:
-            return serializers.TicketDetailSerializer
-
-        if self.request.user.profile.position == models.Profile.USER:
-            return serializers.UserTicketDetailSerializer
-        if self.request.user.profile.position == models.Profile.PROGRAMMER:
-            return serializers.ProgrammerTicketDetailSerializer
-        if self.request.user.profile.position == models.Profile.SUPERVISOR:
-            return serializers.SupervisorTicketDetailSerializer
+        if self.request.user.is_authenticated:
+            if self.request.user.profile.position == models.Profile.PROGRAMMER:
+                if self.get_object().author == self.request.user:
+                    return serializers.ProgrammerTicketOwnerSerializer
+                else:
+                    return serializers.ProgrammerTicketDetailSerializer
+            if self.request.user.profile.position == models.Profile.SUPERVISOR:
+                return serializers.SupervisorTicketDetailSerializer
+        return serializers.UserTicketDetailSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -56,7 +57,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 class LanguageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LanguageSerializer
     queryset = models.Language.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.LanguageFilter
@@ -71,7 +72,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
                   mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.exclude(is_superuser=True)
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsSelfOrSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.UserFilter
@@ -94,7 +95,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
 class ModuleViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ModuleSerializer
     queryset = models.Module.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.ModuleFilter
@@ -106,7 +107,7 @@ class ModuleViewSet(viewsets.ModelViewSet):
 class SeverityViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SeveritySerializer
     queryset = models.Severity.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsSupervisorOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter)
     search_fields = ('name',)
@@ -116,7 +117,7 @@ class SeverityViewSet(viewsets.ModelViewSet):
 
 class BugViewSet(viewsets.ModelViewSet):
     queryset = models.Bug.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsStaffOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.BugFilter
@@ -135,7 +136,7 @@ class BugViewSet(viewsets.ModelViewSet):
 
 class PatchViewset(viewsets.ModelViewSet):
     queryset = models.Patch.objects.all()
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,
                           IsStaffOrReadOnly)
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     filterset_class = bugtracker_filters.PatchFilter

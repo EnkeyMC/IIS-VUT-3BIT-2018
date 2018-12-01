@@ -14,87 +14,67 @@ class StrictModelSerializer(serializers.ModelSerializer):
         if not hasattr(self, 'initial_data'):
             return attrs
 
-        known_fields = set()
-        known_fields.add('csrfmiddlewaretoken')
-        readonly_fields = set()
-        for name, field in self.fields.items():
-            known_fields.add(name)
-            if field.read_only:
-                readonly_fields.add(name)
+        known_fields = set(self.fields.keys())
+        writable_fields = set(f.field_name for f in self._writable_fields)
+        readonly_fields = known_fields - writable_fields
+        request_fields = set(self.initial_data.keys())
 
-            if not hasattr(field, 'fields'):
-                continue
-            for name_nested, field_nested in field.fields.items():
-                known_fields.add(name + '.' + name_nested)
-                if field_nested.read_only:
-                    readonly_fields.add(name + '.' + name_nested)
-
-        request_fields = set()
-        for name, value in self.initial_data.items():
-            request_fields.add(name)
-            if isinstance(value, dict):
-                for key in value.keys():
-                    request_fields.add(name + '.' + key)
-
-        perm_denied_fields = request_fields.intersection(set(readonly_fields))
+        perm_denied_fields = request_fields.intersection(readonly_fields)
         if perm_denied_fields:
             raise PermissionDenied(detail=dict.fromkeys(
                 perm_denied_fields,
                 'You do not have permission to modify this field.'))
 
+        known_fields.add('csrfmiddlewaretoken')
         unknown_fields = request_fields - known_fields
         if unknown_fields:
-            err_msg = 'Unexpected field.'
-            err = {field.split('.')[0]: {}
-                   for field in unknown_fields if '.' in field}
-            for field in unknown_fields:
-                if '.' in field:
-                    name, nested_name = field.split('.')
-                    err[name][nested_name] = [err_msg]
-                else:
-                    err[field] = err_msg
-            raise serializers.ValidationError(err)
+            raise serializers.ValidationError(detail=dict.fromkeys(
+                unknown_fields, 'Unexpected field.'))
 
         return attrs
 
 
 class TicketListSerializer(StrictModelSerializer):
-    attachment = serializers.FileField(write_only=True, allow_null=True)
     author = serializers.ReadOnlyField(source='author.username')
-    description = serializers.CharField(write_only=True)
+    expert = serializers.ReadOnlyField(source='expert.username', default=None)
+    status = serializers.ReadOnlyField()
 
     class Meta:
         model = models.Ticket
-        exclude = ('expert', 'bugs')
+        exclude = ('bugs',)
         read_only_fields = ('status', 'duplicate')
+        extra_kwargs = {
+            'description': {'write_only': True},
+            'attachment': {'write_only': True,
+                           'required': False,
+                           'allow_empty_file': False}
+        }
 
 
-class TicketDetailSerializer(StrictModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
-    expert = serializers.ReadOnlyField(source='expert.username')
+class UserTicketDetailSerializer(TicketListSerializer):
+    attachment = serializers.FileField(
+        required=False, default=None, allow_empty_file=False)
 
+    class Meta:
+        model = models.Ticket
+        fields = '__all__'
+        read_only_fields = ('duplicate', 'bugs')
+
+
+class ProgrammerTicketDetailSerializer(TicketListSerializer):
+    class Meta:
+        model = models.Ticket
+        fields = '__all__'
+        read_only_fields = ('title', 'description', 'attachment')
+
+
+class ProgrammerTicketOwnerSerializer(UserTicketDetailSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
 
 
-class UserTicketDetailSerializer(TicketDetailSerializer):
-    attachment = serializers.FileField(allow_null=True)
-
-    class Meta:
-        model = models.Ticket
-        fields = '__all__'
-        read_only_fields = ('bugs', 'status', 'duplicate')
-
-
-class ProgrammerTicketDetailSerializer(TicketDetailSerializer):
-    class Meta:
-        model = models.Ticket
-        fields = '__all__'
-        read_only_fields = ('title', 'description', 'attachment', 'status')
-
-
-class SupervisorTicketDetailSerializer(TicketDetailSerializer):
+class SupervisorTicketDetailSerializer(UserTicketDetailSerializer):
     expert = serializers.SlugRelatedField(
         slug_field='username', allow_null=True, queryset=User.objects.all()
     )
@@ -102,23 +82,39 @@ class SupervisorTicketDetailSerializer(TicketDetailSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = ('title', 'description', 'attachment', 'status')
 
 
 class UserListSerializer(StrictModelSerializer):
+    position = serializers.ReadOnlyField(source='profile.position')
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name')
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_active',
+            'position'
+        )
 
 
-class ProfileSerializer(StrictModelSerializer):
+class UserDetailSerializer(StrictModelSerializer):
+    email = serializers.EmailField(allow_blank=False)
     languages = serializers.SlugRelatedField(
-        slug_field='name', queryset=models.Language.objects.all(),
-        many=True, required=False)
+        many=True, slug_field='name', source='profile.languages',
+        queryset=models.Language.objects.all())
+    birth_date = serializers.DateField(source='profile.birth_date')
+    last_login = serializers.DateTimeField(read_only=True)
+    date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
     position = serializers.ChoiceField(
-        choices=models.Profile.USER_TYPES,
-        read_only=True, required=False,
-    )
+        choices=models.Profile.USER_TYPES, source='profile.position',
+        read_only=True, required=False)
+
+    class Meta:
+        model = User
+        exclude = ('password', 'groups', 'user_permissions',
+                   'is_staff', 'is_superuser')
 
     def validate_birth_date(self, birth_date):
         minimum_age = 15
@@ -127,31 +123,6 @@ class ProfileSerializer(StrictModelSerializer):
                 'The minimum age requirement for '
                 'this site is {} years old.').format(minimum_age))
         return birth_date
-
-    class Meta:
-        model = models.Profile
-        fields = ('birth_date', 'languages', 'position')
-
-
-class SupervisorProfileSerializer(ProfileSerializer):
-    position = serializers.ChoiceField(
-        choices=models.Profile.USER_TYPES, required=False)
-
-    class Meta:
-        model = models.Profile
-        fields = ('birth_date', 'languages', 'position')
-
-
-class UserDetailSerializer(StrictModelSerializer):
-    profile = ProfileSerializer()
-    last_login = serializers.DateTimeField(read_only=True)
-    date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
-    email = serializers.EmailField(allow_blank=False)
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'last_login', 'date_joined', 'profile')
 
     def update(self, instance, validated_data):
         if validated_data.get('profile', False):
@@ -169,12 +140,13 @@ class UserDetailSerializer(StrictModelSerializer):
 
 
 class SupervisorUserDetailSerializer(UserDetailSerializer):
-    profile = SupervisorProfileSerializer()
+    position = serializers.ChoiceField(
+        choices=models.Profile.USER_TYPES, source='profile.position',
+        required=False)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'last_login', 'date_joined', 'profile', 'is_active')
+        exclude = UserDetailSerializer.Meta.exclude
 
 
 class LanguageSerializer(StrictModelSerializer):
