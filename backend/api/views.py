@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import mixins, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.exceptions import PermissionDenied
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -53,6 +54,13 @@ class TicketViewSet(viewsets.ModelViewSet):
         else:
             serializer.save(status=models.Ticket.STATUS_NEW)
 
+    def perform_destroy(self, instance):
+        if self.request.user.profile.position == models.Profile.SUPERVISOR:
+            instance.delete()
+        else:
+            raise PermissionDenied(
+                detail='You do not have permission to DELETE a ticket.')
+
 
 class LanguageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LanguageSerializer
@@ -90,6 +98,13 @@ class UserViewSet(mixins.RetrieveModelMixin,
         elif self.request.user.profile.position == models.Profile.SUPERVISOR:
             return serializers.SupervisorUserDetailSerializer
         return serializers.UserDetailSerializer
+
+    def perform_destroy(self, instance):
+        if self.request.user.profile.position == models.Profile.SUPERVISOR:
+            instance.delete()
+        else:
+            raise PermissionDenied(
+                detail='You do not have permission to DELETE an account.')
 
 
 class ModuleViewSet(viewsets.ModelViewSet):
