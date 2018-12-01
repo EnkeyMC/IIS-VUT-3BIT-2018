@@ -115,7 +115,7 @@ class UserDetailSerializer(StrictModelSerializer):
         model = User
         exclude = ('password', 'groups', 'user_permissions',
                    'is_staff', 'is_superuser')
-        read_only_fields = ('is_active')
+        read_only_fields = ('is_active',)
 
     def validate_birth_date(self, birth_date):
         minimum_age = 15
