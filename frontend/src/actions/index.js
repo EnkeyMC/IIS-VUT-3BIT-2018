@@ -30,6 +30,26 @@ export function cancelActionRequests(actionType) {
     return { type: CANCEL_ACTION_REQUESTS, actionType: actionType };
 }
 
+function buildQuery(query = null) {
+    if (!query)
+        return '';
+
+    let q = '?';
+    for (const key in query) {
+        if (query.hasOwnProperty(key)) {
+            if (Array.isArray(query[key])) {
+                for (const i in query[key]) {
+                    if (query[key].hasOwnProperty(i))
+                        q += key+'='+encodeURIComponent(query[key][i])+'&';
+                }
+            } else {
+                q += key+'='+encodeURIComponent(query[key])+'&';
+            }
+        }
+    }
+    return q;
+}
+
 export function verifyUser() {
     return {
         type: VERIFY_USER,
@@ -42,15 +62,7 @@ export function verifyUser() {
 }
 
 export function getTickets(query = null) {
-    let url = '/api/tickets';
-    if (query) {
-        url += '?';
-        for (const key in query) {
-            if (query.hasOwnProperty(key)) {
-                url += key+'='+query[key]+'&';
-            }
-        }
-    }
+    let url = '/api/tickets' + buildQuery(query);
     return {
         type: GET_TICKETS,
         payload: {
@@ -258,12 +270,12 @@ export function clearModuleBugs() {
     }
 }
 
-export function getUsers() {
+export function getUsers(query = null) {
     return {
         type: GET_USERS,
         payload: {
             request: {
-                url: '/api/users'
+                url: '/api/users'+buildQuery(query)
             }
         }
     }

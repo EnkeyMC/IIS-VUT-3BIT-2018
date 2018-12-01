@@ -20,7 +20,7 @@ export default class ModuleForm extends React.Component {
 
     componentDidMount() {
         this.props.getLanguages();
-        this.props.getUsers();
+        this.props.getUsers({position: ['programmer', 'supervisor']});
     }
 
     handleSubmitSuccess(id, data) {
@@ -126,7 +126,7 @@ ModuleForm = connect(
     dispatch => {
         return {
             getLanguages: () => dispatch(getLanguages()),
-            getUsers: () => dispatch(getUsers())
+            getUsers: (query) => dispatch(getUsers(query))
         }
     }
 )(withAlert(withRouter(ModuleForm)));
