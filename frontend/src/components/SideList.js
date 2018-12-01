@@ -43,9 +43,9 @@ export function SideListHeader(props) {
         <div className="w-100 p-2 select">
             <div>
                 <h3 className="d-inline-block">{props.title}</h3>
-                {props.filter ? props.filter : null}
                 {props.newBtn ? props.newBtn : null}
             </div>
+            {props.filter ? props.filter : null}
             {props.order ? props.order : null}
         </div>
     );
@@ -92,8 +92,8 @@ export class SideListFilter extends React.Component {
     render() {
         return (
             <UncontrolledDropdown setActiveFromChild className="d-inline">
-                <DropdownToggle tag="a" className="nav-link pointer d-inline pr-0" caret>
-                    {this.getLabel()}
+                <DropdownToggle tag="a" className="nav-link pointer d-inline pl-0" caret>
+                    <span className="text-muted">Filter:</span> {this.getLabel()}
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-link">
                     <FilterContext.Provider value={{handleChange: this.handleChange}}>

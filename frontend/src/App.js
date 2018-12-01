@@ -105,7 +105,8 @@ export default class App extends Component {
                       <Route path="/no-permission" render={props => <ErrorView {...props} error="403"/>}/>
                       <Route path="/bugs" component={BugView}/>
                       <Route path="/modules" component={ModuleView} />
-                      <Route path="/patches" component={PatchesView}/>
+                      <Redirect exact from="/patches" to="/patches/all" />
+                      <Route path="/patches/:status(all|my|in-progress|awaiting-approval|approved|released)" component={PatchesView}/>
                       <RestrictedRoute minRole={ROLE_SUPERVISOR} path="/users" component={UsersView} />
                       <Route render={props => <ErrorView {...props} error="404" />} />
                   </Switch>

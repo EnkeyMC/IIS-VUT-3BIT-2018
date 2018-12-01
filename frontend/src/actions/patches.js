@@ -12,3 +12,12 @@ export function getPatches(query = null) {
         }
     }
 }
+
+export function getFilteredPatches(filter, username) {
+    if (filter === 'all') {
+        return getPatches();
+    } else if (filter === 'my') {
+        return getPatches({username: username});
+    }
+    return getPatches({status: filter});
+}
