@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 
 from rest_framework import mixins, viewsets
@@ -173,7 +175,11 @@ class PatchViewset(viewsets.ModelViewSet):
             for ticket in bug.tickets.all():
                 tickets_before_update.add(ticket.id)
 
-        serializer.save()
+        status = serializer.validated_data.get('status')
+        if status and status == models.Patch.STATUS_RELEASED:
+            serializer.save(date_released=date.today())
+        else:
+            serializer.save()
 
         tickets_after_update = set()
         for bug in self.get_object().bugs.all():
