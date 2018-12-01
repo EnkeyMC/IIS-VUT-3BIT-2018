@@ -10,7 +10,7 @@ import {
     Button
 } from 'reactstrap';
 import {connect} from "react-redux";
-import {getUser} from "../actions";
+import {getUser} from "../actions/users";
 import {Spinner} from "../utils";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";

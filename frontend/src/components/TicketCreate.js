@@ -10,7 +10,7 @@ import {withRouter} from "react-router";
 import {Form, RequiredFieldsNotice} from "./form/Form";
 import {withAlert} from "react-alert";
 import {connect} from "react-redux";
-import {getTickets} from "../actions";
+import {getTickets} from "../actions/tickets";
 import {Input} from "./form/Input";
 import {FileDrop} from "./form/FileDrop";
 

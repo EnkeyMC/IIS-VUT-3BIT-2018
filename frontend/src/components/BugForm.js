@@ -1,6 +1,6 @@
 import React from "react";
 import {Form} from "./form/Form";
-import {getBugs, getModules, getSeverities, getTickets} from "../actions";
+import {getModules} from "../actions/modules";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
@@ -10,6 +10,9 @@ import {Input} from "./form/Input";
 import {Select} from "./form/Select";
 import {Checkbox} from "./form/Checkbox";
 import {Button} from "reactstrap";
+import {getTickets} from "../actions/tickets";
+import {getBugs} from "../actions/bugs";
+import {getSeverities} from "../actions/severities";
 
 export default class BugForm extends React.Component {
     constructor(props) {

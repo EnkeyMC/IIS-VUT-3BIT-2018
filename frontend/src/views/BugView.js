@@ -3,7 +3,7 @@ import BugInfo from "../components/BugInfo";
 import DefaultLayout from "./layouts/DefaultLayout";
 import {Route, Switch, withRouter} from "react-router";
 import {connect} from "react-redux";
-import {getBugs} from "../actions";
+import {getSeverities} from "../actions/severities";
 import Observable from "../utils/Observable";
 import {RestrictedRoute, RestrictedView, ROLE_PROGRAMMER} from "../components/RoleRestriction";
 import BugCreate from "../components/BugCreate";
@@ -12,6 +12,7 @@ import {NavLink} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {UncontrolledTooltip} from "reactstrap";
 import BugEdit from "../components/BugEdit";
+import {getBugs} from "../actions/bugs";
 
 export default class BugView extends React.Component {
     constructor(props) {
@@ -67,7 +68,8 @@ BugView = connect(
     },
     dispatch => {
         return {
-            getBugs: () => dispatch(getBugs())
+            getBugs: () => dispatch(getBugs()),
+            getSeverities: () => dispatch(getSeverities())
         }
     }
 )(withRouter(BugView));

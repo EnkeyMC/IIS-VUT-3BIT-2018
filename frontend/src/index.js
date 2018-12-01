@@ -11,8 +11,9 @@ import {history, zeroBugsApp} from './reducers';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
-import {setToken, setUser} from "./actions";
+import {setToken} from "./actions/global";
 import {createCancellationMiddleware} from './utils/cancellationMiddleware';
+import {setUser} from "./actions/global";
 
 export const client = axios.create();
 

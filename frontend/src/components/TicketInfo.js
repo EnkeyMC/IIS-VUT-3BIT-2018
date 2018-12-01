@@ -5,12 +5,7 @@ import {
 } from "reactstrap";
 import {connect} from "react-redux";
 import {
-    cancelActionRequests,
-    clearTicketBugs, GET_TICKET,
-    GET_TICKET_BUG, getBugs,
-    getTicket,
-    getTicketBug, getTickets, getUsers, setTicket,
-    setTicketError, submitForm
+    submitForm
 } from '../actions';
 import {Link} from "react-router-dom";
 import Error from "./Error";
@@ -26,6 +21,18 @@ import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestriction";
 import {SelectItem} from "./form/SearchSelect";
 import SearchSelect from "./form/SearchSelect";
+import {cancelActionRequests} from "../actions/global";
+import {
+    clearTicketBugs, GET_TICKET,
+    GET_TICKET_BUG,
+    getTicket,
+    getTicketBug,
+    getTickets,
+    setTicket,
+    setTicketError
+} from "../actions/tickets";
+import {getUsers} from "../actions/users";
+import {getBugs} from "../actions/bugs";
 
 
 export default class TicketInfo extends Component {

@@ -10,10 +10,11 @@ import {Form} from "../components/form/Form";
 import {copyMerge} from "../utils";
 import {withRouter} from "react-router";
 import connect from "react-redux/es/connect/connect";
-import {setToken, setUser} from "../actions";
+import {setToken} from "../actions/global";
 import {withAlert} from "react-alert";
 import DefaultLayout from "./layouts/DefaultLayout";
 import {Input} from "../components/form/Input";
+import {setUser} from "../actions/global";
 
 export default class RegisterView extends React.Component {
     render() {

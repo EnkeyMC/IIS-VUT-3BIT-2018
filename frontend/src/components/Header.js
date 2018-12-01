@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 
 import {NavLink as RouterNavLink, Link} from "react-router-dom";
-import {logout} from "../actions";
+import {logout} from "../actions/global";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 

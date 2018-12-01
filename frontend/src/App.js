@@ -39,7 +39,7 @@ import {
 import {Provider} from "react-alert";
 import AlertTemplate from 'react-alert-template-basic';
 import {connect} from "react-redux";
-import {verifyUser} from "./actions";
+import {verifyUser} from "./actions/global";
 import PatchesView from "./views/PatchesView";
 import {RestrictedRoute, ROLE_SUPERVISOR} from "./components/RoleRestriction";
 

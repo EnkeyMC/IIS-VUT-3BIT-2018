@@ -3,7 +3,7 @@ import CardContainer from "./CardContainer";
 import {CardBody, CardHeader, Container} from "reactstrap";
 import {StateRenderer} from "../utils";
 import {connect} from "react-redux";
-import {getBug} from "../actions";
+import {getBug} from "../actions/bugs";
 import BugForm from "./BugForm";
 
 export default class BugEdit extends React.Component {

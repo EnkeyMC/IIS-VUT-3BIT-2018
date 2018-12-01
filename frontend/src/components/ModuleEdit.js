@@ -4,7 +4,7 @@ import {CardBody, CardHeader} from "reactstrap";
 import ModuleForm from "./ModuleForm";
 import {StateRenderer} from "../utils";
 import {connect} from "react-redux";
-import {getModule} from "../actions";
+import {getModule} from "../actions/modules";
 
 export default class ModuleEdit extends React.Component {
     componentDidMount() {

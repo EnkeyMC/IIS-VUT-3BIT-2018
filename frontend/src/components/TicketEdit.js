@@ -3,7 +3,7 @@ import CardContainer from "./CardContainer";
 import {Form, RequiredFieldsNotice} from "./form/Form";
 import {Input} from "./form/Input";
 import {FileDrop} from "./form/FileDrop";
-import {getTicket, getTickets} from "../actions";
+import {getTickets} from "../actions/tickets";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {StateRenderer} from "../utils";
@@ -11,6 +11,7 @@ import {RestrictedRoute, ROLE_PROGRAMMER} from "./RoleRestriction";
 import {Link} from "react-router-dom";
 import {Button, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 import {connect} from "react-redux";
+import {getTicket} from "../actions/tickets";
 
 export default class TicketEdit extends Component {
     componentDidMount() {

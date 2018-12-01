@@ -7,13 +7,7 @@ import {
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import {
-    cancelActionRequests,
-    clearBugTickets, GET_BUG,
-    GET_BUG_TICKET,
-    getBug,
-    getBugTicket,
-    getTickets, setBug,
-    setBugError, submitForm
+    submitForm
 } from "../actions";
 import Observable from "../utils/Observable";
 import {Spinner, StateRenderer} from "../utils";
@@ -25,6 +19,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
 import CloseBtn from "./CloseBtn";
 import pathToRegexp from "path-to-regexp";
+import {cancelActionRequests} from "../actions/global";
+import {getTickets} from "../actions/tickets";
+import {clearBugTickets, GET_BUG, GET_BUG_TICKET, getBug, getBugTicket, setBug, setBugError} from "../actions/bugs";
 
 export default class BugInfo extends Component {
     constructor(props) {

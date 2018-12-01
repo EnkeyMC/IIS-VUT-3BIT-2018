@@ -1,7 +1,7 @@
 import React from "react";
 import {Component} from "react";
 import connect from "react-redux/es/connect/connect";
-import {getUsers} from "../actions";
+import {getUsers} from "../actions/users";
 
 
 export default class Users extends Component {

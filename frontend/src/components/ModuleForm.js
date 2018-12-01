@@ -5,11 +5,12 @@ import {Input} from "./form/Input";
 import SearchSelect, {SelectItem} from "./form/SearchSelect";
 import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {Link} from "react-router-dom";
-import {getLanguages, getUsers} from "../actions";
+import {getLanguages} from "../actions/languages";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {Button, Col, Row} from "reactstrap";
 import {connect} from "react-redux";
+import {getUsers} from "../actions/users";
 
 export default class ModuleForm extends React.Component {
     constructor(props) {

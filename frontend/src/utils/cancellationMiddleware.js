@@ -1,5 +1,7 @@
 import axios from 'axios';
-import {CANCEL_ACTION_REQUESTS, CANCEL_DATA} from "../actions";
+import {CANCEL_ACTION_REQUESTS} from "../actions/global";
+import {REQ} from "../actions/index";
+import {CANCEL_DATA} from "../actions/global";
 
 // Code from this file is based on code from this web page https://gist.github.com/alexeychikk/2078366d8fc975922294ae6210648a0f
 
@@ -15,7 +17,7 @@ export function createCancellationMiddleware() {
         return next => action => {
             const { actionType, payload, type } = action;
 
-            if (type.endsWith('_REQ')) {
+            if (type.endsWith(REQ)) {
                 const actionTypeRequest = type;
                 const source = axios.CancelToken.source();
                 source.onCancelCallback = payload.request.onCancel;

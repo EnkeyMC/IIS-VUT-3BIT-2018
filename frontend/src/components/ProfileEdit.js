@@ -4,12 +4,14 @@ import {Button, CardBody, CardHeader, Col, Row} from "reactstrap";
 import {Form} from "./form/Form";
 import {StateRenderer} from "../utils";
 import connect from "react-redux/es/connect/connect";
-import {getLanguages, getUser, verifyUser} from "../actions";
+import {getLanguages} from "../actions/languages";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {Input} from "./form/Input";
+import {verifyUser} from "../actions/global";
+import {getUser} from "../actions/users";
 
 export default function ProfileEdit() {
     return (

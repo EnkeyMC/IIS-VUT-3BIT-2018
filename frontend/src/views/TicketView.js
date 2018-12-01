@@ -2,7 +2,7 @@ import React from "react";
 import TicketInfo from "../components/TicketInfo";
 import {Route, Switch, withRouter} from "react-router";
 import {connect} from "react-redux";
-import {getTickets} from "../actions";
+import {getTickets} from "../actions/tickets";
 import Observable from "../utils/Observable";
 import DefaultLayout from "./layouts/DefaultLayout";
 import TicketCreate from "../components/TicketCreate";

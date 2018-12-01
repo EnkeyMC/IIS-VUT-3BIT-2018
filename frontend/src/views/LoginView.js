@@ -7,11 +7,12 @@ import {
 import {Link} from "react-router-dom";
 import { Form} from "../components/form/Form";
 import {connect} from "react-redux";
-import {setToken, setUser} from "../actions";
+import {setToken} from "../actions/global";
 import {Redirect, withRouter} from "react-router";
 import {withAlert} from "react-alert";
 import DefaultLayout from "./layouts/DefaultLayout";
 import {Input} from "../components/form/Input";
+import {setUser} from "../actions/global";
 
 export default class LoginView extends React.Component {
     render() {

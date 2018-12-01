@@ -2,7 +2,7 @@ import React from "react";
 import DefaultLayout from "./layouts/DefaultLayout";
 import Users from '../components/Users';
 import connect from "react-redux/es/connect/connect";
-import {getUsers} from "../actions";
+import {getUsers} from "../actions/users";
 import SideList from "../components/SideList";
 import {withRouter} from "react-router";
 

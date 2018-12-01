@@ -7,7 +7,7 @@ import {NavLink} from "react-router-dom";
 import {appendToPath} from "../utils";
 import pathToRegexp from "path-to-regexp";
 import {connect} from "react-redux";
-import {getPatches} from "../actions";
+import {getPatches} from "../actions/patches";
 import {withRouter} from "react-router";
 
 export default class PatchesView extends React.Component {

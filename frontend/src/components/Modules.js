@@ -5,12 +5,14 @@ import { Card, CardTitle, CardText, CardColumns,
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
-import {getModules, getModuleBug, clearModuleBugs, GET_MODULE_BUG, cancelActionRequests} from "../actions";
+import {GET_MODULE_BUG} from "../actions/modules";
 import {Spinner, StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 import Error from "./Error";
 import {Bug} from "./TicketInfo";
 import {RestrictedView, ROLE_SUPERVISOR} from "./RoleRestriction";
+import {cancelActionRequests} from "../actions/global";
+import {clearModuleBugs, getModuleBug, getModules} from "../actions/modules";
 
 export default class Modules extends Component {
     constructor(props) {
