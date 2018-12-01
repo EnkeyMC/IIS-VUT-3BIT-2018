@@ -175,6 +175,7 @@ function reduceGetList(state, action, ACTION) {
         case ACTION+SUCC:
             return copyMerge(state, {
                 loading: false,
+                error: null,
                 data: action.payload.data.results
             });
         case ACTION+FAIL:
@@ -251,7 +252,7 @@ function reduceUserView(state = initialProfileViewState, action) {
         case GET_USER+SUCC:
             if (action.payload.data.count === 0)
                 return copyMerge(state, {user: null, loading: false, error: "User not found"});
-            return copyMerge(state, {user: action.payload.data.results[0], loading: false});
+            return copyMerge(state, {user: action.payload.data.results[0], loading: false, error: null});
         case GET_USER+FAIL:
             return copyMerge(state, {loading: false, error: action.error.message});
         default:

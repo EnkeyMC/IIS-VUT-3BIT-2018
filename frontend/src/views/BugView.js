@@ -11,6 +11,7 @@ import SideList, {NewItemBtn, SideListHeader} from "../components/SideList";
 import {NavLink} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {UncontrolledTooltip} from "reactstrap";
+import BugEdit from "../components/BugEdit";
 
 export default class BugView extends React.Component {
     constructor(props) {
@@ -50,6 +51,7 @@ export default class BugView extends React.Component {
                 </SideList>
                 <Switch>
                     <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/create'} component={BugCreate} />
+                    <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/:id/edit'} component={BugEdit} />
                     <Route path={this.props.match.path+'/:id(\\d+)?'} render={(props) => <BugInfo defaultId={defaultId} {...props} />} />
                 </Switch>
             </DefaultLayout>

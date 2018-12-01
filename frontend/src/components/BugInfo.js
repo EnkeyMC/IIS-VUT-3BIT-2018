@@ -24,6 +24,7 @@ import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {RestrictedView, ROLE_PROGRAMMER} from "./RoleRestriction";
 import CloseBtn from "./CloseBtn";
+import pathToRegexp from "path-to-regexp";
 
 export default class BugInfo extends Component {
     constructor(props) {
@@ -142,6 +143,11 @@ export default class BugInfo extends Component {
         ++idx;
         nextBugId = this.props.bugs.data[idx] ? this.props.bugs.data[idx].id : undefined;
 
+        const toPath = pathToRegexp.compile(this.props.match.path);
+        const path = toPath({
+            id: this.getBugId()
+        });
+
         return (
             <div className="ticket-info content-height">
                 <Container>
@@ -167,6 +173,13 @@ export default class BugInfo extends Component {
                                 <Row>
                                     <Col>
                                         <h1>#{bug.id} - {bug.title}</h1>
+                                    </Col>
+                                </Row>
+                                <Row className="pt-3">
+                                    <Col>
+                                        <RestrictedView minRole={ROLE_PROGRAMMER}>
+                                            <Link to={path+'/edit'} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>
+                                        </RestrictedView>
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
