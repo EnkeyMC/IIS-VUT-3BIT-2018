@@ -4,7 +4,7 @@ import {
     GET_BUGS,
     GET_LANGUAGES, GET_MODULE,
     GET_MODULE_BUG,
-    GET_MODULES,
+    GET_MODULES, GET_PATCHES,
     GET_SEVERITIES,
     GET_TICKET,
     GET_TICKET_BUG,
@@ -116,6 +116,12 @@ const initialModuleState = {
     data: null
 };
 
+const initialPatchesState = {
+    loading: false,
+    error: null,
+    data: null
+};
+
 export const zeroBugsApp = (state, action) => {
     return rootReducer(state, action);
 };
@@ -133,6 +139,7 @@ const rootReducer = combineReducers({
     modules: reduceModules,
     users: reduceUsersList,
     module: reduceModule,
+    patches: reducePatches
 });
 
 function reduceGlobal(state = initialGlobalState, action) {
@@ -335,4 +342,8 @@ function reduceModule(state = initialModuleState, action) {
         default:
             return state;
     }
+}
+
+function reducePatches(state = initialPatchesState, action) {
+    return reduceGetList(state, action, GET_PATCHES);
 }

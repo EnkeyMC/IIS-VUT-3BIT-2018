@@ -22,6 +22,7 @@ export const GET_MODULES = 'GET_MODULES_REQ';
 export const GET_MODULE_BUG = 'GET_MODULE_BUG_REQ';
 export const GET_MODULE = 'GET_MODULE_REQ';
 export const GET_USERS = 'GET_USERS_REQ';
+export const GET_PATCHES = 'GET_PATCHES_REQ';
 
 export const CANCEL_ACTION_REQUESTS = 'CANCEL_ACTION_REQUEST';
 export const CANCEL_DATA = {cancelled: true};
@@ -287,6 +288,17 @@ export function getModule(id) {
         payload: {
             request: {
                 url: '/api/modules/'+id
+            }
+        }
+    }
+}
+
+export function getPatches(query = null) {
+    return {
+        type: GET_PATCHES,
+        payload: {
+            request: {
+                url: '/api/patches'+buildQuery(query)
             }
         }
     }
