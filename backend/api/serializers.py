@@ -159,7 +159,13 @@ class LanguageSerializer(StrictModelSerializer):
 
 class ModuleSerializer(StrictModelSerializer):
     expert = serializers.SlugRelatedField(
-        slug_field='username', allow_null=True, queryset=User.objects.all())
+        slug_field='username',
+        queryset=User.objects.filter(is_superuser=False).filter(
+            profile__position__in=[
+                models.Profile.SUPERVISOR, models.Profile.PROGRAMMER
+            ]
+        )
+    )
     languages = serializers.SlugRelatedField(
         slug_field='name', many=True, queryset=models.Language.objects.all())
     bugs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)

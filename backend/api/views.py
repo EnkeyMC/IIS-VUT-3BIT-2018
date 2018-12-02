@@ -182,22 +182,22 @@ class PatchViewset(viewsets.ModelViewSet):
                 if position == models.Profile.SUPERVISOR:
                     serializer.save(date_released=datetime.now())
                 else:
-                    raise PermissionDenied(detail=
-                        'Only supervisor can release a patch.')
+                    raise PermissionDenied(
+                        detail='Only supervisor can release a patch.')
             elif status == models.Patch.STATUS_APPROVED:
                 for bug in self.get_object().bugs.all():
-                    if bug.module.expert == self.request.user:
+                    if bug.module and bug.module.expert == self.request.user:
                         serializer.save()
                         break
                 else:
-                    raise PermissionDenied(detail=
-                        'You do not have permission to approve this patch.')
+                    raise PermissionDenied(
+                        detail='You do not have permission to approve this patch.')
             elif status == models.Patch.STATUS_AWAIT:
                 if self.get_object().author == self.request.user:
                     serializer.save()
                 else:
-                    raise PermissionDenied(detail=
-                        'Only author can perform this action.')
+                    raise PermissionDenied(
+                        detail='Only author can perform this action.')
         else:
             serializer.save()
 
