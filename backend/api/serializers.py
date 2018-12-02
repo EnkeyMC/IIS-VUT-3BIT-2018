@@ -184,6 +184,7 @@ class BugPOSTSerializer(StrictModelSerializer):
     class Meta:
         model = models.Bug
         fields = '__all__'
+        extra_kwargs = {'module': {'allow_null': False}}
 
 
 class ModuleInsideBugSerializer(StrictModelSerializer):
@@ -209,6 +210,12 @@ class PatchPOSTSerializer(StrictModelSerializer):
     bugs = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Bug.objects.all())
     date_released = serializers.DateTimeField(read_only=True)
+
+    def validate_bugs(self, bugs):
+        if not bugs:
+            raise serializers.ValidationError(
+                detail='Select bugs associated with this patch.')
+        return bugs
 
     class Meta:
         model = models.Patch
