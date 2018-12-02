@@ -7,7 +7,7 @@ import {getTickets} from "../actions/tickets";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {StateRenderer} from "../utils";
-import {RestrictedRoute, ROLE_PROGRAMMER} from "./RoleRestriction";
+import {RestrictedRoute, RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestriction";
 import {Link} from "react-router-dom";
 import {Button, CardBody, CardHeader, Col, Container, Row} from "reactstrap";
 import {connect} from "react-redux";
@@ -94,6 +94,9 @@ class TicketEditForm extends React.Component {
                           activeClassName="dropzone-success"
                           rejectClassName="dropzone-reject"
                 />
+                <RestrictedView minRole={ROLE_SUPERVISOR}>
+                    <Input type="number" label="Reward (€)" name="reward" id="reward" defaultValue={ticket.reward} />
+                </RestrictedView>
                 <Row form>
                     <Col md="4">
                         <Button

@@ -9,7 +9,7 @@ import {
 } from '../actions';
 import {Link} from "react-router-dom";
 import Error from "./Error";
-import {EntityAction, Spinner, StateRenderer} from "../utils";
+import {ConditionView, EntityAction, Spinner, StateRenderer} from "../utils";
 import Observable from "../utils/Observable";
 import pathToRegexp from 'path-to-regexp';
 import {withRouter} from "react-router";
@@ -213,7 +213,10 @@ export default class TicketInfo extends Component {
                             <Container>
                                 <Row>
                                     <Col>
-                                        <h1>#{ticket.id} - {ticket.title}</h1>
+                                        <h1>
+                                            #{ticket.id} - {ticket.title}
+                                        </h1>
+                                        <ConditionView if={ticket.reward !== "0.00"}><Badge color="light">Reward: &euro;{ticket.reward}</Badge></ConditionView>
                                     </Col>
                                 </Row>
                                 <Row className="pt-3">

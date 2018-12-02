@@ -10,8 +10,9 @@ import {RestrictedRoute, RestrictedView, ROLE_USER} from "../components/RoleRest
 import SideList, {NewItemBtn, SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
 import pathToRegexp from "path-to-regexp";
 import {NavLink} from "react-router-dom";
-import {appendToPath} from "../utils";
+import {appendToPath, ConditionView} from "../utils";
 import TicketEdit from "../components/TicketEdit";
+import {Badge} from "reactstrap";
 
 export default class TicketView extends React.Component {
     constructor(props) {
@@ -115,7 +116,10 @@ const Ticket = withRouter((props) => {
     return (
         <NavLink to={appendToPath(toPath({status: props.match.params.status}), props.item.id)} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.item.status}>
             <div className="d-flex w-100 justify-content-between">
-                <h6 className="pb-1 ticket-list-title">#{props.item.id} - {props.item.title}</h6>
+                <h6 className="pb-1 ticket-list-title">
+                    <ConditionView if={props.item.reward !== "0.00"}><Badge color="light" className="mr-2" >&euro;{props.item.reward}</Badge></ConditionView>
+                    #{props.item.id} - {props.item.title}
+                </h6>
             </div>
             <small className="float-left">{props.item.author}</small>
             <small className="float-right">{props.item.created}</small>
