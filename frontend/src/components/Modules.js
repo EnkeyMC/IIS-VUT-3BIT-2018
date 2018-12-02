@@ -10,9 +10,10 @@ import {Spinner, StateRenderer} from "../utils";
 import {withRouter} from "react-router";
 import Error from "./Error";
 import {Bug} from "./TicketInfo";
-import {RestrictedView, ROLE_SUPERVISOR} from "./RoleRestriction";
+import {RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestriction";
 import {cancelActionRequests} from "../actions/global";
 import {clearModuleBugs, getModuleBug, getModules} from "../actions/modules";
+import CloseBtn from "./CloseBtn";
 
 export default class Modules extends Component {
     constructor(props) {
@@ -110,6 +111,9 @@ const ModuleCard = withRouter((props) => {
     return (
         <Card>
             <CardBody>
+                <RestrictedView minRole={ROLE_PROGRAMMER}>
+                    {props.noRemove ? null : <CloseBtn onClick={(e) => {props.removeBug(props.bug.id); e.preventDefault()}} />}
+                </RestrictedView>
                 <CardTitle>
                     {props.module.name}
                     <RestrictedView minRole={ROLE_SUPERVISOR}>
