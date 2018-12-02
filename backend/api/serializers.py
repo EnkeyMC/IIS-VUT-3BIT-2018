@@ -42,7 +42,7 @@ class TicketListSerializer(StrictModelSerializer):
     class Meta:
         model = models.Ticket
         exclude = ('bugs',)
-        read_only_fields = ('status', 'duplicate')
+        read_only_fields = ('status', 'duplicate', 'reward')
         extra_kwargs = {
             'description': {'write_only': True},
             'attachment': {'write_only': True,
@@ -58,20 +58,21 @@ class UserTicketDetailSerializer(TicketListSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = ('duplicate', 'bugs')
+        read_only_fields = TicketListSerializer.Meta.read_only_fields
 
 
 class ProgrammerTicketDetailSerializer(TicketListSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = ('title', 'description', 'attachment')
+        read_only_fields = ('title', 'description', 'attachment', 'reward')
 
 
 class ProgrammerTicketOwnerSerializer(UserTicketDetailSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
+        read_only_fields = ('reward',)
 
 
 class SupervisorTicketDetailSerializer(UserTicketDetailSerializer):
