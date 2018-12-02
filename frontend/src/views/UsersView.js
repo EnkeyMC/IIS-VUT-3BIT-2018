@@ -89,7 +89,7 @@ const User = withRouter((props) => {
                     {props.item.username}
                     {
                         props.item.is_active === false ?
-                        <small className="text-muted d-inline"> disabled</small>
+                        <small className="text-muted d-inline"> inactive</small>
                         :
                         null
                     }
