@@ -5,6 +5,7 @@ import {StateRenderer} from "../utils";
 import {connect} from "react-redux";
 import {getPatch} from "../actions/patches";
 import PatchForm from "./PatchForm";
+import {RestrictedRoute, ROLE_SUPERVISOR} from "./RoleRestriction";
 
 export default class PatchEdit extends React.Component {
     componentDidMount() {
@@ -25,7 +26,9 @@ export default class PatchEdit extends React.Component {
                                     Edit patch
                                 </CardHeader>
                                 <CardBody>
-                                    <PatchForm patch={props.patch} />
+                                    <RestrictedRoute minRole={ROLE_SUPERVISOR} reqUser={props.patch.author}>
+                                        <PatchForm patch={props.patch} />
+                                    </RestrictedRoute>
                                 </CardBody>
                             </>)}}
                         </StateRenderer>
@@ -39,9 +42,9 @@ export default class PatchEdit extends React.Component {
 PatchEdit = connect(
     state => {
         return {
-            patch: state.bugView.bugInfo.data,
-            loading: state.bugView.bugInfo.loading,
-            error: state.bugView.bugInfo.error
+            patch: state.patch.data,
+            loading: state.patch.loading,
+            error: state.patch.error
         }
     },
     dispatch => {

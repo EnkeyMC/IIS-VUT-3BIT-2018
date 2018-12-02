@@ -6,12 +6,15 @@ import {
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Error from "./Error";
-import {Spinner} from "../utils";
+import {ConditionView, EntityAction, Spinner} from "../utils";
 import {withRouter} from "react-router";
 import {GET_PATCH, getPatch, setPatchError} from "../actions/patches";
 import Observable from "../utils/Observable";
 import {cancelActionRequests} from "../actions/global";
 import PatchView from "../views/PatchesView";
+import {RestrictedView, ROLE_SUPERVISOR} from "./RoleRestriction";
+import * as pathToRegexp from "path-to-regexp";
+import {submitForm} from "../actions";
 
 
 export default class PatchInfo extends Component {
@@ -26,6 +29,8 @@ export default class PatchInfo extends Component {
                 this.props.setPatchError("Nothing to show");
             }
         });
+
+        this.requestApproval = this.requestApproval.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +43,10 @@ export default class PatchInfo extends Component {
 
     getPatchId() {
         return this.props.match.params.id ? this.props.match.params.id : this.props.defaultId;
+    }
+
+    requestApproval() {
+
     }
 
     render() {
@@ -63,11 +72,13 @@ export default class PatchInfo extends Component {
         if (patch.data === null)
             return null;
 
-        // const toPath = pathToRegexp.compile(this.props.match.path);
-        // const path = toPath({
-        //     status: this.props.match.params.status,
-        //     id: this.getFilteredPatches()
-        // });
+        const toPath = pathToRegexp.compile(this.props.match.path);
+        const path = toPath({
+            status: this.props.match.params.status,
+            id: this.getPatchId()
+        });
+
+        const user = this.props.loggedInUser;
 
         return (
             <div className="info content-height">
@@ -82,9 +93,20 @@ export default class PatchInfo extends Component {
                                 </Row>
                                 <Row className="pt-3">
                                     <Col>
-                                        {/*<RestrictedView reqUser={patch.author} minRole={ROLE_PROGRAMMER}>*/}
-                                            {/*<Link to={path+'/edit'} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>*/}
-                                        {/*</RestrictedView>*/}
+                                        <ConditionView if={user && user.username === patch.data.author}>
+                                            <EntityAction linkTo={path+'/edit'} icon="edit">Edit</EntityAction>
+                                        </ConditionView>
+                                        <ConditionView if={user && user.username === patch.data.author}>
+                                            <EntityAction onClick={this.requestApproval} icon="concierge-bell">Request approval</EntityAction>
+                                        </ConditionView>
+                                        <ConditionView if={user && patch.data.bugs.find(bug => bug.module ? bug.module.expert === user.username : false)}>
+                                            <EntityAction className="text-success" icon="thumbs-up">Approve</EntityAction>
+                                        </ConditionView>
+                                        <RestrictedView minRole={ROLE_SUPERVISOR}>
+                                            <ConditionView if={patch.data.status === 'approved'}>
+                                                <EntityAction icon="hand-point-right">Release</EntityAction>
+                                            </ConditionView>
+                                        </RestrictedView>
                                     </Col>
                                 </Row>
                                 <Row className="pt-3 border-bottom">
@@ -113,13 +135,15 @@ PatchInfo = connect(
     state => {
         return {
             patch: state.patch,
+            loggedInUser: state.global.user
         }
     },
     dispatch => {
         return {
             getPatch: (id) => dispatch(getPatch(id)),
             setPatchError: msg => dispatch(setPatchError(msg)),
-            cancelActions: action => dispatch(cancelActionRequests(action))
+            cancelActions: action => dispatch(cancelActionRequests(action)),
+            submitForm: (id, url, data, edit) => dispatch(submitForm(id, url, data, edit))
         }
     }
 )(withRouter(PatchInfo));
@@ -162,12 +186,7 @@ const Detail = withRouter((props) => {
                             Released:
                         </span>
                         &nbsp;
-                        {
-                            props.patch.date_released ?
-                                props.patch.date_released
-                                :
-                                "Not released yet"
-                        }
+                        <ConditionView render={props.patch.date_released} else="Not released yet" />
                     </Row>
                 </Col>
             </Row>
@@ -195,7 +214,7 @@ const BugCard = withRouter((props) => {
                 <div>
                     <span className="mr-2 text-muted">Module:</span>
                     &nbsp;
-                    {props.bug.module.name}
+                    {props.bug.module ? props.bug.module.name : null}
                 </div>
             </CardBody>
         </Card>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Error from "../components/Error";
+import {Link} from "react-router-dom";
 
 
 export function copyMerge(obj1, obj2 = null) {
@@ -75,4 +76,29 @@ export function appendToPath(path, append) {
     if (!path.endsWith('/'))
         path += '/';
     return path + append;
+}
+
+export function ConditionView(props) {
+    if (props.if)
+        return props.children;
+    if (props.render)
+        return props.render;
+    if (props.else)
+        return props.else;
+    return null;
+}
+
+export function EntityAction(props) {
+    const {className, children, icon, linkTo, ...rest} = props;
+    const Tag = linkTo ? Link : "span";
+    return (
+        <Tag to={linkTo} {...rest} className={"btn btn-link p-0 mr-3 " + className}>
+            {icon ?
+                <><FontAwesomeIcon icon={icon}/>&nbsp;</>
+                :
+                null
+            }
+            {children}
+        </Tag>
+    )
 }

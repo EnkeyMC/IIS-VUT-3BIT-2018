@@ -12,6 +12,7 @@ import {Route, Switch, withRouter} from "react-router";
 import Observable from "../utils/Observable";
 import PatchCreate from "../components/PatchCreate";
 import PatchInfo from "../components/PatchInfo";
+import PatchEdit from "../components/PatchEdit";
 
 const PATCH_STATUSES = [
     "in progress",
@@ -80,6 +81,7 @@ export default class PatchesView extends React.Component {
                 </SideList>
                 <Switch>
                     <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/create'} component={PatchCreate} />
+                    <Route path={this.props.match.path+'/:id(\\d+)/edit'} component={PatchEdit} />
                     <Route path={this.props.match.path+'/:id(\\d+)?'} render={props => <PatchInfo {...props} defaultId={defaultId} />} />
                 </Switch>
             </DefaultLayout>

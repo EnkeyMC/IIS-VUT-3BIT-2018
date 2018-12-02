@@ -3,7 +3,7 @@ import {Form, RequiredFieldsNotice} from "./form/Form";
 import {withAlert} from "react-alert";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
-import {StateRenderer} from "../utils";
+import {copyMerge, StateRenderer} from "../utils";
 import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {Input} from "./form/Input";
 import {Button} from "reactstrap";
@@ -24,9 +24,9 @@ export default class PatchForm extends React.Component {
     handleSubmitSuccess(id, data) {
         let newPath;
         const location = this.props.location;
-        if (this.props.bug) {
+        if (this.props.patch) {
             this.props.alert.success("Changes successfully saved.");
-            newPath = location.pathname.replace('/edit', '') + location.search;
+            newPath = location.pathname.replace('/edit', '/') + location.search;
         } else {
             this.props.alert.success("Patch successfully created.");
             newPath = location.pathname.replace('/create', '/'+data.id) + location.search;
@@ -38,7 +38,7 @@ export default class PatchForm extends React.Component {
     }
 
     render() {
-        let patch = this.props.patch;
+        let patch = this.props.patch ? copyMerge(this.props.patch) : null;
         let formProps = {
             edit: false,
             url: "/api/patches/",
@@ -54,10 +54,9 @@ export default class PatchForm extends React.Component {
         } else {
             formProps = {
                 edit: true,
-                url: "/api/bugs/"+patch.id+"/",
+                url: "/api/patches/"+patch.id+"/",
                 id: "edit-patch"
             };
-
             patch.bugs = patch.bugs.map(bug => bug.id);
         }
 

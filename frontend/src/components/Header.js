@@ -47,12 +47,12 @@ export default class Header extends Component {
                     <NavbarToggler onClick={this.handleToggleNavbar} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
-                            <NavItem>
-                                <SearchCategory/>
-                            </NavItem>
-                            <NavItem>
-                                <SearchBar />
-                            </NavItem>
+                            {/*<NavItem>*/}
+                                {/*<SearchCategory/>*/}
+                            {/*</NavItem>*/}
+                            {/*<NavItem>*/}
+                                {/*<SearchBar />*/}
+                            {/*</NavItem>*/}
                             <NavItem>
                                 {
                                     this.props.user ?

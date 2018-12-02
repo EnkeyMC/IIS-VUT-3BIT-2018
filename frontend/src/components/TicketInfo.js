@@ -9,7 +9,7 @@ import {
 } from '../actions';
 import {Link} from "react-router-dom";
 import Error from "./Error";
-import {Spinner, StateRenderer} from "../utils";
+import {EntityAction, Spinner, StateRenderer} from "../utils";
 import Observable from "../utils/Observable";
 import pathToRegexp from 'path-to-regexp';
 import {withRouter} from "react-router";
@@ -219,10 +219,10 @@ export default class TicketInfo extends Component {
                                 <Row className="pt-3">
                                     <Col>
                                         <RestrictedView reqUser={ticket.author} minRole={ROLE_PROGRAMMER}>
-                                            <Link to={path+'/edit'} className="mr-3"><FontAwesomeIcon icon="edit"/>&nbsp;Edit</Link>
+                                            <EntityAction linkTo={path+'/edit'} icon="edit">Edit</EntityAction>
                                         </RestrictedView>
                                         <RestrictedView minRole={ROLE_PROGRAMMER}>
-                                            <span className="btn btn-link mr-3" onClick={this.toggleDuplicateModal}><FontAwesomeIcon icon="marker"/>&nbsp;Mark as duplicate</span>
+                                            <EntityAction onClick={this.toggleDuplicateModal} icon="marker">Mark as duplicate</EntityAction>
                                         </RestrictedView>
                                     </Col>
                                 </Row>

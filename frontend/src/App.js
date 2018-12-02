@@ -31,7 +31,10 @@ import {
     faUsers,
     faSignInAlt,
     faUserTie,
-    faMarker
+    faMarker,
+    faConciergeBell,
+    faThumbsUp,
+    faHandPointRight
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faSquare,
@@ -49,7 +52,7 @@ library.add(
     faBirthdayCake, faLaptopCode, faCalendarAlt, faClock, faSpinner,
     faEdit, faBug, faClone, faPlus, faExclamationCircle, faSearch,
     faCheckSquare, faSquare, faBandAid, faUsers, faSignInAlt, faUserTie,
-    faMarker
+    faMarker, faConciergeBell, faThumbsUp, faHandPointRight
 );
 
 const alertConfig = {
