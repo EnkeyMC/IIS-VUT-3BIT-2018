@@ -107,7 +107,7 @@ export default class BugInfo extends Component {
 
         if (this.props.loading) {
             return (
-                <div className="ticket-info content-height flex-mid">
+                <div className="info content-height flex-mid">
                     <Spinner size="5x" />
                 </div>
             );
@@ -115,7 +115,7 @@ export default class BugInfo extends Component {
 
         if (this.props.error) {
             return (
-                <div className="ticket-info content-height flex-mid">
+                <div className="info content-height flex-mid">
                     <Error>
                         {this.props.error}
                     </Error>
@@ -147,7 +147,7 @@ export default class BugInfo extends Component {
         const search = this.props.location.search;
 
         return (
-            <div className="ticket-info content-height">
+            <div className="info content-height">
                 <Container>
                     <Row className="mb-3">
                         <Col className="pt-1 text-right">

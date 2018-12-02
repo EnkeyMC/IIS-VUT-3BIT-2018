@@ -13,7 +13,7 @@ export default class BugEdit extends React.Component {
 
     render() {
         return (
-            <div className="ticket-info content-height">
+            <div className="info content-height">
                 <Container>
                     <CardContainer>
                         <StateRenderer

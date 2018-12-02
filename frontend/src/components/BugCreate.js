@@ -6,7 +6,7 @@ import BugForm from "./BugForm";
 
 export default function BugCreate() {
     return (
-        <div className="ticket-info content-height">
+        <div className="info content-height">
             <Container className="mb-5">
                 <CardContainer>
                     <CardHeader className="h4">

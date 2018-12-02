@@ -6,7 +6,7 @@ import PatchForm from "./PatchForm";
 
 export default function PatchCreate() {
     return (
-        <div className="ticket-info content-height">
+        <div className="info content-height">
             <Container className="mb-5">
                 <CardContainer>
                     <CardHeader className="h4">

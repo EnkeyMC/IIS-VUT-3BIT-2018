@@ -16,7 +16,7 @@ import {FileDrop} from "./form/FileDrop";
 
 export default function TicketCreate() {
     return (
-        <div className="ticket-info content-height">
+        <div className="info content-height">
             <Container>
                 <CardContainer>
                     <CardHeader className="h4">
