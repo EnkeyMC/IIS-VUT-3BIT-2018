@@ -8,7 +8,7 @@ import {appendToPath} from "../utils";
 import pathToRegexp from "path-to-regexp";
 import {connect} from "react-redux";
 import {getFilteredPatches} from "../actions/patches";
-import {Switch, withRouter} from "react-router";
+import {Route, Switch, withRouter} from "react-router";
 import Observable from "../utils/Observable";
 import PatchCreate from "../components/PatchCreate";
 import PatchInfo from "../components/PatchInfo";
@@ -46,6 +46,11 @@ export default class PatchesView extends React.Component {
     }
 
     render () {
+        let defaultId = null;
+        const data = this.props.patches.data;
+        if (data && data.length > 0)
+            defaultId = data[0].id;
+
         const status = this.props.match.params.status;
         const toPath = pathToRegexp.compile(this.props.match.path);
         const path = toPath({status: status});
@@ -75,8 +80,8 @@ export default class PatchesView extends React.Component {
                 </SideList>
                 <Switch>
                     <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/create'} component={PatchCreate} />
+                    <Route path={this.props.match.path+'/:id(\\d+)?'} render={props => <PatchInfo {...props} defaultId={defaultId} />} />
                 </Switch>
-                <PatchInfo/>
             </DefaultLayout>
         )
     }

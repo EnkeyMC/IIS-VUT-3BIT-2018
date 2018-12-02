@@ -1,49 +1,48 @@
 import React, {Component} from 'react';
 import {
     Col, Container, Row, CardColumns,
-    Card, CardTitle, CardText, CardBody
+    Card, CardTitle, CardText, CardBody, Badge
 } from "reactstrap";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import Error from "./Error";
-import {Spinner, StateRenderer} from "../utils";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Numbering} from "./Numbering";
-import pathToRegexp from 'path-to-regexp';
-import {RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestriction";
+import {Spinner} from "../utils";
 import {withRouter} from "react-router";
-import {getFilteredPatches} from "../actions/patches";
+import {GET_PATCH, getPatch, setPatchError} from "../actions/patches";
 import Observable from "../utils/Observable";
+import {cancelActionRequests} from "../actions/global";
+import PatchView from "../views/PatchesView";
 
 
 export default class PatchInfo extends Component {
     constructor(props) {
         super(props);
 
-        this.statusObservable = new Observable(this.props.match.params.status, val => {
-            this.props.getFilteredPatches(PatchInfo.statusDecode(val));
+        this.idObservable = new Observable(this.getPatchId(), val => {
+            if (val)
+                this.props.getPatch(val);
+            else {
+                this.props.cancelActions(GET_PATCH);
+                this.props.setPatchError("Nothing to show");
+            }
         });
     }
 
     componentDidMount() {
-        this.statusObservable.triggerOnChanged();
+        this.idObservable.triggerOnChanged();
     }
 
     componentDidUpdate() {
-        this.statusObservable.update(this.props.match.params.status);
+        this.idObservable.update(this.getPatchId());
     }
 
-    static statusEncode(status) {
-        return status.replace(' ', '-');
-    }
-
-    static statusDecode(status) {
-        return status.replace('-', ' ');
+    getPatchId() {
+        return this.props.match.params.id ? this.props.match.params.id : this.props.defaultId;
     }
 
     render() {
-        const patch = this.props.patches;
-        if (this.props.loading) {
+        const patch = this.props.patch;
+        if (patch.loading) {
             return (
                 <div className="info content-height flex-mid">
                     <Spinner size="5x" />
@@ -51,7 +50,7 @@ export default class PatchInfo extends Component {
             );
         }
 
-        if (this.props.error) {
+        if (patch.error) {
             return (
                 <div className="info content-height flex-mid">
                     <Error>
@@ -61,16 +60,8 @@ export default class PatchInfo extends Component {
             );
         }
 
-        // let prevTicketId, nextTicketId, idx, ticketIdx;
-        // for (idx = 0; idx < this.props.patches.data.length; idx++) {
-        //     if (String(this.props.patches.data[idx].id) === String(this.getTicketId())) {
-        //         ticketIdx = idx+1;
-        //         break;
-        //     }
-        //     prevTicketId = this.props.patches.data[idx].id;
-        // }
-        // ++idx;
-        // nextTicketId = this.props.patches.data[idx] ? this.props.patches.data[idx].id : undefined;
+        if (patch.data === null)
+            return null;
 
         // const toPath = pathToRegexp.compile(this.props.match.path);
         // const path = toPath({
@@ -81,28 +72,12 @@ export default class PatchInfo extends Component {
         return (
             <div className="info content-height">
                 <Container>
-                    <Row className="mb-3">
-                        <Col className="pt-1 text-right">
-                            <Container>
-                                <Row>
-                                    <Col>
-                                        {/*<Numbering*/}
-                                            {/*prevId={prevTicketId}*/}
-                                            {/*nextId={nextTicketId}*/}
-                                            {/*thisIdx={ticketIdx}*/}
-                                            {/*size={this.props.patches.data.length}*/}
-                                        {/*/>*/}
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </Col>
-                    </Row>
-                    <Row>
+                    <Row className="mt-5">
                         <Col lg="12" xs="12" md="12">
                             <Container>
                                 <Row>
                                     <Col>
-                                        <h1>#id - patch name</h1>
+                                        <h1>#{patch.data.id} - {patch.data.name}</h1>
                                     </Col>
                                 </Row>
                                 <Row className="pt-3">
@@ -114,18 +89,16 @@ export default class PatchInfo extends Component {
                                 </Row>
                                 <Row className="pt-3 border-bottom">
                                     <Col className="mt-md-4 pb-3">
-                                        <Detail />
+                                        <Detail patch={patch.data} />
                                     </Col>
                                 </Row>
                             </Container>
                         </Col>
                         <Col lg="12" xs="12" md="12">
                             <Container className="mt-5">
-                                <h4 className="mb-3">Fixing bugs:</h4>
+                                <h4 className="mb-3">Fixes bugs:</h4>
                                 <CardColumns>
-                                    <BugCard/>
-                                    <BugCard/>
-                                    <BugCard/>
+                                    {patch.data.bugs.map(bug => <BugCard key={bug.id} bug={bug} />)}
                                 </CardColumns>
                             </Container>
                         </Col>
@@ -139,13 +112,14 @@ export default class PatchInfo extends Component {
 PatchInfo = connect(
     state => {
         return {
-            patches: state.patches,
-            username: state.global.user ? state.global.user.username : null
+            patch: state.patch,
         }
     },
     dispatch => {
         return {
-            getFilteredPatches: (filter) => dispatch(getFilteredPatches(filter))
+            getPatch: (id) => dispatch(getPatch(id)),
+            setPatchError: msg => dispatch(setPatchError(msg)),
+            cancelActions: action => dispatch(cancelActionRequests(action))
         }
     }
 )(withRouter(PatchInfo));
@@ -163,14 +137,16 @@ const Detail = withRouter((props) => {
                             Author:
                         </span>
                         &nbsp;
-                        <Link to="/">author</Link>
+                        <Link to={'/profile/view/'+props.patch.author}>{props.patch.author}</Link>
                     </Row>
                     <Row className="no-margin">
                         <span className="text-muted">
                             Status:
                         </span>
                         &nbsp;
-                        status
+                        <Badge color="light" className={"state-bgr-"+PatchView.statusEncode(props.patch.status)} >
+                            {props.patch.status}
+                        </Badge>
                     </Row>
                 </Col>
                 <Col md="6" xs="12">
@@ -179,14 +155,19 @@ const Detail = withRouter((props) => {
                             Created:
                         </span>
                         &nbsp;
-                        datum
+                        {props.patch.date_created}
                     </Row>
                     <Row className="no-margin">
                         <span className="text-muted">
                             Released:
                         </span>
                         &nbsp;
-                        datum
+                        {
+                            props.patch.date_released ?
+                                props.patch.date_released
+                                :
+                                "Not released yet"
+                        }
                     </Row>
                 </Col>
             </Row>
@@ -196,25 +177,25 @@ const Detail = withRouter((props) => {
 
 const BugCard = withRouter((props) => {
     return (
-        <Card>
+        <Card tag={Link} to={'/bugs/'+props.bug.id} className="mb-2 bugs position-relative"
+             style={props.bug.severity ?
+                 {borderLeft: '5px solid ' + props.bug.severity.color}
+                 :
+                 null
+             }
+        >
             <CardBody>
                 <CardTitle>
-                    Title
-                    {/*<RestrictedView minRole={ROLE_SUPERVISOR}>*/}
-                        {/*<Link to={props.match.path+'/edit/'+props.module.id}><FontAwesomeIcon icon="edit" className="float-right"/></Link>*/}
-                    {/*</RestrictedView>*/}
+                    #{props.bug.id} - {props.bug.title}
                 </CardTitle>
-                <CardText className="border-bottom pb-3 text-justify">
-                    Bug description
+                <CardText className="clearfix border-bottom pb-3">
+                    <small className="text-muted float-left">{props.bug.author}</small>
+                    <small className="text-muted float-right">{props.bug.created}</small>
                 </CardText>
                 <div>
-                    <span className="mr-2">Module:</span>
-                    {/*{props.module.languages.map(item => <Badge color="primary" pill key={item} className="mr-1">{item}</Badge>)}*/}
-                    {/*<ViewBugsBtn onClick={() => props.openModal(props.module)} />*/}
-                </div>
-                <div>
-                    <span className="mr-2">Tickets:</span>
-                    {/*<Link to={"/profile/view/"+props.module.expert}>{props.module.expert}</Link>*/}
+                    <span className="mr-2 text-muted">Module:</span>
+                    &nbsp;
+                    {props.bug.module.name}
                 </div>
             </CardBody>
         </Card>

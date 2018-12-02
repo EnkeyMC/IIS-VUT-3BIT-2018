@@ -1,7 +1,7 @@
 import {initialState, isCancelled} from "./helpers";
 import {copyMerge} from "../utils";
 import {FAIL, SUCC} from "../actions";
-import {GET_PATCH} from "../actions/patches";
+import {GET_PATCH, SET_PATCH_ERROR} from "../actions/patches";
 
 export function reducePatch(state = initialState, action) {
     switch (action.type) {
@@ -20,6 +20,8 @@ export function reducePatch(state = initialState, action) {
             if (action.error.response.status === 404)
                 return copyMerge(state, {loading: false, error: "Patch not found"});
             return copyMerge(state, {loading: false, error: action.error.message});
+        case SET_PATCH_ERROR:
+            return copyMerge(state, {error: action.msg});
         default:
             return state;
     }
