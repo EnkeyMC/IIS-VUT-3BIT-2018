@@ -204,7 +204,7 @@ class PatchPOSTSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     bugs = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Bug.objects.all())
-    date_released = serializers.ReadOnlyField(default=None)
+    date_released = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = models.Patch

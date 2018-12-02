@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from django.contrib.auth.models import User
 
@@ -177,7 +177,7 @@ class PatchViewset(viewsets.ModelViewSet):
 
         status = serializer.validated_data.get('status')
         if status and status == models.Patch.STATUS_RELEASED:
-            serializer.save(date_released=date.today())
+            serializer.save(date_released=datetime.now())
         else:
             serializer.save()
 
