@@ -4,7 +4,14 @@ from knox import views as knox_views
 
 from . import views as api_views
 
-router = DefaultRouter()
+
+class OptionalSlashRouter(DefaultRouter):
+    def __init__(self):
+        super().__init__()
+        self.trailing_slash = '/?'
+
+
+router = OptionalSlashRouter()
 router.register(r'languages', api_views.LanguageViewSet)
 router.register(r'users', api_views.UserViewSet)
 router.register(r'tickets', api_views.TicketViewSet)
