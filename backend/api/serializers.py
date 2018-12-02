@@ -187,9 +187,12 @@ class BugPOSTSerializer(StrictModelSerializer):
 
 
 class ModuleInsideBugSerializer(StrictModelSerializer):
+    expert = serializers.SlugRelatedField(
+            slug_field='username', read_only=True)
+
     class Meta:
         model = models.Module
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'expert')
 
 
 class BugGETSerializer(BugPOSTSerializer):
@@ -207,6 +210,13 @@ class PatchPOSTSerializer(StrictModelSerializer):
             many=True, queryset=models.Bug.objects.all())
     date_released = serializers.DateTimeField(read_only=True)
 
+    class Meta:
+        model = models.Patch
+        fields = '__all__'
+        read_only_fields = ('status',)
+
+
+class PatchUpdateSerializer(PatchPOSTSerializer):
     class Meta:
         model = models.Patch
         fields = '__all__'

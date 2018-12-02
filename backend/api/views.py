@@ -176,8 +176,28 @@ class PatchViewset(viewsets.ModelViewSet):
                 tickets_before_update.add(ticket.id)
 
         status = serializer.validated_data.get('status')
-        if status and status == models.Patch.STATUS_RELEASED:
-            serializer.save(date_released=datetime.now())
+        if status and status != models.Patch.STATUS_PROGRESS:
+            position = self.request.user.profile.position
+            if status == models.Patch.STATUS_RELEASED:
+                if position == models.Profile.SUPERVISOR:
+                    serializer.save(date_released=datetime.now())
+                else:
+                    raise PermissionDenied(detail=
+                        'Only supervisor can release a patch.')
+            elif status == models.Patch.STATUS_APPROVED:
+                for bug in self.get_object().bugs.all():
+                    if bug.module.expert == self.request.user:
+                        serializer.save()
+                        break
+                else:
+                    raise PermissionDenied(detail=
+                        'You do not have permission to approve this patch.')
+            elif status == models.Patch.STATUS_AWAIT:
+                if self.get_object().author == self.request.user:
+                    serializer.save()
+                else:
+                    raise PermissionDenied(detail=
+                        'Only author can perform this action.')
         else:
             serializer.save()
 
@@ -213,4 +233,6 @@ class PatchViewset(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
             return serializers.PatchGETSerializer
-        return serializers.PatchPOSTSerializer
+        elif self.action == 'create':
+            return serializers.PatchPOSTSerializer
+        return serializers.PatchUpdateSerializer
