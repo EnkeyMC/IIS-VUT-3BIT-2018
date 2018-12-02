@@ -13,7 +13,7 @@ import {
 
 const initialTicketsViewState = {
     tickets: initialState,
-    ticketInfo: Object.assign(initialState, {
+    ticketInfo: copyMerge(initialState, {
         ticketBugs: initialSingleToListState,
         ticketsForSelect: initialState  // For forms
     })

@@ -4,7 +4,7 @@ import {isCancelled} from "./helpers";
 import {initialSingleToListState, initialState, reduceGetList, reduceSingleToList} from "./helpers";
 import {GET_MODULE, GET_MODULE_BUG, GET_MODULES} from "../actions/modules";
 
-const initialModulesState = Object.assign(
+const initialModulesState = copyMerge(
     initialState,
     {moduleBugs: initialSingleToListState}
 );

@@ -6,7 +6,7 @@ import {GET_BUG, GET_BUG_TICKET, GET_BUGS, SET_BUG, SET_BUG_ERROR} from "../acti
 
 const initialBugsViewState = {
     bugs: initialState,
-    bugInfo: Object.assign(initialState,
+    bugInfo: copyMerge(initialState,
         {bugTickets: initialSingleToListState})
 };
 
