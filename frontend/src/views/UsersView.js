@@ -9,6 +9,7 @@ import {appendToPath} from "../utils";
 import pathToRegexp from "path-to-regexp";
 import {connect} from "react-redux";
 import Observable from "../utils/Observable";
+import UserEdit from "../components/UserEdit";
 
 export default class UsersView extends React.Component {
     constructor(props) {
@@ -59,6 +60,7 @@ export default class UsersView extends React.Component {
                         }/>
                 </SideList>
                 <Switch>
+                    <Route path={this.props.match.path+'/:id(\\d+)/edit'} component={UserEdit} />
                     <Route path={this.props.match.path+'/:id(\\d+)?'} render={props => <UserInfo defaultId={defaultId} {...props}/>} />
                 </Switch>
             </DefaultLayout>

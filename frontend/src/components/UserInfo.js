@@ -7,6 +7,10 @@ import {withRouter} from "react-router";
 import {StateRenderer} from "../utils";
 import UserCard from "./UserCard";
 import Observable from "../utils/Observable";
+import pathToRegexp from "path-to-regexp";
+import {Link} from "react-router-dom";
+import {Button} from "reactstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 export default class UserInfo extends Component {
@@ -29,12 +33,27 @@ export default class UserInfo extends Component {
     getUserId() {
         return this.props.match.params.id ? this.props.match.params.id : this.props.defaultId;
     }
+
     render() {
+        const toPath = pathToRegexp.compile(this.props.match.path);
+        const path = toPath({
+            position: this.props.match.params.position,
+            id: this.getUserId()
+        });
         return (
             <div className="info content-height">
                 <StateRenderer state={this.props} renderCondition={this.props.user !== null}>
                     {props => {return (
-                        <UserCard user={props.user} />
+                        <UserCard user={props.user} buttons={
+                            <Button
+                                tag={Link}
+                                to={path+'/edit'}
+                                color="primary"
+                                className="float-right"
+                            >
+                                Edit <FontAwesomeIcon icon="edit" />
+                            </Button>
+                        } />
                     )}}
                 </StateRenderer>
             </div>

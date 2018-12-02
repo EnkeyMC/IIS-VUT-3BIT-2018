@@ -1,64 +1,76 @@
 import React from 'react';
 import CardContainer from "./CardContainer";
 import {Button, CardBody, CardHeader, Col, Row} from "reactstrap";
-import {Form} from "./form/Form";
-import {StateRenderer} from "../utils";
-import connect from "react-redux/es/connect/connect";
-import {getLanguages} from "../actions/languages";
-import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
-import {Link} from "react-router-dom";
-import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
+import {Form, RequiredFieldsNotice} from "./form/Form";
+import {StateRenderer} from "../utils";
 import {Input} from "./form/Input";
+import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
+import {Link} from "react-router-dom";
+import {getUser, getUserById, getUsersFiltered} from "../actions/users";
+import {getLanguages} from "../actions/languages";
 import {verifyUser} from "../actions/global";
-import {getUser} from "../actions/users";
+import {withAlert} from "react-alert";
+import {connect} from "react-redux";
+import {Select} from "./form/Select";
+import {Checkbox} from "./form/Checkbox";
 
-export default function ProfileEdit() {
+export default function UserEdit() {
     return (
-        <CardContainer>
-            <CardHeader className="h4">
-                Edit profile
-            </CardHeader>
-            <CardBody>
-                <ProfileEditForm />
-            </CardBody>
-        </CardContainer>
+        <div className="info content-height">
+            <CardContainer>
+                <CardHeader className="h4">
+                    Edit user
+                </CardHeader>
+                <CardBody>
+                    <UserEditForm />
+                </CardBody>
+            </CardContainer>
+        </div>
     );
 }
 
-class ProfileEditForm extends React.Component {
+
+class UserEditForm extends React.Component {
     constructor(props) {
         super(props);
 
         this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
-
-        this.state = {
-            redirect: false
-        };
     }
 
+
     componentDidMount() {
-        this.props.getUser(this.props.loggedUser.username);
+        this.props.getUserById(this.props.match.params.id);
         this.props.getLanguages();
     }
 
     handleSubmitSuccess(id, data) {
-        this.setState({redirect: true});
-        if (data.username !== this.props.loggedUser.username)
-            this.props.verifyUser();
         this.props.alert.success("Changes successfully saved.");
+
+        this.props.getUsersFiltered(this.props.match.params.position);
+        this.props.history.push(this.getPathBack());
+    }
+
+    getPathBack() {
+        return this.props.location.pathname.replace('/edit', '');
     }
 
     render() {
-        if (this.state.redirect)
-            return <Redirect to={this.props.location.state ? this.props.location.state.from : '/profile'} />;
-
         return (
-            <Form edit id="edit-profile" url={"/api/users/"+this.props.loggedUser.id+'/'} onSubmitSuccess={this.handleSubmitSuccess}>
-                <p className="text-muted">Fields marked by <span className="text-danger">*</span> are required.</p>
+            <Form edit id="edit-user" url={"/api/users/"+this.props.match.params.id+'/'} onSubmitSuccess={this.handleSubmitSuccess}>
+                <RequiredFieldsNotice/>
                 <StateRenderer state={this.props} renderCondition={this.props.user !== null && this.props.languages !== null}>
                     {props => {return (
                         <>
+                            <Select label="Role" name="position" id="position" defaultValue={props.user.position} required >
+                                <option value="user">user</option>
+                                <option value="programmer">programmer</option>
+                                <option value="supervisor">supervisor</option>
+                            </Select>
+                            <Checkbox label="Is active" name="is_active" id="is_active" defaultValue={props.user.is_active}
+                                hint="Uncheck this to disable account. (User won't be able to log in)"
+                            />
+                            <hr/>
                             <Input label="Username" name="username" id="username" defaultValue={props.user.username} required />
                             <Input label="First name" name="first_name" id="first_name" defaultValue={props.user.first_name} />
                             <Input label="Last name" name="last_name" id="last_name" defaultValue={props.user.last_name} />
@@ -71,7 +83,7 @@ class ProfileEditForm extends React.Component {
                                 <Col md="4">
                                     <Button
                                         tag={Link}
-                                        to={this.props.location.state ? this.props.location.state.from : '/profile'}
+                                        to={this.getPathBack()}
                                         color="secondary" className="w-100 mt-4"
                                     >
                                         Cancel
@@ -89,11 +101,10 @@ class ProfileEditForm extends React.Component {
     }
 }
 
-ProfileEditForm = connect(
+UserEditForm = connect(
     (state) => {
         return {
             user: state.profileView.user,
-            loggedUser: state.global.user,
             loading: state.profileView.loading || state.languages.loading,
             error: state.profileView.error ? state.profileView.error : state.languages.error,
             languages: state.languages.data
@@ -101,9 +112,9 @@ ProfileEditForm = connect(
     },
     dispatch => {
         return {
-            getUser: username => dispatch(getUser(username)),
+            getUserById: id => dispatch(getUserById(id)),
             getLanguages: () => dispatch(getLanguages()),
-            verifyUser: () => dispatch(verifyUser())
+            getUsersFiltered: filter => dispatch(getUsersFiltered(filter))
         }
     }
-)(withAlert(withRouter(ProfileEditForm)));
+)(withAlert(withRouter(UserEditForm)));
