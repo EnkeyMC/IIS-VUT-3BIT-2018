@@ -3,7 +3,6 @@ import CardContainer from "./CardContainer";
 import {CardBody, CardHeader, Container} from "reactstrap";
 import {StateRenderer} from "../utils";
 import {connect} from "react-redux";
-import BugForm from "./BugForm";
 import {getPatch} from "../actions/patches";
 import PatchForm from "./PatchForm";
 

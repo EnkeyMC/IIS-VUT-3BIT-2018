@@ -11,6 +11,7 @@ import {getFilteredPatches} from "../actions/patches";
 import {Switch, withRouter} from "react-router";
 import Observable from "../utils/Observable";
 import PatchCreate from "../components/PatchCreate";
+import PatchInfo from "../components/PatchInfo";
 
 const PATCH_STATUSES = [
     "in progress",
@@ -75,6 +76,7 @@ export default class PatchesView extends React.Component {
                 <Switch>
                     <RestrictedRoute minRole={ROLE_PROGRAMMER} path={this.props.match.path+'/create'} component={PatchCreate} />
                 </Switch>
+                <PatchInfo/>
             </DefaultLayout>
         )
     }
@@ -99,10 +101,10 @@ const Patch = withRouter((props) => {
     return (
         <NavLink to={appendToPath(toPath({status: props.match.params.status}), props.item.id)} activeClassName="selected" className={"list-group-item list-group-item-action flex-column align-items-start state-" + PatchesView.statusEncode(props.item.status)}>
             <div className="d-flex w-100 justify-content-between">
-                <h6 className="pb-1 ticket-list-title">#{props.item.id}</h6>
+                <h6 className="pb-1 ticket-list-title">#{props.item.id} {props.item.name}</h6>
             </div>
             <small className="float-left">{props.item.author}</small>
-            <small className="float-right">{props.item.created}</small>
+            <small className="float-right">{props.item.status}</small>
         </NavLink>
     );
 });

@@ -23,7 +23,7 @@ export default function UserCard(props) {
                 {props.user.username}
                 {
                     props.user.is_active === false ?
-                        <h5 className="text-muted d-inline"> disabled</h5>
+                        <h5 className="text-muted d-inline"> inactive</h5>
                         :
                         null
                 }

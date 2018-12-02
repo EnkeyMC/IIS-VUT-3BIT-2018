@@ -121,7 +121,6 @@ code {
       position: absolute;
       left: 100%;
       transition: transform 0.3s;
-      //transform: translateX(-100%);
       @include prefix(transform, translateX(-100%), webkit ms);
       white-space: nowrap;
     }
@@ -133,8 +132,6 @@ code {
       width: 50px;
     }
     &:hover .icon-text, &.test .icon-text {
-      //transform: translate(calc(100% - calc(100% - 50px)));
-      //@include prefix(transform, translate(calc(100% - calc(100% - 50px))), webkit ms);  -- take složiteee zbytečně -_-
       @include prefix(transform, translateX(0), webkit ms);
       color: #ffffff;
       background: #d41212;
@@ -378,7 +375,7 @@ code {
 }
 
 .state-approved {
-  border-left: 5px solid #bada55 !important;
+  border-left: 5px solid #76da31 !important;
 }
 
 .state-released {
