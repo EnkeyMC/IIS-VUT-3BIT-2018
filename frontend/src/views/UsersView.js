@@ -1,21 +1,40 @@
 import React from "react";
 import DefaultLayout from "./layouts/DefaultLayout";
-import Users from '../components/Users';
-import connect from "react-redux/es/connect/connect";
-import {getUsers} from "../actions/users";
+import UserInfo from '../components/UserInfo';
+import {getUsers, getUsersFiltered} from "../actions/users";
 import SideList, {SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
-import {withRouter} from "react-router";
+import {Route, Switch, withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
 import {appendToPath} from "../utils";
 import pathToRegexp from "path-to-regexp";
+import {connect} from "react-redux";
+import Observable from "../utils/Observable";
 
 export default class UsersView extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.positionObservable = new Observable(this.props.match.params.position, val => {
+            this.props.getUsersFiltered(val);
+        });
+    }
+
+
     componentDidMount() {
-        this.props.getUsers();
+        this.positionObservable.triggerOnChanged();
+    }
+
+    componentDidUpdate() {
+        this.positionObservable.update(this.props.match.params.position);
     }
 
     render () {
         const position = this.props.match.params.position;
+
+        let defaultId = null;
+        const data = this.props.users.data;
+        if (data && data.length > 0)
+            defaultId = data[0].id;
 
         return (
             <DefaultLayout>
@@ -28,13 +47,15 @@ export default class UsersView extends React.Component {
                                 defaultValue={{value: "all"}}
                             >
                                 <SideListFilterItem linkTo="/users/all" value="all" />
-                                <SideListFilterItem linkTo="/users/supervisor" value="supervisor" />
-                                <SideListFilterItem linkTo="/users/programmers" value="programmer" />
-                                <SideListFilterItem linkTo="/users/users" value="user" />
+                                <SideListFilterItem linkTo="/users/users" value="users" />
+                                <SideListFilterItem linkTo="/users/programmers" value="programmers" />
+                                <SideListFilterItem linkTo="/users/supervisors" value="supervisors" />
                             </SideListFilter>
                         }/>
                 </SideList>
-                <Users/>
+                <Switch>
+                    <Route path={this.props.match.path+'/:id(\\d+)?'} render={props => <UserInfo defaultId={defaultId} {...props}/>} />
+                </Switch>
             </DefaultLayout>
         )
     }
@@ -48,7 +69,7 @@ UsersView = connect (
     },
     dispatch => {
         return {
-            getUsers: () => dispatch(getUsers())
+            getUsersFiltered: (filter) => dispatch(getUsersFiltered(filter))
         }
     }
 ) (withRouter(UsersView));
@@ -57,7 +78,7 @@ UsersView = connect (
 const User = withRouter((props) => {
     const toPath = pathToRegexp.compile(props.match.path);
     return (
-        <NavLink to={appendToPath(toPath({status: props.match.params.posiiton}), props.item.id)} className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.item.position} activeClassName="selected">
+        <NavLink to={appendToPath(toPath({position: props.match.params.position}), props.item.id)} className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.item.position} activeClassName="selected">
             <div className="d-flex w-100 justify-content-between">
                 <h6 className="pb-1 ticket-list-title">{props.item.username}</h6>
             </div>

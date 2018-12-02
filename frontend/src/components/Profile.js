@@ -11,26 +11,14 @@ import {
 } from 'reactstrap';
 import {connect} from "react-redux";
 import {getUser} from "../actions/users";
-import {Spinner} from "../utils";
+import {Spinner, StateRenderer} from "../utils";
 import {withAlert} from "react-alert";
 import {Redirect, withRouter} from "react-router";
 import Error from "./Error";
 import Observable from "../utils/Observable";
 import CardContainer from "./CardContainer";
 import {Link} from "react-router-dom";
-
-
-function ProfileKey(props) {
-    return (
-        <Col md="6" xs="12" className="text-muted">
-            {props.children}
-        </Col>
-    );
-}
-
-function ProfileValue(props) {
-    return <Col md="6" xs="12">{props.children}</Col>
-}
+import UserCard from "./UserCard";
 
 
 export default class Profile extends Component {
@@ -72,11 +60,10 @@ export default class Profile extends Component {
 
 
         return (
-            <CardContainer>
-                <CardHeader className="h4">
-                    {!this.props.loading ? this.props.user.username : "Loading..."}
-                    {
-                        this.props.username === this.props.loggedInUserUsername ?
+            <StateRenderer state={this.props} renderCondition={this.props.user !== null}>
+                {props => {return (
+                    <UserCard user={props.user} buttons={
+                        props.username === this.props.loggedInUserUsername ?
                             <Button
                                 tag={Link}
                                 to={{pathname: '/profile/edit', state: {from: this.props.location}}}
@@ -87,81 +74,9 @@ export default class Profile extends Component {
                             </Button>
                             :
                             null
-                    }
-                </CardHeader>
-                <CardBody>
-                    {
-                        this.props.loading ?
-                            <Container>
-                                <Row>
-                                    <Col className="text-center mt-4">
-                                        <Spinner size="5x" />
-                                    </Col>
-                                </Row>
-                            </Container>
-                            :
-                            <Container>
-                                <Row className="border-bottom pb-4">
-                                    <Container>
-                                        <Row className="mb-3">
-                                            <ProfileKey>
-                                                <FontAwesomeIcon icon="user" fixedWidth/> Name
-                                            </ProfileKey>
-                                            <ProfileValue>
-                                                {this.props.user.first_name} {this.props.user.last_name}
-                                            </ProfileValue>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <ProfileKey>
-                                                <FontAwesomeIcon icon="envelope" fixedWidth/> Email
-                                            </ProfileKey>
-                                            <ProfileValue>
-                                                {this.props.user.email}
-                                            </ProfileValue>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <ProfileKey>
-                                                <FontAwesomeIcon icon="birthday-cake" fixedWidth/> Birthday
-                                            </ProfileKey>
-                                            <ProfileValue>
-                                                {this.props.user.birth_date}
-                                            </ProfileValue>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <ProfileKey>
-                                                <FontAwesomeIcon icon="laptop-code" fixedWidth/> Programming
-                                                languages
-                                            </ProfileKey>
-                                            <ProfileValue>
-                                                {this.props.user.languages.map(item => <Badge
-                                                    color="primary" pill className="mr-1"
-                                                    key={item}>{item}</Badge>)}
-                                            </ProfileValue>
-                                        </Row>
-                                        <Row>
-                                            <ProfileKey>
-                                                <FontAwesomeIcon icon="user-tie" fixedWidth/> Role
-                                            </ProfileKey>
-                                            <ProfileValue>
-                                                {this.props.user.position}
-                                            </ProfileValue>
-                                        </Row>
-                                    </Container>
-                                </Row>
-                                <Row className="mt-3 text-muted">
-                                    <Col>
-                                        <FontAwesomeIcon icon="calendar-alt" fixedWidth/> Date Joined
-                                    </Col>
-                                    <Col>{this.props.user.date_joined}</Col>
-                                    <Col>
-                                        <FontAwesomeIcon icon="clock" fixedWidth/> Last Login
-                                    </Col>
-                                    <Col>{this.props.user.last_login ? this.props.user.last_login : "Never"}</Col>
-                                </Row>
-                            </Container>
-                    }
-                </CardBody>
-            </CardContainer>
+                    } />
+                )}}
+            </StateRenderer>
         )
     }
 }

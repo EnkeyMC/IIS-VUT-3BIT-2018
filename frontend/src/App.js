@@ -107,7 +107,8 @@ export default class App extends Component {
                       <Route path="/modules" component={ModuleView} />
                       <Redirect exact from="/patches" to="/patches/all" />
                       <Route path="/patches/:status(all|my|in-progress|awaiting-approval|approved|released)" component={PatchesView}/>
-                      <RestrictedRoute minRole={ROLE_SUPERVISOR} path="/users" component={UsersView} />
+                      <Redirect exact from="/users" to="/users/all"/>
+                      <RestrictedRoute minRole={ROLE_SUPERVISOR} path="/users/:position(all|supervisors|programmers|users)" component={UsersView} />
                       <Route render={props => <ErrorView {...props} error="404" />} />
                   </Switch>
               </Provider>

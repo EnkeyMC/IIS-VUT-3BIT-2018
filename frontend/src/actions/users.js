@@ -24,3 +24,27 @@ export function getUsers(query = null) {
         }
     }
 }
+
+export function getUsersFiltered(filter) {
+    switch (filter) {
+        case "users":
+            return getUsers({position: "user"});
+        case "programmers":
+            return getUsers({position: "programmer"});
+        case "supervisors":
+            return getUsers({position: "supervisor"});
+        default:
+            return getUsers();
+    }
+}
+
+export function getUserById(id) {
+    return {
+        type: GET_USER,
+        payload: {
+            request: {
+                url: "/api/users/"+id+"/"
+            }
+        }
+    }
+}
