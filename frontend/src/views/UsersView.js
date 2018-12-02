@@ -1,8 +1,8 @@
 import React from "react";
 import DefaultLayout from "./layouts/DefaultLayout";
 import UserInfo from '../components/UserInfo';
-import {getUsers, getUsersFiltered} from "../actions/users";
-import SideList, {SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
+import {getUsersFiltered} from "../actions/users";
+import SideList, {NewItemBtn, SideListFilter, SideListFilterItem, SideListHeader} from "../components/SideList";
 import {Route, Switch, withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
 import {appendToPath} from "../utils";
@@ -41,6 +41,11 @@ export default class UsersView extends React.Component {
                 <SideList list={this.props.users} noItems="No users found" itemTag={User}>
                     <SideListHeader
                         title="Users"
+                        newBtn={
+                            <NewItemBtn linkTo={'/register'}>
+                                Register User
+                            </NewItemBtn>
+                        }
                         filter={
                             <SideListFilter
                                 value={{value: position}}
