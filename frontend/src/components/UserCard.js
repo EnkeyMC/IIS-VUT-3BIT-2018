@@ -21,6 +21,12 @@ export default function UserCard(props) {
         <CardContainer>
             <CardHeader className="h4">
                 {props.user.username}
+                {
+                    props.user.is_active === false ?
+                        <h5 className="text-muted d-inline"> disabled</h5>
+                        :
+                        null
+                }
                 {props.buttons}
             </CardHeader>
             <CardBody>

@@ -80,7 +80,15 @@ const User = withRouter((props) => {
     return (
         <NavLink to={appendToPath(toPath({position: props.match.params.position}), props.item.id)} className={"list-group-item list-group-item-action flex-column align-items-start state-" + props.item.position} activeClassName="selected">
             <div className="d-flex w-100 justify-content-between">
-                <h6 className="pb-1 ticket-list-title">{props.item.username}</h6>
+                <h6 className="pb-1 ticket-list-title">
+                    {props.item.username}
+                    {
+                        props.item.is_active === false ?
+                        <small className="text-muted d-inline"> disabled</small>
+                        :
+                        null
+                    }
+                </h6>
             </div>
             <small className="float-left">{props.item.first_name} {props.item.last_name}</small>
             <small className="float-right">{props.item.position}</small>
