@@ -53,12 +53,12 @@ class TicketListSerializer(StrictModelSerializer):
 
 class UserTicketDetailSerializer(TicketListSerializer):
     attachment = serializers.FileField(
-        required=False, default=None, allow_empty_file=False)
+        required=False, allow_empty_file=False)
 
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        read_only_fields = TicketListSerializer.Meta.read_only_fields
+        read_only_fields = ('status', 'duplicate', 'reward', 'bugs')
 
 
 class ProgrammerTicketDetailSerializer(TicketListSerializer):

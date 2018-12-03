@@ -36,7 +36,7 @@ class TicketViewSet(viewsets.ModelViewSet):
                     return serializers.ProgrammerTicketOwnerSerializer
                 else:
                     return serializers.ProgrammerTicketDetailSerializer
-            if self.request.user.profile.position == models.Profile.SUPERVISOR:
+            elif self.request.user.profile.position == models.Profile.SUPERVISOR:
                 return serializers.SupervisorTicketDetailSerializer
         return serializers.UserTicketDetailSerializer
 
