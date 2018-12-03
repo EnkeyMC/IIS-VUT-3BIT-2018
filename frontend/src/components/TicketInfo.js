@@ -381,8 +381,8 @@ function Attachment(props) {
             fileView = <div className="attachment-img">
                 <Lightbox images={[{
                             src: props.file,
-                            title: 'image title',
-                            description: 'some description' }]}
+                            title: ' ',
+                            description: ' ' }]}
                           showImageModifiers={true}
                           thumbnailWidth='auto'
                           thumbnailHeight='auto'
