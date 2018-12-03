@@ -110,7 +110,8 @@ class UserDetailSerializer(StrictModelSerializer):
         many=True, slug_field='name', source='profile.languages',
         queryset=models.Language.objects.all())
     birth_date = serializers.DateField(
-            source='profile.birth_date', allow_null=True)
+            source='profile.birth_date',
+            required=False, allow_null=True)
     last_login = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
     position = serializers.ChoiceField(
@@ -154,6 +155,7 @@ class SupervisorUserDetailSerializer(UserDetailSerializer):
     class Meta:
         model = User
         exclude = UserDetailSerializer.Meta.exclude
+        extra_kwargs = {'is_active': {'default': True}}
 
 
 class LanguageSerializer(StrictModelSerializer):
