@@ -367,6 +367,22 @@ code {
 }
 
 /* Patches css */
+@media (max-width: 850px) {
+  .patch-columns {
+    -webkit-column-count: 1;
+    -moz-column-count: 1;
+    column-count: 1;
+  }
+}
+
+@media (min-width: 851px) and (max-width: 1100px) {
+  .patch-columns {
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
+}
+
 .state-in-progress {
   border-left: 5px solid #01dcff !important;
 }

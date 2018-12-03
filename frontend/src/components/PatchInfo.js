@@ -119,7 +119,7 @@ export default class PatchInfo extends Component {
                         <Col lg="12" xs="12" md="12">
                             <Container className="mt-5">
                                 <h4 className="mb-3">Fixes bugs:</h4>
-                                <CardColumns>
+                                <CardColumns className="patch-columns">
                                     {patch.data.bugs.map(bug => <BugCard key={bug.id} bug={bug} />)}
                                 </CardColumns>
                             </Container>
