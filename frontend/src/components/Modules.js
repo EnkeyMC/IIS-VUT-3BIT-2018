@@ -14,6 +14,8 @@ import {RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestrictio
 import {cancelActionRequests} from "../actions/global";
 import {clearModuleBugs, getModuleBug, getModules} from "../actions/modules";
 import CloseBtn from "./CloseBtn";
+import confirm from 'reactstrap-confirm';
+import {deleteItem} from "../actions";
 
 export default class Modules extends Component {
     constructor(props) {
@@ -27,6 +29,7 @@ export default class Modules extends Component {
         this.toggleModuleBugsModal = this.toggleModuleBugsModal.bind(this);
         this.closeModuleBugsModal = this.closeModuleBugsModal.bind(this);
         this.openModuleBugsModal = this.openModuleBugsModal.bind(this);
+        this.removeModule = this.removeModule.bind(this);
     }
 
     toggleModuleBugsModal() {
@@ -52,6 +55,19 @@ export default class Modules extends Component {
         this.props.getModules();
     }
 
+    async removeModule(id) {
+        let confirmation = await confirm({
+            message: "Are you sure you want to delete this module?",
+            confirmText: "Delete",
+            confirmColor: "danger"
+        });
+
+        if (confirmation) {
+            this.props.deleteItem('/api/modules/'+id);
+            setTimeout(this.props.getModules, 100);
+        }
+    }
+
     render() {
         return (
             <StateRenderer state={this.props} renderCondition={this.props.modules !== null}
@@ -68,6 +84,7 @@ export default class Modules extends Component {
                             <CardColumns>
                                 {
                                     props.modules.map(module => <ModuleCard openModal={this.openModuleBugsModal}
+                                                                            removeModule={this.removeModule}
                                                                             module={module}
                                                                             key={module.id}
                                     />)
@@ -102,7 +119,8 @@ Modules = connect (
     },
     dispatch => {
         return {
-            getModules: () => dispatch(getModules())
+            getModules: () => dispatch(getModules()),
+            deleteItem: (url) => dispatch(deleteItem(url))
         }
     }
 ) (Modules);
@@ -111,8 +129,8 @@ const ModuleCard = withRouter((props) => {
     return (
         <Card>
             <CardBody>
-                <RestrictedView minRole={ROLE_PROGRAMMER}>
-                    {props.noRemove ? null : <CloseBtn onClick={(e) => {props.removeBug(props.bug.id); e.preventDefault()}} />}
+                <RestrictedView minRole={ROLE_SUPERVISOR}>
+                    {props.noRemove ? null : <CloseBtn onClick={() => {props.removeModule(props.module.id)}} />}
                 </RestrictedView>
                 <CardTitle>
                     {props.module.name}
@@ -174,6 +192,7 @@ class BugsContainer extends Component {
 
         return (
             <div>
+                {this.props.data.length === 0 ? <p className="text-center mt-3 mb-3">No bugs found</p> : null}
                 {this.props.data.map(bug => <Bug bug={bug} key={bug.id} noRemove />)}
                 {
                     this.props.loading ?

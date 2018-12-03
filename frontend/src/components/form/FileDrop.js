@@ -51,21 +51,23 @@ export class FileDrop extends React.Component {
                         :
                         null
                 }
-                <Dropzone
-                    accept={accept}
-                    onDrop={this.onDrop}
-                    onFileDialogCancel={this.onCancel}
-                    maxSize={1024*1024}
-                    multiple={false}
-                    {...inputProps}
-                >
-                    {
-                        field.value.name !== "" ?
-                            <p><span className="black-text">Selected file: {field.value.name}</span></p>
-                            :
-                            <p>Upload file by dragging & dropping or click here.</p>
-                    }
-                </Dropzone>
+                <div className={error ? 'is-invalid' : ''}>
+                    <Dropzone
+                        accept={accept}
+                        onDrop={this.onDrop}
+                        onFileDialogCancel={this.onCancel}
+                        maxSize={1024*1024}
+                        multiple={false}
+                        {...inputProps}
+                    >
+                        {
+                            field.value.name !== "" ?
+                                <p><span className="black-text">Selected file: {field.value.name}</span></p>
+                                :
+                                <p>Upload file by dragging & dropping or click here.</p>
+                        }
+                    </Dropzone>
+                </div>
                 <FormFeedback>{error}</FormFeedback>
                 {hint ? <FormText>{hint}</FormText> : null}
             </FormGroup>

@@ -58,7 +58,7 @@ export default class MultiSearchSelect extends React.Component {
                     :
                     null
             }
-                <div className="form-control multi-search-select">
+                <div className={"form-control multi-search-select "+(error ? 'is-invalid' : '')}>
                     <div className="multi-search-select-header">
                         <InputGroupText>
                             <FontAwesomeIcon icon="search" />

@@ -1,4 +1,5 @@
 export const SUBMIT_FORM = 'SUBMIT_FORM_REQ';
+export const DELETE = 'DELETE_REQ';
 
 export const SUCC = '_SUCCESS';
 export const FAIL = '_FAIL';
@@ -47,3 +48,14 @@ export function submitForm(id, url, data, edit) {
     }
 }
 
+export function deleteItem(url) {
+    return {
+        type: DELETE,
+        payload: {
+            request: {
+                url: url,
+                method: 'delete'
+            }
+        }
+    }
+}

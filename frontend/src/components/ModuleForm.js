@@ -64,7 +64,7 @@ export default class ModuleForm extends React.Component {
                             <RequiredFieldsNotice />
                             <Input label="Name" name="name" id="name" defaultValue={module.name} required />
                             <Input type="textarea" rows="5" label="Description" name="description" id="description" defaultValue={module.description} required />
-                            <SearchSelect name="expert" label="Expert" defaultValue={module.expert}>
+                            <SearchSelect name="expert" label="Expert" defaultValue={module.expert} required>
                                 {
                                     () => props.users.map(
                                         user => <SelectItem

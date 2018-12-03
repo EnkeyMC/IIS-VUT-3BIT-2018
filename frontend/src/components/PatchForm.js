@@ -71,7 +71,7 @@ export default class PatchForm extends React.Component {
                         return  (<>
                             <RequiredFieldsNotice/>
                             <Input label="Name" name="name" id="name" required defaultValue={patch.name} />
-                            <MultiSearchSelect label="Patching bugs" name="bugs" defaultValue={patch.bugs}>
+                            <MultiSearchSelect label="Patching bugs" name="bugs" defaultValue={patch.bugs} required>
                                 {
                                     () => props.bugs.map(
                                         bug => <MultiSelectItem

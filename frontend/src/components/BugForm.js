@@ -89,7 +89,7 @@ export default class BugForm extends React.Component {
                                 }
                             </Select>
                             <Checkbox label="Vulnerability" name="vulnerability" id="vulnerability" defaultValue={bug.vulnerability} />
-                            <Select label="Module" name="module" id="module" defaultValue={bug.module ? bug.module.id : ""}>
+                            <Select label="Module" name="module" id="module" defaultValue={bug.module ? bug.module.id : ""} required>
                                 <option value="" disabled>--- Select module ---</option>
                                 {
                                     props.modules.map(module => <option value={module.id} key={module.id}>{module.name}</option>)

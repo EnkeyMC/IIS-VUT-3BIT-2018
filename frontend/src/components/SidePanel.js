@@ -24,7 +24,6 @@ export default class SidePanel extends Component {
                         <FontAwesomeIcon icon="users"/>
                     </PanelLink>
                 </RestrictedView>
-
             </nav>
         );
     }
