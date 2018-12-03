@@ -21,22 +21,23 @@
     <dt>Autoøi</dt>
     <dd>Martin Omacht <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
         <a href="mailto:xomach00@stud.fit.vutbr.cz">xomach00@stud.fit.vutbr.cz</a> -
-        Redux API connection
+        Propojení backendu s frontendem pomocí Redux, správa stavu aplikace, formuláøe
     </dd>
     <dd>Zdenìk Chovanec <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
         <a href="mailto:xchova19@stud.fit.vutbr.cz">xchova19@stud.fit.vutbr.cz</a> -
-        Backend: Server side of web application
+        Backend v Djangu + Django REST api
     </dd>
     <dd>Petr Hendrych <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
         <a href="mailto:xhendr03@stud.fit.vutbr.cz">xhendr03@stud.fit.vutbr.cz</a> -
-        Frontend: Client side of web application
+        Frontend v Reactu
     </dd>
     <dt>URL aplikace</dt>
-    <dd><a href="http://rainbowshaggy.com:8000">http://rainbowshaggy.com:8000</a></dd>
+    <dd><a href="http://rainbowshaggy.com:8000" target="_blank">http://rainbowshaggy.com:8000</a> - Frontend aplikace</dd>
+    <dd><a href="http://rainbowshaggy.com:8000/api" target="_blank">http://rainbowshaggy.com:8000/api</a> - API aplikace</dd>
+    <dd><a href="http://rainbowshaggy.com:8000/admin" target="_blank">http://rainbowshaggy.com:8000/admin</a> - Administrace databáze</dd>
 </dl>
 
 <h2>U¾ivatelé systému pro testování</h2>
-<p>Uveïte prosím existující zástupce <strong>v¹ech rolí u¾ivatelù</strong>.</p>
 <table>
     <tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
     <tr><td>xomach00</td><td>xomach00</td><td>supervisor</td></tr>
@@ -52,13 +53,16 @@
     v dokumentaci zdùvodnìny.</p>
 
 <h2>Instalace</h2>
+<h3>SW po¾adavky</h3>
 <ul>
-    <li>Struènì popi¹te postup instalace na server</li>
-    <li>Softwarové po¾adavky (verze PHP apod.)</li>
-    <li>Jak rozbalit, konfigurovat, inicializovat databází, ...</li>
+    <li>Python 3.6 (+ modul venv)</li>
+    <li>NodeJS (npm)</li>
 </ul>
 
+<h3>Instalace</h3>
+<p>Instalace se provede pøíkazem <strong>make PYTHON=&lt;python&gt;</strong> v koøenové slo¾ce projektu, kde &lt;python&gt; je spustitelný soubor Pythonu 3.6 (napø. <i>python3.6</i>). Následnì by server mìl naslouchat na portu 8000.</p>
+
 <h2>Známé problémy</h2>
-<p>Není implementováno upozoròování u¾ivatelù v aplikaci, to by se øe¹ilo zasíláním emailù. Dále není implementováno vytváøení patchù bì¾nými u¾ivateli.</p>
+<p>Není implementováno upozoròování u¾ivatelù v aplikaci, to by se øe¹ilo zasíláním emailù. Dále není implementováno vytváøení patchù bì¾nými u¾ivateli, proto¾e se nám to zdálo v tomto systému nevhodné.</p>
 </body>
 </html>
