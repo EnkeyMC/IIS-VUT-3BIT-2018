@@ -145,9 +145,12 @@ class BugViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def get_serializer_class(self):
+        print(self.action)
         if self.action == 'list' or self.action == 'retrieve':
             return serializers.BugGETSerializer
-        return serializers.BugPOSTSerializer
+        elif self.action == 'create':
+            return serializers.BugPOSTSerializer
+        return serializers.BugPUTSerializer
 
 
 class PatchViewset(viewsets.ModelViewSet):

@@ -207,6 +207,16 @@ class BugPOSTSerializer(StrictModelSerializer):
         read_only_fields = ('patch',)
 
 
+class BugPUTSerializer(BugPOSTSerializer):
+    class Meta:
+        model = models.Bug
+        fields = '__all__'
+        extra_kwargs = {'module': {'allow_null': False, 'required': False},
+                        'title': {'required': False},
+                        'description': {'required': False}}
+        read_only_fields = ('patch',)
+
+
 class ModuleInsideBugSerializer(StrictModelSerializer):
     expert = serializers.SlugRelatedField(
             slug_field='username', read_only=True)
