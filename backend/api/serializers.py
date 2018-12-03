@@ -66,6 +66,7 @@ class ProgrammerTicketDetailSerializer(TicketListSerializer):
         model = models.Ticket
         fields = '__all__'
         read_only_fields = ('title', 'description', 'attachment', 'reward')
+        extra_kwargs = {'bugs': {'allow_empty': True}}
 
 
 class ProgrammerTicketOwnerSerializer(UserTicketDetailSerializer):
@@ -73,16 +74,19 @@ class ProgrammerTicketOwnerSerializer(UserTicketDetailSerializer):
         model = models.Ticket
         fields = '__all__'
         read_only_fields = ('reward',)
+        extra_kwargs = {'bugs': {'allow_empty': True}}
 
 
 class SupervisorTicketDetailSerializer(UserTicketDetailSerializer):
     expert = serializers.SlugRelatedField(
-        slug_field='username', allow_null=True, queryset=User.objects.all()
+        slug_field='username', allow_null=True, required=False,
+        queryset=User.objects.all()
     )
 
     class Meta:
         model = models.Ticket
         fields = '__all__'
+        extra_kwargs = {'bugs': {'allow_empty': True}}
 
 
 class UserListSerializer(StrictModelSerializer):
@@ -105,7 +109,8 @@ class UserDetailSerializer(StrictModelSerializer):
     languages = serializers.SlugRelatedField(
         many=True, slug_field='name', source='profile.languages',
         queryset=models.Language.objects.all())
-    birth_date = serializers.DateField(source='profile.birth_date')
+    birth_date = serializers.DateField(
+            source='profile.birth_date', allow_null=True)
     last_login = serializers.DateTimeField(read_only=True)
     date_joined = serializers.DateTimeField(read_only=True, format='%Y-%m-%d')
     position = serializers.ChoiceField(
@@ -120,7 +125,7 @@ class UserDetailSerializer(StrictModelSerializer):
 
     def validate_birth_date(self, birth_date):
         minimum_age = 15
-        if birth_date.year + minimum_age > date.today().year:
+        if birth_date and birth_date.year + minimum_age > date.today().year:
             raise serializers.ValidationError(detail=(
                 'The minimum age requirement for '
                 'this site is {} years old.').format(minimum_age))
@@ -179,18 +184,19 @@ class SeveritySerializer(StrictModelSerializer):
     class Meta:
         model = models.Severity
         fields = '__all__'
+        extra_kwargs = {'color': {'required': False}}
 
 
 class BugPOSTSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     tickets = serializers.PrimaryKeyRelatedField(
             many=True, queryset=models.Ticket.objects.all())
-    patch = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = models.Bug
         fields = '__all__'
         extra_kwargs = {'module': {'allow_null': False, 'required': True}}
+        read_only_fields = ('patch',)
 
 
 class ModuleInsideBugSerializer(StrictModelSerializer):
@@ -214,14 +220,9 @@ class BugGETSerializer(BugPOSTSerializer):
 class PatchPOSTSerializer(StrictModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     bugs = serializers.PrimaryKeyRelatedField(
-            many=True, queryset=models.Bug.objects.all())
+            queryset=models.Bug.objects.all(),
+            many=True, allow_empty=False)
     date_released = serializers.DateTimeField(read_only=True)
-
-    def validate_bugs(self, bugs):
-        if not bugs:
-            raise serializers.ValidationError(
-                detail='Select bugs associated with this patch.')
-        return bugs
 
     class Meta:
         model = models.Patch
