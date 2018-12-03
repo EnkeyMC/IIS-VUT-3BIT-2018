@@ -15,7 +15,7 @@ export class FileDrop extends React.Component {
 
 
     componentDidMount() {
-        this.props.form.registerInput(this.props.name, new File([], ""));
+        this.props.form.registerInput(this.props.name, this.getDefaultValue());
         if (this.props.onMount)
             this.props.onMount(this.props);
     }
@@ -29,7 +29,13 @@ export class FileDrop extends React.Component {
     }
 
     onCancel() {
-        this.props.form.registerInput(this.props.name, new File([], ""));
+        this.props.form.registerInput(this.props.name, this.getDefaultValue());
+    }
+
+    getDefaultValue() {
+        const fd = new FormData();
+        fd.set('a', new Blob([]), "");
+        return fd.get('a');
     }
 
     render() {

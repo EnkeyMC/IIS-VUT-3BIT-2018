@@ -22,6 +22,7 @@ import pathToRegexp from "path-to-regexp";
 import {cancelActionRequests} from "../actions/global";
 import {getTickets} from "../actions/tickets";
 import {clearBugTickets, GET_BUG, GET_BUG_TICKET, getBug, getBugTicket, setBug, setBugError} from "../actions/bugs";
+import {withAlert} from "react-alert";
 
 export default class BugInfo extends Component {
     constructor(props) {
@@ -94,10 +95,20 @@ export default class BugInfo extends Component {
     removeTicket(ticketId) {console.log("fds");
         let data = new FormData();
         this.props.bug.tickets.forEach(id => id !== ticketId ? data.append('tickets', id) : false);
+        if (!data.has('tickets'))
+            data.append('tickets', '');
         this.props.submitForm('remove-ticket', '/api/bugs/'+this.props.bug.id+'/', data, true)
             .then(action => {
                 if (action.payload) {
-                    this.props.setBug(action.payload.data);
+                    this.props.getBug(this.getBugId());
+                } else if (action.error) {
+                    if (action.error.response && action.error.response.data.tickets)
+                        this.props.alert.error("You cannot remove this ticket.");
+                    else if (action.error.response && action.error.response.data.detail)
+                        this.props.alert.error(action.error.response.data.detail);
+                    else
+                        this.props.alert.error(action.error.message);
+
                 }
             });
     }
@@ -229,11 +240,10 @@ BugInfo = connect(
             getBugTicket: (id) => dispatch(getBugTicket(id)),
             clearBugTickets: () => dispatch(clearBugTickets()),
             cancelActions: (actionType) => dispatch(cancelActionRequests(actionType)),
-            setBug: (data) => dispatch(setBug(data)),
             submitForm: (id, url, data, edit) => dispatch(submitForm(id, url, data, edit)),
         }
     }
-)(BugInfo);
+)(withAlert(BugInfo));
 
 const TicketsContainer = connect(
     (state) => {

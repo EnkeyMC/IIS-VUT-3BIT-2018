@@ -34,6 +34,7 @@ import {
 } from "../actions/tickets";
 import {getUsers} from "../actions/users";
 import {getBugs} from "../actions/bugs";
+import {withAlert} from "react-alert";
 
 
 export default class TicketInfo extends Component {
@@ -138,10 +139,20 @@ export default class TicketInfo extends Component {
     removeBug(bugId) {
         let data = new FormData();
         this.props.ticket.bugs.forEach(id => id !== bugId ? data.append('bugs', id) : false);
+        if (!data.has('bugs'))
+            data.append('bugs', "");
         this.props.submitForm('remove-bug', '/api/tickets/'+this.props.ticket.id+'/', data, true)
             .then(action => {
                 if (action.payload) {
                     this.props.setTicket(action.payload.data);
+                } else if (action.error) {
+                    if (action.error.response && action.error.response.data.bugs)
+                        this.props.alert.error("You cannot remove this bug.");
+                    else if (action.error.response && action.error.response.data.detail)
+                        this.props.alert.error(action.error.response.data.detail);
+                    else
+                        this.props.alert.error(action.error.message);
+
                 }
             });
     }
@@ -304,7 +315,7 @@ TicketInfo = connect(
             setTicket: (data) => dispatch(setTicket(data)),
         }
     }
-)(TicketInfo);
+)(withAlert(TicketInfo));
 
 const Detail = withRouter((props) => {
     const status = props.match.params.status;
