@@ -385,7 +385,7 @@ class AssignTicketsForm extends React.Component {
 
     render() {
         return (
-            <Form method="patch" id="assign-tickets-form" url={"/api/bugs/"+this.props.bug.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+            <Form method="put" id="assign-tickets-form" url={"/api/bugs/"+this.props.bug.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
                 <StateRenderer state={this.props} renderCondition={this.props.data !== null && this.props.bug}>
                     {props => { return (<>
                         <MultiSearchSelect name="tickets" defaultValue={props.bug.tickets}>

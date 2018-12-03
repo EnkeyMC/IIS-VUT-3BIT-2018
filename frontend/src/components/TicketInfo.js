@@ -501,7 +501,7 @@ class AssignBugsForm extends React.Component {
 
     render() {
         return (
-            <Form method="patch" id="assign-bugs-form"
+            <Form method="put" id="assign-bugs-form"
                   url={"/api/tickets/"+this.props.ticket.id+'/'}
                   onSubmitSuccess={this.handleFormSuccess}
             >

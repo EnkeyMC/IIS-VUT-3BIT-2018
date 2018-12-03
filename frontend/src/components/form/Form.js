@@ -31,7 +31,8 @@ export class Form extends React.Component {
         let newFields = {};
         for (const field in this._fieldsToRegister) {
             newFields[this._fieldsToRegister[field].name] = {
-                value: this._fieldsToRegister[field].defaultValue
+                value: this._fieldsToRegister[field].defaultValue,
+                file: this._fieldsToRegister[field].file
             }
         }
 
@@ -57,9 +58,11 @@ export class Form extends React.Component {
 
         for (const name in fields) {
             if (fields.hasOwnProperty(name)) {
-                if (Array.isArray(fields[name].value)) {
+                if (fields[name].file && fields[name].value === "") {
+                    // Do not append
+                } else if (Array.isArray(fields[name].value)) {
                     if (fields[name].value.length === 0) {
-                        if (this.getMethod() !== 'put')
+                        if (this.getMethod() !== 'put' && this.getMethod() !== 'post')
                             data.append(name, "");
                     } else {
                         for (const i in fields[name].value) {
@@ -138,15 +141,15 @@ export class Form extends React.Component {
         }});
     }
 
-    registerInput(name, defaultValue) {
+    registerInput(name, defaultValue, file = false) {
         if (this._isMounted) {
             this.setState((state) => {
                 return {
-                    fields: copyMerge(state.fields, {[name]: {value: defaultValue}})
+                    fields: copyMerge(state.fields, {[name]: {value: defaultValue, file: file}})
                 }
             });
         } else {
-            this._fieldsToRegister = this._fieldsToRegister.concat([{name: name, defaultValue: defaultValue}]);
+            this._fieldsToRegister = this._fieldsToRegister.concat([{name: name, defaultValue: defaultValue, file: file}]);
         }
     }
 
