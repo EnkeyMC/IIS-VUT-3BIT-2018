@@ -16,6 +16,7 @@ import {withRouter} from "react-router";
 import {Numbering} from "./Numbering";
 import CloseBtn from "./CloseBtn";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Lightbox from "react-lightbox-component";
 import {Form} from "./form/Form";
 import MultiSearchSelect, {MultiSelectItem} from "./form/MultiSearchSelect";
 import {RestrictedView, ROLE_PROGRAMMER, ROLE_SUPERVISOR} from "./RoleRestriction";
@@ -373,12 +374,19 @@ function Description(props) {
 
 function Attachment(props) {
     let fileView = <p className="text-muted">No files attached.</p>;
+
     if (props.file) {
         const extension = props.file.split('.').pop();
         if (['png', 'jpg', 'bmp', 'jpeg'].includes(extension.toLowerCase())) {
             fileView = <div className="attachment-img">
-                <img alt="attachment" src={props.file} className="attachment-preview"/>
-                <p><a href={props.file} target="_blank" rel="noopener noreferrer">View attachment</a></p>
+                <Lightbox images={[{
+                            src: props.file,
+                            title: 'image title',
+                            description: 'some description' }]}
+                          showImageModifiers={true}
+                          thumbnailWidth='auto'
+                          thumbnailHeight='auto'
+                />
             </div>
         } else {
             fileView = <a href={props.file} target="_blank" rel="noopener noreferrer">View attachment</a>;
