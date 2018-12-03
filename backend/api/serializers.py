@@ -74,7 +74,9 @@ class ProgrammerTicketOwnerSerializer(UserTicketDetailSerializer):
         model = models.Ticket
         fields = '__all__'
         read_only_fields = ('reward',)
-        extra_kwargs = {'bugs': {'allow_empty': True}}
+        extra_kwargs = {'bugs': {'allow_empty': True},
+                        'title': {'required': False},
+                        'description': {'required': False}}
 
 
 class SupervisorTicketDetailSerializer(UserTicketDetailSerializer):
@@ -86,7 +88,11 @@ class SupervisorTicketDetailSerializer(UserTicketDetailSerializer):
     class Meta:
         model = models.Ticket
         fields = '__all__'
-        extra_kwargs = {'bugs': {'allow_empty': True}}
+        extra_kwargs = {'bugs': {'allow_empty': True},
+                        'title': {'required': False},
+                        'description': {'required': False},
+                        'reward': {'required': False},
+                        'duplicate': {'required': False}}
 
 
 class UserListSerializer(StrictModelSerializer):
