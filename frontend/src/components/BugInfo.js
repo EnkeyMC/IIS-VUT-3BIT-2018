@@ -375,7 +375,7 @@ class AssignTicketsForm extends React.Component {
     }
 
     handleFormSuccess(id, data) {
-        this.props.setBug(data);
+        this.props.getBug(this.props.bug.id);
         this.props.closeModal();
     }
 
@@ -385,7 +385,7 @@ class AssignTicketsForm extends React.Component {
 
     render() {
         return (
-            <Form edit id="assign-tickets-form" url={"/api/bugs/"+this.props.bug.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+            <Form method="patch" id="assign-tickets-form" url={"/api/bugs/"+this.props.bug.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
                 <StateRenderer state={this.props} renderCondition={this.props.data !== null && this.props.bug}>
                     {props => { return (<>
                         <MultiSearchSelect name="tickets" defaultValue={props.bug.tickets}>
@@ -422,7 +422,7 @@ AssignTicketsForm = connect(
     dispatch => {
         return {
             getTickets: () => dispatch(getTickets()),
-            setBug: (data) => dispatch(setBug(data))
+            getBug: (id) => dispatch(getBug(id))
         }
     }
 ) (AssignTicketsForm);

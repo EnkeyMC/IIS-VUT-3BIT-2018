@@ -501,7 +501,10 @@ class AssignBugsForm extends React.Component {
 
     render() {
         return (
-            <Form edit id="assign-bugs-form" url={"/api/tickets/"+this.props.ticket.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+            <Form method="patch" id="assign-bugs-form"
+                  url={"/api/tickets/"+this.props.ticket.id+'/'}
+                  onSubmitSuccess={this.handleFormSuccess}
+            >
                 <StateRenderer state={this.props} renderCondition={this.props.data !== null && this.props.bug}>
                     {props => { return (<>
                         <MultiSearchSelect name="bugs" defaultValue={props.ticket.bugs}>
@@ -556,6 +559,7 @@ class AssignProgrammerForm extends React.Component {
         super(props);
 
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
+        this.beforeSubmit = this.beforeSubmit.bind(this);
     }
 
     handleFormSuccess(id, data) {
@@ -576,9 +580,22 @@ class AssignProgrammerForm extends React.Component {
         this.props.getUsers();
     }
 
+    beforeSubmit(state) {
+        if (!state.fields["expert"].value) {
+            this.props.closeModal();
+            return false;
+        }
+
+        return true;
+    }
+
     render() {
         return (
-            <Form edit id="assign-programmer-form" url={"/api/tickets/"+this.props.ticket.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+            <Form method="patch" id="assign-programmer-form"
+                  url={"/api/tickets/"+this.props.ticket.id+'/'}
+                  onSubmitSuccess={this.handleFormSuccess}
+                  beforeSubmit={this.beforeSubmit}
+            >
                 <StateRenderer state={this.props} renderCondition={this.props.data !== null}>
                     {props => { return (<>
                         <SearchSelect name="expert">
@@ -630,6 +647,7 @@ class DuplicateForm extends React.Component {
         super(props);
 
         this.handleFormSuccess = this.handleFormSuccess.bind(this);
+        this.beforeSubmit = this.beforeSubmit.bind(this);
     }
 
     handleFormSuccess(id, data) {
@@ -650,9 +668,22 @@ class DuplicateForm extends React.Component {
         this.props.getTicketsForSelect();
     }
 
+    beforeSubmit(state) {
+        if (!state.fields["duplicate"].value) {
+            this.props.closeModal();
+            return false;
+        }
+
+        return true;
+    }
+
     render() {
         return (
-            <Form edit id="mark-as-duplicate-form" url={"/api/tickets/"+this.props.ticket.id+'/'} onSubmitSuccess={this.handleFormSuccess}>
+            <Form method="patch" id="mark-as-duplicate-form"
+                  url={"/api/tickets/"+this.props.ticket.id+'/'}
+                  onSubmitSuccess={this.handleFormSuccess}
+                  beforeSubmit={this.beforeSubmit}
+            >
                 <StateRenderer state={this.props} renderCondition={this.props.data !== null}>
                     {props => { return (<>
                         <SearchSelect name="duplicate">
