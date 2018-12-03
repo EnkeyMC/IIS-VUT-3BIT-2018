@@ -13,11 +13,11 @@ export default class SidePanel extends Component {
                 <PanelLink to="/bugs" label="Bugs" margin="mt-2">
                     <FontAwesomeIcon icon="bug"/>
                 </PanelLink>
-                <PanelLink to="/modules" label="Modules" margin="mt-2">
-                    <FontAwesomeIcon icon="clone" />
-                </PanelLink>
                 <PanelLink to="/patches" label="Patches" margin="mt-2">
                     <FontAwesomeIcon icon="band-aid" transform={{ rotate: -45 }}/>
+                </PanelLink>
+                <PanelLink to="/modules" label="Modules" margin="mt-2">
+                    <FontAwesomeIcon icon="clone" />
                 </PanelLink>
                 <RestrictedView minRole={ROLE_SUPERVISOR}>
                     <PanelLink to="/users" label="Users" margin="mt-2">

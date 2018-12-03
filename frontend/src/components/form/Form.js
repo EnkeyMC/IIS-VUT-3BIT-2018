@@ -58,9 +58,13 @@ export class Form extends React.Component {
         for (const name in fields) {
             if (fields.hasOwnProperty(name)) {
                 if (Array.isArray(fields[name].value)) {
-                    for (const i in fields[name].value) {
-                        if (fields[name].value.hasOwnProperty(i))
-                            data.append(name, fields[name].value[i]);
+                    if (fields[name].value.length === 0) {
+                        data.append(name, "");
+                    } else {
+                        for (const i in fields[name].value) {
+                            if (fields[name].value.hasOwnProperty(i))
+                                data.append(name, fields[name].value[i]);
+                        }
                     }
                 } else {
                     data.append(name, fields[name].value);
@@ -108,7 +112,10 @@ export class Form extends React.Component {
                         data.non_field_errors.forEach(item => this.props.alert.error(item));
                     }
                 } else if (action.error) {
-                    this.props.alert.error(action.error.message);
+                    if (action.error.response && action.error.response.data.detail)
+                        this.props.alert.error(action.error.response.data.detail);
+                    else
+                        this.props.alert.error(action.error.message);
                 }
             });
 

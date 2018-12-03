@@ -8,13 +8,15 @@ import {Link} from "react-router-dom";
 import Error from "./Error";
 import {ConditionView, EntityAction, Spinner} from "../utils";
 import {withRouter} from "react-router";
-import {GET_PATCH, getPatch, setPatchError} from "../actions/patches";
+import {GET_PATCH, getFilteredPatches, getPatch, setPatchError} from "../actions/patches";
 import Observable from "../utils/Observable";
 import {cancelActionRequests} from "../actions/global";
 import PatchView from "../views/PatchesView";
 import {RestrictedView, ROLE_SUPERVISOR} from "./RoleRestriction";
 import * as pathToRegexp from "path-to-regexp";
 import {submitForm} from "../actions";
+import {withAlert} from "react-alert";
+import confirm from 'reactstrap-confirm';
 
 
 export default class PatchInfo extends Component {
@@ -30,7 +32,8 @@ export default class PatchInfo extends Component {
             }
         });
 
-        this.requestApproval = this.requestApproval.bind(this);
+        this.handleSubmitForm = this.handleSubmitForm.bind(this);
+        this.releasePatch = this.releasePatch.bind(this);
     }
 
     componentDidMount() {
@@ -45,8 +48,40 @@ export default class PatchInfo extends Component {
         return this.props.match.params.id ? this.props.match.params.id : this.props.defaultId;
     }
 
-    requestApproval() {
+    async releasePatch() {
+        let confirmation = await confirm({
+            message: "Are you sure you want to release patch? You cannot undo this operation!",
+            confirmText: "Release",
+            confirmColor: "success"
+        });
 
+        if (confirmation)
+            this.setPatchStatus('released');
+    }
+
+    setPatchStatus(status) {
+        let formData = new FormData();
+        formData.append('status', status);
+        this.props.submitForm(
+            'request-approval-form',
+            '/api/patches/'+this.getPatchId(),
+            formData,
+            true
+        ).then(this.handleSubmitForm);
+    }
+
+    handleSubmitForm(action) {
+        if (action.payload) {
+            this.idObservable.triggerOnChanged();
+            this.props.getFilteredPatches(this.props.match.params.status);
+        } else if (action.error) {
+            if (action.error.response && action.error.response.data.status)
+                this.props.alert.error(action.error.response.data.status);
+            else if (action.error.response && action.error.response.data.detail)
+                this.props.alert.error(action.error.response.data.detail);
+            else
+                this.props.alert.error(action.error.message);
+        }
     }
 
     render() {
@@ -96,15 +131,18 @@ export default class PatchInfo extends Component {
                                         <ConditionView if={user && user.username === patch.data.author}>
                                             <EntityAction linkTo={path+'/edit'} icon="edit">Edit</EntityAction>
                                         </ConditionView>
-                                        <ConditionView if={user && user.username === patch.data.author}>
-                                            <EntityAction onClick={this.requestApproval} icon="concierge-bell">Request approval</EntityAction>
+                                        <ConditionView if={user && user.username === patch.data.author && patch.data.status === 'in progress'}>
+                                            <EntityAction onClick={() => this.setPatchStatus('awaiting approval')} icon="concierge-bell">Request approval</EntityAction>
                                         </ConditionView>
-                                        <ConditionView if={user && patch.data.bugs.find(bug => bug.module ? bug.module.expert === user.username : false)}>
-                                            <EntityAction className="text-success" icon="thumbs-up">Approve</EntityAction>
+                                        <ConditionView if={user && user.username === patch.data.author && patch.data.status === 'awaiting approval'}>
+                                            <EntityAction onClick={() => this.setPatchStatus('in progress')} icon="times">Cancel approval request</EntityAction>
+                                        </ConditionView>
+                                        <ConditionView if={user && patch.data.bugs.find(bug => bug.module ? bug.module.expert === user.username : false) && patch.data.status === 'awaiting approval'}>
+                                            <EntityAction onClick={() => this.setPatchStatus('approved')} className="text-success" icon="thumbs-up">Approve</EntityAction>
                                         </ConditionView>
                                         <RestrictedView minRole={ROLE_SUPERVISOR}>
                                             <ConditionView if={patch.data.status === 'approved'}>
-                                                <EntityAction icon="hand-point-right">Release</EntityAction>
+                                                <EntityAction onClick={this.releasePatch} icon="hand-point-right">Release</EntityAction>
                                             </ConditionView>
                                         </RestrictedView>
                                     </Col>
@@ -143,10 +181,11 @@ PatchInfo = connect(
             getPatch: (id) => dispatch(getPatch(id)),
             setPatchError: msg => dispatch(setPatchError(msg)),
             cancelActions: action => dispatch(cancelActionRequests(action)),
-            submitForm: (id, url, data, edit) => dispatch(submitForm(id, url, data, edit))
+            submitForm: (id, url, data, edit) => dispatch(submitForm(id, url, data, edit)),
+            getFilteredPatches: (filter) => dispatch(getFilteredPatches(filter)),
         }
     }
-)(withRouter(PatchInfo));
+)(withRouter(withAlert(PatchInfo)));
 
 const Detail = withRouter((props) => {
     // const status = props.match.params.status;
