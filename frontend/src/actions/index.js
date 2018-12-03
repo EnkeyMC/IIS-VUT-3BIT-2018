@@ -34,13 +34,13 @@ export function buildQuery(query = null) {
     return q;
 }
 
-export function submitForm(id, url, data, edit) {
+export function submitForm(id, url, data, method) {
     return {
         type: SUBMIT_FORM,
         id: id,
         payload: {
             request: {
-                method: edit ? "patch" : "post",
+                method: method,
                 url: url,
                 data: data
             }

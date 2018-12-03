@@ -66,7 +66,7 @@ export default class PatchInfo extends Component {
             'request-approval-form',
             '/api/patches/'+this.getPatchId(),
             formData,
-            true
+            'patch'
         ).then(this.handleSubmitForm);
     }
 

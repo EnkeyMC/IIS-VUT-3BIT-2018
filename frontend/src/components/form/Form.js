@@ -59,7 +59,8 @@ export class Form extends React.Component {
             if (fields.hasOwnProperty(name)) {
                 if (Array.isArray(fields[name].value)) {
                     if (fields[name].value.length === 0) {
-                        data.append(name, "");
+                        if (this.getMethod() !== 'put')
+                            data.append(name, "");
                     } else {
                         for (const i in fields[name].value) {
                             if (fields[name].value.hasOwnProperty(i))
@@ -72,7 +73,7 @@ export class Form extends React.Component {
             }
         }
 
-        this.props.onSubmit(this.props.id, this.props.url, data, this.props.edit)
+        this.props.onSubmit(this.props.id, this.props.url, data, this.getMethod())
             .then(action => {
                 if (action.payload && this.props.onSubmitSuccess) {
                     this.props.onSubmitSuccess(this.props.id, action.payload.data);
@@ -122,6 +123,10 @@ export class Form extends React.Component {
         event.preventDefault();
     }
 
+    getMethod() {
+        return this.props.edit ? 'put' : this.props.method;
+    }
+
     onChange(name, newValue) {
         this.setState(state => { return {
             fields: copyMerge(state.fields, {
@@ -167,7 +172,14 @@ Form.propTypes = {
     url: PropTypes.string.isRequired,
     onSubmitSuccess: PropTypes.func,
     beforeSubmit: PropTypes.func,
-    className: PropTypes.string
+    className: PropTypes.string,
+    method: PropTypes.string,
+    edit: PropTypes.bool
+};
+
+Form.defaultProps = {
+    method: "post",
+    edit: false
 };
 
 export const withForm = WrappedComponent => {

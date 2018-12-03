@@ -97,7 +97,7 @@ export default class BugInfo extends Component {
         this.props.bug.tickets.forEach(id => id !== ticketId ? data.append('tickets', id) : false);
         if (!data.has('tickets'))
             data.append('tickets', '');
-        this.props.submitForm('remove-ticket', '/api/bugs/'+this.props.bug.id+'/', data, true)
+        this.props.submitForm('remove-ticket', '/api/bugs/'+this.props.bug.id+'/', data, 'patch')
             .then(action => {
                 if (action.payload) {
                     this.props.getBug(this.getBugId());
