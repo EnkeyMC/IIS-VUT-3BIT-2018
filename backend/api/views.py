@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from rest_framework import mixins, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -180,7 +179,7 @@ class PatchViewset(viewsets.ModelViewSet):
             position = self.request.user.profile.position
             if status == models.Patch.STATUS_RELEASED:
                 if position == models.Profile.SUPERVISOR:
-                    serializer.save(date_released=datetime.now())
+                    serializer.save(date_released=timezone.now())
                 else:
                     raise PermissionDenied(
                         detail='Only supervisor can release a patch.')

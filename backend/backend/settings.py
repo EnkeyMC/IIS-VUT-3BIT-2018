@@ -57,6 +57,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CSRF_COOKIE_PATH = '/api/'
+SESSION_COOKIE_PATH = '/api/'
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [

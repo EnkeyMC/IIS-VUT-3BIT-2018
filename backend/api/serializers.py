@@ -190,7 +190,7 @@ class BugPOSTSerializer(StrictModelSerializer):
     class Meta:
         model = models.Bug
         fields = '__all__'
-        extra_kwargs = {'module': {'allow_null': False}}
+        extra_kwargs = {'module': {'allow_null': False, 'required': True}}
 
 
 class ModuleInsideBugSerializer(StrictModelSerializer):
