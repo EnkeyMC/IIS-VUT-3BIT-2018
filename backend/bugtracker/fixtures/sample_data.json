@@ -28,13 +28,19 @@
     }
 },
 {
+    "model": "bugtracker.language",
+    "pk": 5,
+    "fields": {
+        "name": "SQL"
+    }
+},
+{
     "model": "bugtracker.profile",
     "pk": 1,
     "fields": {
         "birth_date": "1970-01-01",
         "position": "supervisor",
-        "languages": [
-        ]
+        "languages": []
     }
 },
 {
@@ -99,11 +105,11 @@
 },
 {
     "model": "bugtracker.module",
-    "pk": 1,
+    "pk": 13,
     "fields": {
         "expert": 3,
         "name": "Frontend",
-        "description": "Client side of web application",
+        "description": "The web UI of the information system.",
         "languages": [
             2,
             3,
@@ -113,32 +119,24 @@
 },
 {
     "model": "bugtracker.module",
-    "pk": 2,
+    "pk": 14,
     "fields": {
         "expert": 4,
         "name": "Backend",
-        "description": "Server side of web application",
+        "description": "Backend of the information system.",
         "languages": [
-            1
+            1,
+            5
         ]
     }
 },
 {
     "model": "bugtracker.severity",
-    "pk": 4,
+    "pk": 1,
     "fields": {
-        "name": "Cosmetic",
-        "description": "Bug is only cosmetic, does not affect program functions.",
-        "color": "#09c0fc"
-    }
-},
-{
-    "model": "bugtracker.severity",
-    "pk": 3,
-    "fields": {
-        "name": "Minor",
-        "description": "Insignificant problem of the program functioning.",
-        "color": "#f3ea19"
+        "name": "Critical",
+        "description": "Error that can affect security, cause crashes or data loss",
+        "color": "#FF0000"
     }
 },
 {
@@ -152,245 +150,218 @@
 },
 {
     "model": "bugtracker.severity",
-    "pk": 1,
-    "fields": {
-        "name": "Critical",
-        "description": "Error that can affect security, cause crashes or data loss",
-        "color": "#FF0000"
-    }
-},
-{
-    "model": "bugtracker.patch",
-    "pk": 1,
-    "fields": {
-        "name": "Patch 1",
-        "author": 4,
-        "status": "released",
-        "date_created": "2017-11-16T12:13:58.395Z",
-        "date_released": "2017-12-13T15:11:00.965Z"
-    }
-},
-{
-    "model": "bugtracker.patch",
-    "pk": 2,
-    "fields": {
-        "name": "Patch 2",
-        "author": 4,
-        "status": "released",
-        "date_created": "2016-04-30T14:32:12.324Z",
-        "date_released": "2017-07-18T11:01:42.543Z"
-    }
-},
-{
-    "model": "bugtracker.patch",
     "pk": 3,
     "fields": {
-        "name": "Patch 3",
-        "author": 3,
-        "status": "released",
-        "date_created": "2017-12-14T16:12:21.642Z",
-        "date_released": "2017-12-22T10:53:11.658Z"
+        "name": "Minor",
+        "description": "Insignificant problem of the program functioning.",
+        "color": "#f3ea19"
     }
 },
 {
-    "model": "bugtracker.patch",
+    "model": "bugtracker.severity",
     "pk": 4,
     "fields": {
-        "name": "Patch 4",
-        "author": 4,
-        "status": "approved",
-        "date_created": "2017-05-08T09:19:43.112Z",
-        "date_released": null
+        "name": "Cosmetic",
+        "description": "Bug is only cosmetic, does not affect program functions.",
+        "color": "#09c0fc"
     }
 },
 {
     "model": "bugtracker.patch",
-    "pk": 5,
+    "pk": 13,
     "fields": {
-        "name": "Patch 5",
-        "author": 3,
+        "name": "Add .fw CSS class to user icon",
+        "author": 2,
         "status": "awaiting approval",
-        "date_created": "2018-11-23T07:59:21.991Z",
+        "date_created": "2018-12-03T22:44:15.387Z",
         "date_released": null
     }
 },
 {
     "model": "bugtracker.patch",
-    "pk": 6,
+    "pk": 14,
     "fields": {
-        "name": "Patch 6",
+        "name": "Correct linking of images in galery",
         "author": 3,
         "status": "in progress",
-        "date_created": "2018-11-23T13:56:12.232Z",
+        "date_created": "2018-12-03T22:48:18.910Z",
         "date_released": null
     }
 },
 {
     "model": "bugtracker.bug",
-    "pk": 1,
+    "pk": 22,
     "fields": {
-        "author": 4,
-        "created": "2017-11-14T12:30:34.268Z",
+        "author": 2,
+        "created": "2018-12-03T22:27:42.694Z",
         "severity": 2,
-        "module": 2,
-        "patch": 1,
-        "vulnerability": false,
-        "title": "Bug #1",
-        "description": "This is a minor bug"
-    }
-},
-{
-    "model": "bugtracker.bug",
-    "pk": 2,
-    "fields": {
-        "author": 3,
-        "created": "2018-11-23T12:21:10.553Z",
-        "severity": 3,
-        "module": 1,
+        "module": 14,
         "patch": null,
         "vulnerability": false,
-        "title": "Bug #2",
-        "description": "This is a major bug"
+        "title": "Cannot change username",
+        "description": "Cannot change username when user has tickets created. This bug was introduced in last weeks update 1.3.2."
     }
 },
 {
     "model": "bugtracker.bug",
-    "pk": 3,
+    "pk": 23,
     "fields": {
-        "author": 4,
-        "created": "2016-04-20T09:44:42.185Z",
+        "author": 3,
+        "created": "2018-12-03T22:30:49.817Z",
+        "severity": 3,
+        "module": 13,
+        "patch": null,
+        "vulnerability": false,
+        "title": "Module cards",
+        "description": "Module cards doesn't work on small devices. Redo card layout for small devices."
+    }
+},
+{
+    "model": "bugtracker.bug",
+    "pk": 24,
+    "fields": {
+        "author": 2,
+        "created": "2018-12-03T22:36:58.864Z",
         "severity": 4,
-        "module": 2,
-        "patch": 2,
-        "vulnerability": true,
-        "title": "Bug #3",
-        "description": "This is a critical bug and a security problem! Do something about it!"
+        "module": 13,
+        "patch": 13,
+        "vulnerability": false,
+        "title": "Profile icons - user",
+        "description": "After adding last info to profile card user icon moved from a bit agains other icons. The icon is missing .fw CSS class"
     }
 },
 {
     "model": "bugtracker.bug",
-    "pk": 4,
+    "pk": 25,
     "fields": {
         "author": 3,
-        "created": "2018-11-20T06:30:02.019Z",
+        "created": "2018-12-03T22:46:42.968Z",
         "severity": 2,
-        "module": 1,
-        "patch": null,
-        "vulnerability": false,
-        "title": "Bug #4",
-        "description": "This is a bug"
-    }
-},
-{
-    "model": "bugtracker.bug",
-    "pk": 5,
-    "fields": {
-        "author": 4,
-        "created": "2018-11-22T22:10:01.599Z",
-        "severity": 2,
-        "module": 2,
-        "patch": 6,
-        "vulnerability": false,
-        "title": "Bug #5",
-        "description": "This is a bug"
-    }
-},
-{
-    "model": "bugtracker.bug",
-    "pk": 6,
-    "fields": {
-        "author": 4,
-        "created": "2018-11-21T22:00:17.233Z",
-        "severity": 3,
-        "module": 2,
-        "patch": 5,
-        "vulnerability": false,
-        "title": "Bug #6",
-        "description": "This is a bug"
+        "module": 13,
+        "patch": 14,
+        "vulnerability": true,
+        "title": "Show images in modal window",
+        "description": "Images not showing in modal window after clicking on them in galery. Add correct linking to modal window."
     }
 },
 {
     "model": "bugtracker.ticket",
-    "pk": 1,
+    "pk": 40,
     "fields": {
         "expert": 3,
         "author": 5,
         "duplicate": null,
-        "title": "Reporting these multiple issues",
-        "description": "They annoy me",
+        "title": "Module unreable on mobile",
+        "description": "Text in modules is unreable when I'm on mobile phone.",
         "status": "assigned",
-        "created": "2016-04-15T08:30:21.255Z",
-        "attachment": "",
+        "created": "2018-12-03T22:06:16.647Z",
+        "attachment": "tickets/2018/12/03/mobile_1Q0dMPT.png",
+        "reward": "0.00",
         "bugs": [
-            2,
-            3,
-            4
+            23
         ]
     }
 },
 {
     "model": "bugtracker.ticket",
-    "pk": 2,
+    "pk": 41,
     "fields": {
-        "expert": 4,
-        "author": 5,
-        "duplicate": null,
-        "title": "Page not found problem",
-        "description": "It is not working",
-        "status": "closed",
-        "created": "2017-05-11T13:10:01.533Z",
-        "attachment": "",
-        "bugs": [
-            1,
-            6
-        ]
-    }
-},
-{
-    "model": "bugtracker.ticket",
-    "pk": 3,
-    "fields": {
-        "expert": 3,
+        "expert": 2,
         "author": 6,
         "duplicate": null,
-        "title": "Reporting problem with ...",
-        "description": "It is not working",
+        "title": "Cannot change my username",
+        "description": "When I try to change my username in profile I get a page with error 500. Few weeks ago it worked normally.",
         "status": "assigned",
-        "created": "2018-05-12T11:10:14.677Z",
+        "created": "2018-12-03T22:06:34.308Z",
         "attachment": "",
+        "reward": "0.00",
         "bugs": [
-            5
+            22
         ]
     }
 },
 {
     "model": "bugtracker.ticket",
-    "pk": 4,
+    "pk": 42,
     "fields": {
         "expert": null,
         "author": 6,
         "duplicate": null,
-        "title": "Reporting this issue",
-        "description": "It is not working",
+        "title": "Error when logging in from another device",
+        "description": "Today I tried to login from my phone, but got and error 403. I got the same error when I tried it on my wifes phone.",
         "status": "new",
-        "created": "2018-09-17T21:32:15.412Z",
+        "created": "2018-12-03T22:11:52.935Z",
         "attachment": "",
+        "reward": "0.00",
         "bugs": []
     }
 },
 {
     "model": "bugtracker.ticket",
-    "pk": 5,
+    "pk": 43,
     "fields": {
-        "expert": 4,
-        "author": 6,
-        "duplicate": 2,
-        "title": "Reporting another problem",
-        "description": "It is not working",
+        "expert": null,
+        "author": 5,
+        "duplicate": 41,
+        "title": "Changing username is not possible",
+        "description": "I have reconsidered my username and wanted to change it but found out it's not working and I cannot change it. Please fix.",
         "status": "duplicate",
-        "created": "2017-10-15T15:43:18.759Z",
+        "created": "2018-12-03T22:13:14.891Z",
         "attachment": "",
+        "reward": "0.00",
         "bugs": []
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 44,
+    "fields": {
+        "expert": null,
+        "author": 6,
+        "duplicate": null,
+        "title": "Side panel overflowing when title is long",
+        "description": "The title of side panel item visually overflows the conatiner.",
+        "status": "new",
+        "created": "2018-12-03T22:17:48.856Z",
+        "attachment": "",
+        "reward": "0.00",
+        "bugs": []
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 45,
+    "fields": {
+        "expert": 3,
+        "author": 5,
+        "duplicate": null,
+        "title": "Image not showing after clicking on it",
+        "description": "After clicking in galery to image it shows only empty window without picture.",
+        "status": "closed",
+        "created": "2018-12-03T22:18:57.461Z",
+        "attachment": "",
+        "reward": "0.00",
+        "bugs": [
+            25
+        ]
+    }
+},
+{
+    "model": "bugtracker.ticket",
+    "pk": 46,
+    "fields": {
+        "expert": 2,
+        "author": 6,
+        "duplicate": null,
+        "title": "The user icon in profile is 2 pixels off center",
+        "description": "I just noticed the user icon in profile is 2 pixels off center and it's really bugging me! Please fix this!",
+        "status": "closed",
+        "created": "2018-12-03T22:23:54.102Z",
+        "attachment": "tickets/2018/12/03/bug.png",
+        "reward": "300.00",
+        "bugs": [
+            24
+        ]
     }
 }
 ]

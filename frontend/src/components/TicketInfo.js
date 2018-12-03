@@ -233,7 +233,7 @@ export default class TicketInfo extends Component {
                                 </Row>
                                 <Row className="pt-3">
                                     <Col>
-                                        <RestrictedView reqUser={ticket.author} minRole={ROLE_PROGRAMMER}>
+                                        <RestrictedView reqUser={ticket.author} minRole={ROLE_SUPERVISOR}>
                                             <EntityAction linkTo={path+'/edit'} icon="edit">Edit</EntityAction>
                                         </RestrictedView>
                                         <RestrictedView minRole={ROLE_PROGRAMMER}>
