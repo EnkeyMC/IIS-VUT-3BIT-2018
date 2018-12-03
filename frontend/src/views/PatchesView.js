@@ -73,9 +73,11 @@ export default class PatchesView extends React.Component {
                             </SideListFilter>
                         }
                         newBtn={
-                            <NewItemBtn linkTo={path+'/create'}>
-                                Create New Patch
-                            </NewItemBtn>
+                            <RestrictedView minRole={ROLE_PROGRAMMER}>
+                                <NewItemBtn linkTo={path+'/create'}>
+                                    Create New Patch
+                                </NewItemBtn>
+                            </RestrictedView>
                         }
                     />
                 </SideList>
